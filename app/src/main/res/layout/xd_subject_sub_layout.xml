@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/flow_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="小学"
+        android:textColor="@color/btn_blue"
+        android:textSize="@dimen/x36" />
+
+    <com.telit.zhkt_three.CustomView.FlowLayout
+        android:id="@+id/flowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/shape_flow_xd_subject_bg"-->
+            <!--android:padding="@dimen/x10"-->
+            <!--android:text="语文"-->
+            <!--android:textSize="@dimen/x36" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/shape_flow_xd_subject_bg"-->
+            <!--android:padding="@dimen/x10"-->
+            <!--android:text="数学"-->
+            <!--android:textSize="@dimen/x36" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/shape_flow_xd_subject_bg"-->
+            <!--android:padding="@dimen/x10"-->
+            <!--android:text="思想品德"-->
+            <!--android:textSize="@dimen/x36" />-->
+    </com.telit.zhkt_three.CustomView.FlowLayout>
+</LinearLayout>

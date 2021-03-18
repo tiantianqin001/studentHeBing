@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.telit.zhkt_three.Activity.AfterHomeWork.JobReportActivity">
+
+    <RelativeLayout
+        android:id="@+id/job_report_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/job_report_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/job_report_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="作业报告"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/job_report_head_layout"
+        android:layout_marginBottom="@dimen/x21"
+        android:layout_marginLeft="@dimen/y36"
+        android:layout_marginRight="@dimen/y36"
+        android:layout_marginTop="@dimen/x21">
+
+        <!--完成率以及正确率-->
+        <com.telit.zhkt_three.CustomView.JobReport.CustomJobReportChartView
+            android:id="@+id/job_report_chart_complete_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.telit.zhkt_three.CustomView.JobReport.CustomJobReportChartView>
+
+        <com.telit.zhkt_three.CustomView.JobReport.CustomJobReportChartView
+            android:id="@+id/job_report_chart_right_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"></com.telit.zhkt_three.CustomView.JobReport.CustomJobReportChartView>
+
+        <!--习题主体-->
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/job_report_xRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/y33"
+            android:layout_toRightOf="@+id/job_report_chart_complete_rate"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+    </RelativeLayout>
+</RelativeLayout>

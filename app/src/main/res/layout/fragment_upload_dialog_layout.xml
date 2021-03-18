@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_corner_tips_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/upload_img"
+            android:layout_width="@dimen/y687"
+            android:layout_height="@dimen/x387"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/x9"
+            android:background="@drawable/shape_upload_border"
+            android:src="@mipmap/icon_user" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E5E5E5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:minHeight="@dimen/x93"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.telit.zhkt_three.CustomView.ToUsePullView
+                    android:id="@+id/upload_pullView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    zbv:hint_color="#4562CF"
+                    zbv:hint_text="上传到"
+                    zbv:pop_menu_bg="@android:color/white"
+                    zbv:pop_text_color="#4562CF"
+                    zbv:pop_choosed_text_color="@color/word_gray_deep"
+                    zbv:pull_icon="@drawable/ic_icon_triggle"
+                    zbv:text_color="#4562CF"></com.telit.zhkt_three.CustomView.ToUsePullView>
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/tips_bottom_line"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#E5E5E5" />
+
+            <TextView
+                android:id="@+id/upload_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#FF4444"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/upload_confirm_btn"
+        android:layout_width="@dimen/x429"
+        android:layout_height="@dimen/x99"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x39"
+        android:background="@mipmap/upload_btn"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+</LinearLayout>

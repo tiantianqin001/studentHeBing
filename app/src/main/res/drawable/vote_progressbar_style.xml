@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/background">
+
+        <shape>
+            <size android:height="@dimen/x36" />
+            <solid android:color="#F3F4F5" />
+            <corners android:radius="@dimen/x18" />
+            <stroke
+                android:width="@dimen/x3"
+                android:color="#E5E5E5" />
+        </shape>
+    </item>
+
+    <!--
+    <item android:id="@android:id/secondaryProgress">
+
+        <clip>
+            <shape>
+
+                <solid android:color=""/>
+            </shape>
+        </clip>
+    </item>
+    -->
+
+    <item android:id="@android:id/progress">
+        <clip>
+            <!--其中scaleWidth可以让背景进行缩放，而不是右侧截断的效果-->
+            <scale
+                android:drawable="@drawable/shape_vote_progress"
+                android:scaleWidth="100%" />
+        </clip>
+    </item>
+</layer-list>

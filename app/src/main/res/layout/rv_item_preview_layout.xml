@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/preview_left_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/preview_grid_rv"
+        android:layout_alignTop="@+id/preview_grid_rv">
+
+        <!--日期视图-->
+        <LinearLayout
+            android:id="@+id/preview_date_view"
+            android:layout_width="@dimen/y207"
+            android:layout_height="@dimen/x66"
+            android:background="@mipmap/date_bg"
+            android:layout_marginRight="18dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/x36"
+                android:layout_height="@dimen/x36"
+                android:src="@mipmap/calendar_icon" />
+
+            <TextView
+                android:id="@+id/preview_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y12"
+                android:text="2019/03/26 "
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x21" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/preview_one_circle"
+            android:layout_width="@dimen/x18"
+            android:layout_height="@dimen/x18"
+            android:layout_below="@+id/preview_date_view"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_date_circle" />
+
+        <View
+            android:id="@+id/preview_line"
+            android:layout_width="@dimen/x2"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/preview_one_circle"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="#637EDA" />
+
+        <View
+            android:id="@+id/preview_two_circle"
+            android:layout_width="@dimen/x18"
+            android:layout_height="@dimen/x18"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_date_circle" />
+    </RelativeLayout>
+
+    <!--网格内容-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/preview_grid_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/preview_left_view"></android.support.v7.widget.RecyclerView>
+</RelativeLayout>

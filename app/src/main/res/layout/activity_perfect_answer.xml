@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.telit.zhkt_three.Activity.MistakesCollection.PerfectAnswerActivity">
+
+    <RelativeLayout
+        android:id="@+id/perfect_answer_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/perfect_answer_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/perfect_answer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="优秀答案"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/perfect_answer_head"
+        android:orientation="horizontal">
+
+        <!--左侧的排行列表-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/perfect_answer_recycler_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"></android.support.v7.widget.RecyclerView>
+
+        <!--右侧的排行答案显示列表-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/perfect_answer_recycler_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"></android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <!--显示加载失败等信息-->
+    <!--访问出错-->
+    <LinearLayout
+        android:id="@+id/request_retry_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/perfect_answer_head"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/x20"
+            android:text="访问出错"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/request_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_link_net_bg"
+            android:gravity="center"
+            android:text="重试"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+
+    <!--无资源-->
+    <LinearLayout
+        android:id="@+id/leak_resource_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/perfect_answer_head"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/leak_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_resource" />
+    </LinearLayout>
+
+    <!--无网络-->
+    <LinearLayout
+        android:id="@+id/leak_net_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/perfect_answer_head"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_network" />
+
+        <TextView
+            android:id="@+id/link_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_link_net_bg"
+            android:gravity="center"
+            android:text="连接网络"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</RelativeLayout>

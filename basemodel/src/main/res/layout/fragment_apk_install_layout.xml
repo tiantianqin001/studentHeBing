@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_file_receive_bg">
+
+    <RelativeLayout
+        android:layout_width="@dimen/y711"
+        android:layout_height="@dimen/x240">
+
+        <TextView
+            android:id="@+id/file_receive_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x40"
+            android:text="文件接收"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x48" />
+
+        <!--因为滑块占据y40-->
+        <com.zbv.basemodel.ApkInstallProgressView
+            android:id="@+id/apk_receive_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/file_receive_title"
+            android:layout_marginLeft="@dimen/y20"
+            android:layout_marginTop="@dimen/x50" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/y549"
+    android:layout_height="@dimen/x348"
+    android:background="@drawable/white_color_bg">
+
+    <ImageView
+        android:id="@+id/new_color_close"
+        android:layout_width="@dimen/x15"
+        android:layout_height="@dimen/x15"
+        android:layout_marginLeft="@dimen/x18"
+        android:layout_marginTop="@dimen/x18"
+        android:src="@drawable/ic_delete" />
+
+    <RelativeLayout
+        android:id="@+id/new_circle_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x6"
+        android:layout_toRightOf="@+id/new_color_close"
+        android:background="@drawable/shape_circle_color_bg">
+
+        <com.telit.zhkt_three.CustomView.ColorPicker
+            android:id="@+id/new_colorPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/new_other_color_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_toRightOf="@+id/new_circle_layout">
+
+        <RelativeLayout
+            android:id="@+id/new_color_white_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/new_color_gray_layout"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_color_select">
+
+            <ImageView
+                android:id="@+id/new_color_white"
+                android:layout_width="@dimen/x54"
+                android:layout_height="@dimen/x54"
+                android:layout_centerInParent="true"
+                android:src="@drawable/shape_new_color_white_normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/new_color_gray_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/x30"
+            android:layout_marginTop="@dimen/x30"
+            android:background="@drawable/selector_color_select">
+
+            <ImageView
+                android:id="@+id/new_color_gray"
+                android:layout_width="@dimen/x54"
+                android:layout_height="@dimen/x54"
+                android:layout_centerInParent="true"
+                android:src="@drawable/shape_new_color_gray_normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/new_color_black_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_color_gray_layout"
+            android:background="@drawable/selector_color_select">
+
+            <ImageView
+                android:id="@+id/new_color_black"
+                android:layout_width="@dimen/x54"
+                android:layout_height="@dimen/x54"
+                android:layout_centerInParent="true"
+                android:src="@drawable/shape_new_color_black_normal" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/y81"
+        android:layout_toRightOf="@+id/new_other_color_layout"
+        android:orientation="vertical">
+
+        <!--图片边角锯齿化，所以采用SVG,长宽比3:4-->
+        <FrameLayout
+            android:layout_width="@dimen/x48"
+            android:layout_height="@dimen/x64"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/x3"
+            android:background="@drawable/ic_dubble_bg">
+
+            <TextView
+                android:id="@+id/new_color_pen_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+        </FrameLayout>
+
+        <!--
+        不适配，所以不采用
+        <com.telit.zhkt_three.CustomView.Bubble.BubbleView-->
+        <!--android:id="@+id/new_color_bubbleView"-->
+        <!--android:layout_width="@dimen/x36"-->
+        <!--android:layout_height="@dimen/x48"-->
+        <!--zbv:bubble_bg_color="#4562CF"-->
+        <!--zbv:bubble_max_value="70"-->
+        <!--zbv:bubble_min_value="10"-->
+        <!--zbv:bubble_text_color="@android:color/white"-->
+        <!--zbv:bubble_text_size="@dimen/x24" />-->
+
+        <com.telit.zhkt_three.CustomView.Bubble.VerticalSeekBar
+            android:id="@+id/new_color_seekbar_vertical"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x195"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <!--thumb是SVG图片是可以的-->
+    <!--<SeekBar-->
+    <!--android:id="@+id/seekbar"-->
+    <!--android:layout_width="@dimen/x195"-->
+    <!--android:layout_height="@dimen/x40"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginBottom="@dimen/x20"-->
+    <!--android:maxHeight="@dimen/x12"-->
+    <!--android:minHeight="@dimen/x12"-->
+    <!--android:paddingEnd="0dp"-->
+    <!--android:paddingStart="0dp"-->
+    <!--android:progress="50"-->
+    <!--android:progressDrawable="@drawable/vertical_seekbar_style"-->
+    <!--android:thumb="@mipmap/white_slide" />-->
+</RelativeLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <!--随堂练习 head-->
+    <LinearLayout
+        android:id="@+id/practice_head_layout"
+        android:layout_width="@dimen/y300"
+        android:layout_height="@dimen/x51"
+        android:background="@mipmap/practice_head_bg"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/practice_head_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/y9"
+            android:text="[单选]"
+            android:textColor="#FFDA0D"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/practice_head_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/y15"
+            android:text="第1题 共25题"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/practise_head_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="(1分)"
+            android:visibility="gone"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/x24" />
+    </LinearLayout>
+
+    <!--单选题内容-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/option_do_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_circle_bg"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="@drawable/selector_text_color"
+            android:textSize="@dimen/x36" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

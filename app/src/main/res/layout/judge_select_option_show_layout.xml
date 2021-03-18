@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/y66"
+    android:layout_marginTop="@dimen/x30">
+
+    <org.sufficientlysecure.htmltextview.HtmlTextView
+        android:id="@+id/option_show_htv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A、答案是就是A"
+        android:textSize="@dimen/x36"
+        android:textColor="@color/word_gray_deep" />
+</RelativeLayout>

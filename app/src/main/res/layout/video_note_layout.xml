@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/x40">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="观后感"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/video_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x10"
+        android:background="@null"
+        android:ellipsize="end"
+        android:gravity="left|top"
+        android:hint="填写观后感"
+        android:lines="5"
+        android:maxEms="180"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        android:text="tips：亲爱的小朋友，请给辛苦的老师预留的学习资源评个分吧，星星数越高表示越喜欢哦" />
+
+    <RatingBar
+        android:id="@+id/vidoe_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x10" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/video_notdo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x10"
+            android:layout_toLeftOf="@+id/video_complete"
+            android:text="下次再说"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/video_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x10"
+            android:text="打分完毕"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

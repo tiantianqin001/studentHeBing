@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--head view-->
+    <RelativeLayout
+        android:id="@+id/class_record_left_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/foot_class_record_linear"
+        android:layout_alignBottom="@+id/foot_class_record_linear">
+
+        <View
+            android:id="@+id/class_record_line"
+            android:layout_width="@dimen/x2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/x103"
+            android:layout_marginRight="@dimen/x103"
+            android:background="#637EDA" />
+
+        <View
+            android:id="@+id/class_record_one_circle"
+            android:layout_width="@dimen/x18"
+            android:layout_height="@dimen/x18"
+            android:layout_alignBottom="@+id/class_record_line"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/shape_date_circle" />
+
+        <View
+            android:id="@+id/class_record_one_circle_opaque"
+            android:layout_width="@dimen/x10"
+            android:layout_height="@dimen/x10"
+            android:layout_alignBottom="@+id/class_record_line"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/x4"
+            android:background="@drawable/shape_date_circle_opaque" />
+
+    </RelativeLayout>
+
+    <!--four item view-->
+    <LinearLayout
+        android:id="@+id/foot_class_record_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_toRightOf="@+id/class_record_left_view"
+        android:orientation="horizontal">
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/foot_class_record_one"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/foot_class_record_two"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/foot_class_record_three"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/foot_class_record_four"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+    </LinearLayout>
+</RelativeLayout>

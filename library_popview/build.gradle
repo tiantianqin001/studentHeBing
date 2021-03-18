@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+group = 'com.davemorrissey.labs'
+archivesBaseName = 'subsampling-scale-image-view-androidx'
+version = '3.0.0.0.18'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        consumerProguardFiles 'proguard-rules.txt'
+    }
+}
+
+configurations {
+    javadocs
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    destinationDir = rootProject.file("docs/javadoc")
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+    classpath += configurations.javadocs
+    options.noTimestamp = true
+    options.links = ['https://developer.android.com/reference/']
+}
+
+//apply from: rootProject.file('release.gradle')

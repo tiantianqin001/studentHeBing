@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    tools:context=".MediaTools.image.ImageLookActivity">
+
+    <com.telit.zhkt_three.MediaTools.image.PhotoViewPager
+        android:id="@+id/photoViewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/photo_tv_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x150"
+        android:gravity="center"
+        android:padding="@dimen/x10"
+        android:text="1/3"
+        android:textColor="#FEFEFE"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/photo_prev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|left"
+        android:layout_marginLeft="@dimen/y75"
+        android:drawableLeft="@mipmap/left_shape"
+        android:drawablePadding="@dimen/x21"
+        android:gravity="center"
+        android:text="上一张"
+        android:textColor="#FEFEFE"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/photo_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="@dimen/y75"
+        android:drawablePadding="@dimen/x21"
+        android:drawableRight="@mipmap/right_shape"
+        android:gravity="center"
+        android:text="下一张"
+        android:textColor="#FEFEFE"
+        android:textSize="@dimen/x36" />
+
+    <LinearLayout
+        android:id="@+id/photo_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/x108"
+        android:background="@drawable/shape_rating_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/x48"
+            android:layout_height="@dimen/x48"
+            android:src="@mipmap/pen_comment" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y18"
+            android:gravity="center"
+            android:text="去写点评"
+            android:textColor="#FEFEFE"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/shadow_gray"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/x10">
+
+    <ImageView
+        android:id="@+id/pen_size_big"
+        android:layout_width="@dimen/x120"
+        android:layout_height="@dimen/x120"
+        android:layout_marginTop="@dimen/x20"
+        android:src="@drawable/shape_pen_size_orange" />
+
+    <ImageView
+        android:id="@+id/pen_size_middle"
+        android:layout_width="@dimen/x80"
+        android:layout_height="@dimen/x80"
+        android:layout_marginTop="@dimen/x20"
+        android:src="@drawable/shape_pen_size_orange" />
+
+    <ImageView
+        android:id="@+id/pen_size_small"
+        android:layout_width="@dimen/x40"
+        android:layout_height="@dimen/x40"
+        android:layout_marginBottom="@dimen/x20"
+        android:layout_marginTop="@dimen/x20"
+        android:src="@drawable/shape_pen_size_orange" />
+</LinearLayout>

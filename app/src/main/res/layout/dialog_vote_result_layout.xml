@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/y1719"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x54"
+        android:layout_marginTop="@dimen/x45"
+        android:background="@drawable/shape_round_corner_tips_bg"
+        android:paddingBottom="@dimen/x36">
+
+        <TextView
+            android:id="@+id/vote_result_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/x42"
+            android:layout_marginTop="@dimen/x84"
+            android:gravity="center"
+            android:maxWidth="@dimen/y1434"
+            android:text="中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？"
+            android:textColor="#404040"
+            android:textSize="@dimen/x36" />
+
+        <ScrollView
+            android:layout_width="@dimen/y1434"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vote_result_topic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/x36">
+
+            <LinearLayout
+                android:id="@+id/vote_main_result_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/vote_title"
+        android:layout_width="@dimen/y282"
+        android:layout_height="@dimen/x87"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/vote_count" />
+
+    <Button
+        android:id="@+id/vote_result_close"
+        android:layout_width="@dimen/y441"
+        android:layout_height="@dimen/x108"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@mipmap/vote_close"
+        android:gravity="center"
+        android:text="关 闭"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+</FrameLayout>

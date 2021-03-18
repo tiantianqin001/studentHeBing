@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/chapter_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:ellipsize="end"
+        android:padding="@dimen/x10"
+        android:text="小蝌蚪找妈妈"
+        android:textColor="@drawable/selector_text_chapter_color"
+        android:textSize="@dimen/x36" />
+
+</android.support.constraint.ConstraintLayout>

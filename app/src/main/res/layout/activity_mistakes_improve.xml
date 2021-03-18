@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/improvement_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/improvement_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="错题巩固"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--错题巩固提升-->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/mistakes_improve_swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mistakes_improve_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <!--无资源-->
+        <ImageView
+            android:id="@+id/leak_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_resource"
+            android:visibility="gone" />
+
+        <!--无网络-->
+        <LinearLayout
+            android:id="@+id/leak_net_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_network" />
+
+            <TextView
+                android:id="@+id/link_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="连接网络"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+

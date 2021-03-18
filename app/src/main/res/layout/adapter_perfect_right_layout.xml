@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.telit.zhkt_three.CustomView.CircleImageView
+        android:id="@+id/perfect_avatar"
+        android:layout_width="@dimen/x103"
+        android:layout_height="@dimen/x103"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_toRightOf="@+id/perfect_rank"
+        android:src="@mipmap/icon_user" />
+
+    <!--图片答案-->
+    <RelativeLayout
+        android:id="@+id/perfect_img_relative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x20">
+
+        <TextView
+            android:id="@+id/perfect_img_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/perfect_img_linear"
+            android:background="@drawable/shape_perfect_board_orange"
+            android:gravity="center"
+            android:text="图片答案"
+            android:textColor="@color/word_orange"
+            android:textSize="@dimen/x30" />
+
+        <LinearLayout
+            android:id="@+id/perfect_img_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/perfect_img_title"
+            android:layout_marginTop="@dimen/x20"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/perfect_answer_pic_one"
+                android:layout_width="@dimen/x250"
+                android:layout_height="@dimen/x250"
+                android:background="@drawable/shape_round_corner_bg"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user" />
+
+            <ImageView
+                android:id="@+id/perfect_answer_pic_two"
+                android:layout_width="@dimen/x250"
+                android:layout_height="@dimen/x250"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:background="@drawable/shape_round_corner_bg"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user" />
+
+            <ImageView
+                android:id="@+id/perfect_answer_pic_three"
+                android:layout_width="@dimen/x250"
+                android:layout_height="@dimen/x250"
+                android:background="@drawable/shape_round_corner_bg"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--文字答案-->
+    <RelativeLayout
+        android:id="@+id/perfect_txt_relative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginTop="@dimen/x20">
+
+        <TextView
+            android:id="@+id/perfect_txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/perfect_answer_txt_text"
+            android:background="@drawable/shape_perfect_board_orange"
+            android:gravity="center"
+            android:text="文本答案"
+            android:textColor="@color/word_orange"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/perfect_answer_txt_text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x250"
+            android:layout_below="@+id/perfect_txt_title"
+            android:layout_marginTop="@dimen/x20"
+            android:minWidth="@dimen/x400"
+            android:background="@drawable/shape_round_corner_bg"
+            android:padding="@dimen/x10"
+            android:text="        文本文本文本啊" />
+    </RelativeLayout>
+</LinearLayout>

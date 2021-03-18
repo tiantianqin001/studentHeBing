@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/class_record_grid_layout"
+        android:layout_width="@dimen/y339"
+        android:layout_height="@dimen/x210"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/lianxi">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/class_record_grid_title"
+            android:layout_marginBottom="@dimen/x36"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y36"
+                android:text="互动时间"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x15" />
+
+            <TextView
+                android:id="@+id/class_record_grid_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y6"
+                android:background="@drawable/shape_class_record_time_bg"
+                android:gravity="center"
+                android:text="08:45:12"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x15" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/class_record_grid_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/x36"
+            android:layout_marginRight="@dimen/y27"
+            android:text="来自xxxx老师"
+            android:textColor="#494949"
+            android:textSize="@dimen/x18" />
+    </RelativeLayout>
+</RelativeLayout>

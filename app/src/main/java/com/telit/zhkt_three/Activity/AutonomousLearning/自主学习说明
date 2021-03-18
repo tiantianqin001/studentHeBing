@@ -1,0 +1,5 @@
+总的说明：包含自主学习类：AutoLearningActivity [微课、音频、图片、教材来自于2.0的资源；题库包含题库书、题库知识点为新增内容]
+              题库书本类：ItemBankBookActivity
+            题库知识点类：ItemBankKnowledgeActivity
+
+          

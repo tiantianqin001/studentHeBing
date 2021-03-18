@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.telit.zhkt_three.CustomView.PaletteView
+        android:id="@+id/new_color_board_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/new_color_layout" />
+
+    <RelativeLayout
+        android:id="@+id/new_color_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/y24">
+
+        <FrameLayout
+            android:id="@+id/new_color_pen_layout"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_marginTop="@dimen/x123">
+
+            <ImageView
+                android:layout_width="@dimen/x99"
+                android:layout_height="@dimen/x99"
+                android:src="@mipmap/white_pen" />
+
+            <!--注意使用SVG必须使用app:srcCompat-->
+            <ImageView
+                android:id="@+id/new_color_path"
+                android:layout_width="@dimen/x66"
+                android:layout_height="@dimen/x33"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="@dimen/x3"
+                app:srcCompat="@drawable/ic_pen_path" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/new_color_eraser"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_below="@+id/new_color_pen_layout"
+            android:layout_marginTop="@dimen/x48"
+            android:src="@mipmap/white_eraser" />
+
+        <ImageView
+            android:id="@+id/new_color_clean"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_below="@+id/new_color_eraser"
+            android:layout_marginTop="@dimen/x48"
+            android:src="@mipmap/white_clean" />
+
+        <ImageView
+            android:id="@+id/new_color_backward"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_below="@+id/new_color_clean"
+            android:layout_marginTop="@dimen/x48"
+            android:src="@mipmap/white_back" />
+
+        <ImageView
+            android:id="@+id/new_color_forward"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_below="@+id/new_color_backward"
+            android:layout_marginTop="@dimen/x48"
+            android:src="@mipmap/white_go" />
+
+        <ImageView
+            android:id="@+id/new_color_save"
+            android:layout_width="@dimen/x99"
+            android:layout_height="@dimen/x99"
+            android:layout_below="@+id/new_color_forward"
+            android:layout_marginTop="@dimen/x48"
+            android:src="@mipmap/board_save" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+
+    <com.telit.zhkt_three.CustomView.PaletteView
+        android:id="@+id/board_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/board_tools_layout" />
+
+    <RelativeLayout
+        android:id="@+id/board_tools_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/select_pen"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:src="@drawable/selector_pen" />
+
+        <ImageView
+            android:id="@+id/select_pen_size"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toRightOf="@+id/select_pen"
+            android:background="@drawable/shape_pen_size_orange" />
+
+        <ImageView
+            android:id="@+id/select_erase"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toRightOf="@+id/select_pen_size"
+            android:src="@drawable/selector_erase" />
+
+        <ImageView
+            android:id="@+id/select_color"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toRightOf="@+id/select_erase"
+            android:src="@drawable/color_pick" />
+
+        <ImageView
+            android:id="@+id/select_undo"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toLeftOf="@+id/select_redo"
+            android:src="@drawable/selector_undo" />
+
+        <ImageView
+            android:id="@+id/select_redo"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toLeftOf="@+id/select_clear"
+            android:src="@drawable/selector_redo" />
+
+        <ImageView
+            android:id="@+id/select_clear"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toLeftOf="@+id/select_save"
+            android:src="@drawable/selector_clear" />
+
+        <TextView
+            android:id="@+id/select_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginRight="@dimen/x10"
+            android:background="#4562CF"
+            android:drawableTop="@mipmap/white_save"
+            android:gravity="center"
+            android:text="白板保存"
+            android:padding="@dimen/x6"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </RelativeLayout>
+</RelativeLayout>

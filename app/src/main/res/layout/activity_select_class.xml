@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity">
+
+    <!--标准头布局-->
+    <RelativeLayout
+        android:id="@+id/class_record_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x99"
+        android:background="#4562CF">
+
+        <com.telit.zhkt_three.CustomView.CustomHeadLayout
+            android:id="@+id/class_record_head_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.telit.zhkt_three.CustomView.CustomHeadLayout>
+
+        <TextView
+            android:id="@+id/tv_address_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="加入课堂"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_wifi_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="显示wifi名称"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/x36"
+            />
+
+    </RelativeLayout>
+
+    <FrameLayout
+            android:id="@+id/fl_join_class"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+
+            >
+            <!--左边的布局-->
+            <LinearLayout
+                android:id="@+id/ll_join_left_class"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/x70"
+                android:layout_marginLeft="@dimen/x40"
+                >
+                <com.telit.zhkt_three.CustomView.RippleBackground
+                    android:layout_width="@dimen/x600"
+                    android:layout_height="@dimen/x600"
+                    android:id="@+id/content"
+                    app:rb_color="#4562CF"
+                    app:rb_radius="@dimen/x48"
+                    app:rb_rippleAmount="6"
+                    app:rb_duration="2000"
+                    app:rb_scale="6">
+                    <ImageView
+                        android:layout_width="@dimen/x64"
+                        android:layout_height="@dimen/x64"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/centerImage"
+                        android:src="@mipmap/pad_join_leson"/>
+                    <ImageView
+                        android:layout_width="@dimen/x64"
+                        android:layout_height="@dimen/x64"
+                        android:id="@+id/foundDevice"
+                        android:layout_above="@id/centerImage"
+                        android:layout_marginBottom="32dp"
+                        android:layout_toLeftOf="@id/centerImage"
+                        android:layout_marginRight="6dp"
+                        android:src="@drawable/phone2"
+                        android:visibility="invisible"/>
+                </com.telit.zhkt_three.CustomView.RippleBackground>
+                <!--wifi 名字-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x150"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/x70"
+                    android:layout_marginTop="@dimen/x30"
+                    >
+                    <ImageView
+                        android:id="@+id/board_wifi"
+                        android:layout_width="@dimen/x60"
+                        android:layout_height="@dimen/y56"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/y30"
+                        android:src="@mipmap/join_class_wifi"
+                        />
+                    <TextView
+                        android:id="@+id/tv_wifi_name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="显示wifi名称"
+                        android:textColor="#737373"
+                        android:layout_marginRight="10dp"
+                        android:textSize="@dimen/x36"
+                        />
+
+                </LinearLayout>
+                <!--切换网络-->
+                <TextView
+                    android:id="@+id/tv_wifi_shouse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/x160"
+                    android:background="@drawable/shape_join_lesson"
+                    android:text="切换网络"
+                    android:textColor="#30B5B9"
+                    android:paddingTop="@dimen/x20"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textSize="@dimen/x36" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/ll_join_right_class"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/tv__show_lesson_name"
+                    android:layout_width="@dimen/x370"
+                    android:layout_height="@dimen/x50"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/black"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/join_class_move"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/x208"
+                    />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/clazz_recycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+
+                    />
+
+                <TextView
+                    android:layout_marginTop="@dimen/x20"
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+
+       </LinearLayout>
+
+
+        <!--无资源-->
+        <LinearLayout
+            android:id="@+id/leak_resource_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/leak_resource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/no_class" />
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

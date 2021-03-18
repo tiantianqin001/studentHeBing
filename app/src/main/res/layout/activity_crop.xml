@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.telit.zhkt_three.MediaTools.CropActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/word_gray_deep"
+        android:padding="@dimen/x10">
+
+        <Button
+            android:id="@+id/crop_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="图片裁剪"
+            android:textColor="@color/word_white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <com.edmodo.cropper.CropImageView
+        android:id="@+id/crop_cropView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        custom:guidelines="on"></com.edmodo.cropper.CropImageView>
+</LinearLayout>

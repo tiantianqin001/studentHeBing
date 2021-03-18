@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x15"
+    android:layout_marginTop="@dimen/x15">
+
+    <com.telit.zhkt_three.CustomView.CircleImageView
+        android:id="@+id/discuss_right_avatar"
+        android:layout_width="@dimen/x66"
+        android:layout_height="@dimen/x66"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/y15"
+        android:layout_marginRight="@dimen/y45"
+        android:src="@mipmap/icon_user" />
+
+    <TextView
+        android:id="@+id/discuss_right_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/discuss_right_avatar"
+        android:layout_marginTop="@dimen/x3"
+        android:layout_toLeftOf="@+id/discuss_right_avatar"
+        android:text="我"
+        android:textColor="@color/word_gray_deep"
+        android:textSize="@dimen/x24" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/discuss_right_name"
+        android:layout_below="@+id/discuss_right_name"
+        android:layout_marginTop="@dimen/x12"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/discuss_right_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/y15"
+            android:text="12:30:35"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x18" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/discuss_me">
+
+            <TextView
+                android:id="@+id/discuss_right_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x9"
+                android:maxWidth="@dimen/y495"
+                android:text="我觉着中国会赢，因为我觉着中国会赢，因为我觉着中国会赢，因为我觉着中国会赢，因为我觉着中国会赢，因为"
+                android:textColor="#FEFEFF"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/discuss_right_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x9"
+                android:src="@mipmap/icon_user"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

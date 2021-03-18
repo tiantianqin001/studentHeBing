@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/record_vote_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="投票详情"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="@dimen/y1719"
+                android:layout_height="@dimen/x900"
+                android:layout_marginBottom="@dimen/x54"
+                android:layout_marginTop="@dimen/x45"
+                android:background="@drawable/shape_round_corner_tips_bg"
+                android:paddingBottom="@dimen/x36">
+
+                <TextView
+                    android:id="@+id/vote_result_topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/x42"
+                    android:layout_marginTop="@dimen/x84"
+                    android:gravity="center"
+                    android:maxWidth="@dimen/y1434"
+                    android:text="中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？"
+                    android:textColor="#404040"
+                    android:textSize="@dimen/x36" />
+
+                <ScrollView
+                    android:layout_width="@dimen/y1434"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vote_result_topic"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/x36">
+
+                    <LinearLayout
+                        android:id="@+id/vote_main_result_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"></LinearLayout>
+                </ScrollView>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/vote_title"
+                android:layout_width="@dimen/y282"
+                android:layout_height="@dimen/x87"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/vote_count" />
+        </FrameLayout>
+
+        <!--访问出错-->
+        <LinearLayout
+            android:id="@+id/request_retry_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/x20"
+                android:text="访问出错"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/request_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="重试"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <!--无资源-->
+        <LinearLayout
+            android:id="@+id/leak_resource_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/leak_resource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_resource" />
+        </LinearLayout>
+
+        <!--无网络-->
+        <LinearLayout
+            android:id="@+id/leak_net_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_network" />
+
+            <TextView
+                android:id="@+id/link_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="连接网络"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

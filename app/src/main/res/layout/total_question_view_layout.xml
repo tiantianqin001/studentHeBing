@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+        <!--随堂练习 head-->
+        <LinearLayout
+            android:id="@+id/practice_head_layout"
+            android:layout_width="@dimen/y300"
+            android:layout_height="@dimen/x51"
+            android:background="@mipmap/practice_head_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/practice_head_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/y9"
+                android:text="[判断]"
+                android:textColor="#FFDA0D"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:id="@+id/practice_head_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/y15"
+                android:text="第1题 共25题"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:id="@+id/practise_head_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="(1分)"
+                android:visibility="gone"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/x24" />
+        </LinearLayout>
+
+        <!--作业 head-->
+        <RelativeLayout
+            android:id="@+id/work_head_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/total_work_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1、【选择题】"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24" />
+
+            <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/total_work_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y21"
+                android:layout_toRightOf="@+id/total_work_title"
+                android:text="基友三只腿对不对"
+                android:textColor="#5D5D5D"
+                android:textSize="@dimen/x24" />
+
+            <!--优秀答案-->
+            <TextView
+                android:id="@+id/total_work_good_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看优秀答案"
+                android:layout_toLeftOf="@+id/total_work_promote"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24"
+                android:layout_marginRight="@dimen/x20"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/total_work_promote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="去巩固>>"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24" />
+        </RelativeLayout>
+
+        <!--新增作业图片展示,只显示四张，第五章显示剩余张数-->
+        <LinearLayout
+            android:id="@+id/practice_img_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/practice_img_one"
+                android:layout_width="@dimen/x150"
+                android:layout_height="@dimen/x150"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/practice_img_two"
+                android:layout_width="@dimen/x150"
+                android:layout_height="@dimen/x150"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/practice_img_three"
+                android:layout_width="@dimen/x150"
+                android:layout_height="@dimen/x150"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_user"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/practice_img_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/practice_img_four"
+                    android:layout_width="@dimen/x150"
+                    android:layout_height="@dimen/x150"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginRight="@dimen/x10"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_user" />
+
+                <TextView
+                    android:id="@+id/practice_img_count"
+                    android:layout_width="@dimen/x150"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:background="#884562CF"
+                    android:gravity="center"
+                    android:text="+2张"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x45" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!--答题选项（选择、填空、判断、主观，后续还有连线题等）   核心-->
+        <LinearLayout
+            android:id="@+id/total_options_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x33"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_get_current_quint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="23dp"
+            android:layout_marginLeft="28dp"
+            android:text="获取正确答案:"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            />
+
+        <!--随堂练习 选择、判断答案-->
+        <TextView
+            android:id="@+id/practice_select_judge_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/y33"
+            android:background="@drawable/shape_tv_answer"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/y27"
+            android:text="正确答案：B"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"
+            android:visibility="gone"
+            />
+
+        <!--现在判断题单独来写-->
+        <RelativeLayout
+            android:id="@+id/option_do_tv_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/y33"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+
+            >
+            <TextView
+                android:id="@+id/tv_quit0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正确答案："
+                android:textColor="@color/word_gray_deep"
+                android:textSize="@dimen/x36"
+                android:layout_marginTop="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/x88"
+                android:background="@drawable/shape_circle_selected"
+                android:layout_toRightOf="@+id/tv_quit0"
+                android:gravity="center"
+                >
+                <ImageView
+
+                    android:layout_width="@dimen/x40"
+                    android:layout_height="@dimen/x40"
+                    android:src="@mipmap/check_current_two"
+
+
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/option_do_tv_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/y33"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/tv_quit1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正确答案："
+                android:textColor="@color/word_gray_deep"
+                android:textSize="@dimen/x36"
+                android:layout_marginTop="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/x88"
+                android:background="@drawable/shape_circle_selected"
+                android:layout_toRightOf="@+id/tv_quit1"
+                android:gravity="center"
+                >
+                <ImageView
+
+                    android:layout_width="@dimen/x40"
+                    android:layout_height="@dimen/x40"
+                    android:src="@mipmap/check_err_ome"
+
+                    android:background="@drawable/shape_circle_selected"
+                    />
+
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+
+
+        <!--随堂练习 填空答案-->
+        <LinearLayout
+            android:id="@+id/practice_blank_answer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/practice_right_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y69"
+                android:layout_marginRight="@dimen/y24"
+                android:text="正确答案"
+                android:textColor="@color/word_gray_deep"
+                android:textSize="@dimen/x36" />
+
+            <LinearLayout
+                android:id="@+id/practice_blank_answer_option_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- 作业 答案-->
+        <RelativeLayout
+            android:id="@+id/work_answer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y24"
+            android:background="#F2F5FF"
+            android:visibility="gone">
+
+            <!--作业对错标记-->
+            <ImageView
+                android:id="@+id/total_work_answer_icon"
+                android:layout_width="@dimen/y60"
+                android:layout_height="@dimen/x45"
+                android:layout_marginTop="@dimen/x15"
+                android:src="@mipmap/wrong" />
+
+            <!--作业答案展现-->
+            <LinearLayout
+                android:id="@+id/total_work_answer_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y18"
+                android:layout_toRightOf="@+id/total_work_answer_icon"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/y21">
+
+                <!--作业自己答案显示-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/work_my_answer_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x21"
+                        android:text="你的答案是"
+                        android:textColor="@color/wrong_color"
+                        android:textSize="@dimen/x36" />
+
+                    <LinearLayout
+                        android:id="@+id/work_my_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--作业正确答案显示-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x21"
+                        android:text="正确答案是"
+                        android:textColor="#1DCE92"
+                        android:textSize="@dimen/x36" />
+
+                    <LinearLayout
+                        android:id="@+id/work_right_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--作业答案解析-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x21"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[答案解析]"
+                        android:textColor="#5D5D5D"
+                        android:textSize="@dimen/x36" />
+
+                    <ImageView
+                        android:id="@+id/work_answer_analysis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y21"
+                        android:src="@mipmap/ic_launcher" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--作业难易时间标记-->
+            <LinearLayout
+                android:id="@+id/total_work_answer_desc"
+                android:layout_width="@dimen/y189"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/total_work_answer_layout"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/total_work_answer_layout"
+                android:background="@drawable/shape_middle_tag"
+                android:gravity="center"
+                android:minHeight="@dimen/x189"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/work_desc_date"
+                    android:layout_width="@dimen/y132"
+                    android:layout_height="@dimen/x51"
+                    android:gravity="center"
+                    android:text="2019/02/06 16:40:36"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x24" />
+
+                <TextView
+                    android:id="@+id/work_desc_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y18"
+                    android:text="中等"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x48" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

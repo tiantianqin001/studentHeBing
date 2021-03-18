@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.telit.zhkt_three.MediaTools.ebook.ElectronicResourceActivity">
+
+    <RelativeLayout
+        android:id="@+id/elecRes_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/elecRes_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/elecRes_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="电子书课本详情"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <com.telit.zhkt_three.CusomPater
+        android:id="@+id/elecRes_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/elecRes_head_layout"></com.telit.zhkt_three.CusomPater>
+
+    <!--侧拉 顺序不能颠倒-->
+    <LinearLayout
+        android:id="@+id/elecRes_pull_content_layout"
+        android:layout_width="@dimen/y432"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/elecRes_head_layout"
+        android:background="#F2F5FF"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <com.telit.zhkt_three.CustomView.RoundCornerImageView
+            android:id="@+id/elecRes_pull_cover"
+            android:layout_width="@dimen/y159"
+            android:layout_height="@dimen/x231"
+            android:layout_marginBottom="@dimen/x30"
+            android:layout_marginTop="@dimen/x30"
+            android:src="@mipmap/no_cover" />
+
+        <TextView
+            android:id="@+id/elecRes_pull_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x51"
+            android:background="@drawable/shape_tree_title"
+            android:gravity="center"
+            android:text="一年级语文上册(人教版)"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x24" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/elecRes_rv_chapter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/elecRes_pull_tag"
+        android:layout_width="@dimen/y54"
+        android:layout_height="@dimen/x207"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@mipmap/left_pull_bg">
+
+        <ImageView
+            android:id="@+id/elecRes_pull_icon"
+            android:layout_width="@dimen/y21"
+            android:layout_height="@dimen/x36"
+            android:layout_gravity="center_vertical|right"
+            android:src="@mipmap/left_pull" />
+    </FrameLayout>
+</RelativeLayout>

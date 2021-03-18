@@ -1,0 +1,14 @@
+总的说明：包含互动类：InteractiveActivity
+          关联的Fragment:Fragment/Interactive/*
+          [
+          基本分为：分组讨论[GroupDiscussFragment]、锁屏[LockFragment]、白板[NewWhiteBoardFragment]
+                    随堂练习[QuestionFragment]、抢答[ResponderFragment]、选择班级[SelectClassFragment
+                    投票[VoteFragment]]
+          其余的原先是Android端绘制的，现改为腾讯X5浏览器加载，采用Hybrid开发模式，这样省去了Web端与Android端的数据格式统一等麻烦
+          ]
+
+
+
+
+
+          

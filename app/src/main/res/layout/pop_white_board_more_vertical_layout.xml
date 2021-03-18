@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/more_bg_vertical"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/x15">
+
+    <LinearLayout
+        android:id="@+id/new_board_shot"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x75"
+            android:layout_height="@dimen/x75"
+            android:src="@mipmap/class_shot" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="课堂截屏"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/new_board_record"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x75"
+            android:layout_height="@dimen/x75"
+            android:src="@mipmap/class_record_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="课堂录屏"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/new_board_file_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x75"
+            android:layout_height="@dimen/x75"
+            android:src="@mipmap/receive_file" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="文件接收"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/new_board_collect_practice"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x71"
+            android:layout_height="@dimen/x61"
+            android:src="@mipmap/collect" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="习题收藏"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+</LinearLayout>

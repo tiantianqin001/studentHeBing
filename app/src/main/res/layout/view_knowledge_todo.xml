@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/y21"
+    android:orientation="vertical">
+
+    <org.sufficientlysecure.htmltextview.HtmlTextView
+        android:id="@+id/Item_Bank_list_title_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/Item_Bank_head_title"
+        android:text="(x)孔子说的对"
+        android:textColor="#5D5D5D"
+        android:textSize="@dimen/x36" />
+
+    <!--选项 选择、填空、主观 List为空-->
+    <LinearLayout
+        android:id="@+id/Item_Bank_list_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
+    <!--答案-->
+    <LinearLayout
+        android:id="@+id/Item_Bank_List_Answer_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/Item_Bank_List_my_Answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x36"
+            android:text="你的答案：" />
+
+        <TextView
+            android:id="@+id/Item_Bank_List_right_Answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x36"
+            android:text="正确答案：" />
+
+        <LinearLayout
+            android:id="@+id/Item_Bank_List_Answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Item_Bank_List_Tv_Answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/x36"
+                android:text="答案：" />
+
+            <ImageView
+                android:id="@+id/Item_Bank_List_Img_Answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

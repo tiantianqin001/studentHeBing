@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/select_group_frame"
+        android:layout_width="@dimen/x1200"
+        android:layout_height="@dimen/x720"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--标题栏-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_blue"
+                android:padding="@dimen/x10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="选择讨论小组"
+                    android:textColor="@color/word_white"
+                    android:textSize="@dimen/x36" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x15"
+                    android:background="@drawable/shape_round_corner_bg"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/x5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/clock" />
+
+                    <TextView
+                        android:id="@+id/select_group_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:text="10"
+                        android:textColor="@color/bg_blue"
+                        android:textSize="@dimen/x40" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x5"
+                        android:text="秒"
+                        android:textSize="@dimen/x20" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--主界面模块-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/select_group_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"></android.support.v7.widget.RecyclerView>
+
+                <!--访问出错-->
+                <LinearLayout
+                    android:id="@+id/request_retry_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/word_white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/x20"
+                        android:text="访问出错"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/x36" />
+
+                    <TextView
+                        android:id="@+id/request_retry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_link_net_bg"
+                        android:gravity="center"
+                        android:text="重试"
+                        android:textColor="#4562CF"
+                        android:textSize="@dimen/x36" />
+                </LinearLayout>
+
+                <!--无资源-->
+                <LinearLayout
+                    android:id="@+id/leak_resource_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/leak_resource"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/no_class" />
+                </LinearLayout>
+
+                <!--无网络-->
+                <LinearLayout
+                    android:id="@+id/leak_net_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/leak_network" />
+
+                    <TextView
+                        android:id="@+id/link_network"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_link_net_bg"
+                        android:gravity="center"
+                        android:text="连接网络"
+                        android:textColor="#4562CF"
+                        android:textSize="@dimen/x36" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!--确定分组提交,通过通讯服务提交给教师端-->
+            <TextView
+                android:id="@+id/select_group_btn_commit"
+                android:layout_width="@dimen/y420"
+                android:layout_height="@dimen/x87"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/x18"
+                android:background="@mipmap/commit_bg"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <!--进度条视图-->
+        <LinearLayout
+            android:id="@+id/progress_linear"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/x200"
+            android:layout_gravity="center"
+            android:background="@color/word_gray"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取数据中..."
+                android:textColor="@color/word_white"
+                android:textSize="@dimen/x30" />
+        </LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

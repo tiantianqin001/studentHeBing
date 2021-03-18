@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
+    <color name="colorGray">#CDCDCD</color>
+    <color name="colorBlue">#1296DB</color>
+    <color name="colorDarkBlue">#5677FC</color>
+    <color name="transGray">#88CDCDCD</color>
+    <color name="yellow">#f57c00</color>
+
+    <color name="shadow_gray">#F3F3F3</color>
+
+    <color name="black40">#40000000</color>
+    <color name="practice_text_color">#666666</color>
+
+    //--------------------------------------------------
+    <color name="bg_blue">#4562CF</color>
+    <color name="word_gray_deep">#5D5D5D</color>
+    <color name="word_gray">#858585</color>
+    <color name="word_white">#FFFFFF</color>
+    <color name="btn_gray">#F3F4F5</color>
+    <color name="btn_blue">#2696FF</color>
+    <color name="btn_green">#1DCE92</color>
+    <color name="word_orange">#FF930A</color>
+    <color name="line_gray">#ffb5b5b5</color>
+    <color name="bg_stroke">#C0C0C0</color>
+
+    <color name="alpha_line_gray">#77b5b5b5</color>
+
+    <color name="test_green">#8800ff00</color>
+
+    <color name="right_color">#1DCE92</color>
+    <color name="wrong_color">#FF4D4D</color>
+    <color name="micro_lecture_primary_bg_blue">#F5F5F5</color>
+    <color name="black70">#70000000</color>
+    <color name="dark">#5e5656</color>
+    <color name="light_blue">#53ACF1</color>
+    <color name="light_gray">#F3F4F5</color>
+
+    <color name="dialog_bg">#bc000000</color>
+
+    //------------------------Resource------------------
+    <color name="video_text_color">#FF4343</color>
+    <color name="audio_text_color">#837DFB</color>
+    <color name="picture_text_color">#FE7B52</color>
+    <color name="homework_text_color">#13B5B1</color>
+
+    //-------------------------FillBlank---------------
+    <color name="ggfx_dark_blue">#1D72F1</color>
+    <color name="red">#F22100</color>
+    <color name="rippelColor">#0099CC</color>
+
+</resources>

@@ -1,0 +1,7 @@
+总的说明：包含课堂记录类：ClassRecordActivity [记录分组讨论、随堂练习、投票等详情]
+          分组讨论显示类：RecordDiscussShowActivity
+          随堂练习显示类：RecordPracticeDoneActivity
+          投票结果显示类：RecordVoteResultActivity
+
+
+          

@@ -1,0 +1,212 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.telit.smartclass.desktop"
+      //  applicationId "com.telit.zhkt_three"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 63
+        versionName "3.0.0.0.63"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        //静态接口方法，java8才支持，而最新的okhttp已经使用了
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        //Jpush自动配置所需,因为腾讯x5的so只有32位，那个示例liblbs.so让示例以32位模式运行，如果手机是64的话
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi', 'armeabi-v7a'
+            // , 'arm64-v8a', 'x86', 'x86_64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "ee725b9ec7f56fd88a66740a", //JPush 上注册的包名对应的 Appkey. 2e78927fe4ddb3692628a55b
+                JPUSH_CHANNEL: "telit_smartclass_android", //暂时填写默认值即可.
+        ]
+    }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('./release/smartclass.jks')
+            storePassword 'telit123'
+            keyAlias 'telit123'
+            keyPassword 'telit123'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+    //配置greendao数据库相关的信息
+    greendao {
+        schemaVersion 3                                                                                                                                                                             //数据库版本号
+        daoPackage 'com.telit.zhkt_three.greendao' //设置生成dao一系列类的包名
+        targetGenDir 'src/main/java' //设置生成dao一系列类所在目录
+    }
+
+    // 将aar文件复制到app module目录下的libs文件夹中，然后打开app module目录下的build.gradle配置文件
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+    }
+
+    //android studio默认so文件加载目录为:src/main/jniLibs
+    //注意：so要依据目录响应添加对应的，不然会报错的
+    //如在module的build.gradle按照如下方式,自定义了so文件加载目录请确保对应目录下只有armeabi目录
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+//    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //MD
+    implementation 'com.android.support:design:28.0.0'
+    implementation project(':ijkplayer-java')
+
+    //okHttp3.0 最新版本的okhttp具有TLS安全，低版本的安卓系统不支持Expected Android API level 21+ but was 19，所以修改成3.12.0
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //MultiDex
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //GreenDao
+    implementation 'org.greenrobot:greendao:3.2.2'
+
+    //ButterKnife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //引入Flip_lib
+    implementation project(':libflip')
+
+    //引入Material_Calendar
+    implementation project(':materialcalendar')
+
+    //引入SVG_Vector
+    implementation project(':vectorchildfinder')
+
+    //引入SSDP
+
+    //implementation project(':ssdp')
+
+    //implementation 'io.resourcepool:ssdp-client:2.4.0'
+    implementation project(':basemodel')
+    implementation project(':docxmodel')
+    implementation project(':rtplibrary')
+
+    //  implementation project(':library')
+
+    // implementation project(':rtspservice')
+
+    //显示Html的TextView
+
+    //    implementation 'org.sufficientlysecure:html-textview:3.6'
+
+    //xrecyclerview
+    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+
+    //fastJason
+    implementation 'com.alibaba:fastjson:1.1.71.android'
+
+    //leakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
+
+    //Jpush自动配置依赖
+    implementation 'cn.jiguang.sdk:jpush:3.3.0'
+    implementation 'cn.jiguang.sdk:jcore:2.0.1'
+
+    //Oanth2.0介入安徽省平台统一用户认证接口
+    implementation(name: 'loginsdk', ext: 'aar')
+
+    // Material_Calendar 解析日期需要
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
+
+    //recyclerview的item载入动画等
+    implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
+
+    //测试调用unity
+    implementation(name: 'aidlaar-debug', ext: 'aar')
+
+    //Chrome CustomTabs的使用  ===》 显示的网页内容不用自己操作等其他情况都可以用 Chrome Custom Tabs 来实现
+    implementation 'com.android.support:customtabs:28.0.0'
+
+    //腾讯X5内核
+    implementation project(':HtmlTextView')
+
+    //引入Android图标库
+    implementation project(':MPChartLib')
+
+    //引入bugly,记录异常crash
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    // implementation 'cn.yc:WebViewLib:1.2.2'
+    implementation files('libs/pinyin4j-2.5.0.jar')
+    implementation 'com.hjq:toast:8.8'
+
+    //引入自定义裁剪
+    implementation 'com.edmodo:cropper:1.0.1'
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+    implementation project(path: ':library_popview')
+    implementation 'com.github.andriydruk:dnssd:0.9.13'
+
+    //视频播放库
+    implementation project(path: ':video_library')
+  //  implementation files('libs/tbs_sdk_thirdapp_v4.3.0.3_43903_sharewithdownloadwithfile_withoutGame_obfs_20200402_121309.jar')
+    implementation(name: 'xwalk_core_library', ext: 'aar')
+    implementation project(path: ':rtplibrary')
+    implementation files('libs/pldroid-player-2.2.0.jar')
+    //浏览器
+    implementation 'com.just.agentweb:agentweb:4.1.4'
+    //recycleview
+    implementation 'com.github.jdsjlzx:LRecyclerView:1.5.4.3'
+}

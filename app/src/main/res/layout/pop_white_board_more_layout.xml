@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/more_bg"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/x15">
+
+    <LinearLayout
+        android:id="@+id/new_board_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x75"
+            android:layout_height="@dimen/x75"
+            android:src="@mipmap/white_save" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="白板保存"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/new_board_file_receive"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/x75"
+            android:layout_height="@dimen/x75"
+            android:src="@mipmap/receive_file" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="文件接收"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x18" />
+    </LinearLayout>
+</LinearLayout>

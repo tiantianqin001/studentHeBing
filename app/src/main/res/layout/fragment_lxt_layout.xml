@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/matching_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/line_bg"
+    android:orientation="vertical">
+
+    <!--连线题主体-->
+    <com.telit.zhkt_three.CustomView.interactive.LXT.MatchingView
+        android:id="@+id/matchingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--这个之所以放在MatchingView下面是应该点击事件，其实本应该放在下面的-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x33"
+        android:layout_marginLeft="@dimen/y21"
+        android:layout_marginRight="@dimen/y21"
+        android:layout_marginTop="@dimen/x18">
+
+        <ImageView
+            android:layout_width="@dimen/x282"
+            android:layout_height="@dimen/x87"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/line_type" />
+
+        <TextView
+            android:id="@+id/matching_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="请输入标题"
+            android:textColor="#67C3E0"
+            android:textSize="@dimen/x36" />
+
+        <LinearLayout
+            android:id="@+id/practice_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x10"
+            android:layout_toLeftOf="@+id/matching_answer"
+            android:background="@drawable/shape_clock_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/x51"
+                android:layout_height="@dimen/x51"
+                android:src="@mipmap/clock" />
+
+            <TextView
+                android:id="@+id/matching_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用时：05:29"
+                android:textColor="#FF930A"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/matching_answer"
+            android:layout_width="@dimen/x303"
+            android:layout_height="@dimen/x96"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/line_answer" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/matching_reset"
+        android:layout_width="@dimen/x108"
+        android:layout_height="@dimen/x108"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/x60"
+        android:layout_marginRight="@dimen/x60"
+        android:src="@mipmap/reset" />
+</FrameLayout>

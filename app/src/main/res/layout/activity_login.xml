@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/login_bg"
+    tools:context=".Activity.HomeScreen.LoginActivity">
+
+    <ImageView
+        android:id="@+id/img_wifi"
+        android:layout_width="@dimen/y69"
+        android:layout_height="@dimen/x69"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/y99"
+        android:layout_marginTop="@dimen/x120"
+        android:src="@mipmap/wifi" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/login_logo"
+            android:layout_width="@dimen/y700"
+            android:layout_height="@dimen/x124"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x210"
+            android:src="@mipmap/login" />
+
+
+        <com.telit.zhkt_three.CustomView.CustomEditText
+            android:id="@+id/login_username_edit"
+            android:layout_width="@dimen/y600"
+            android:layout_height="@dimen/x90"
+            android:layout_below="@+id/login_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x81"
+            android:background="@drawable/shape_login_bg"
+            android:hint="@string/hint_username"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textSize="@dimen/x36"
+            android:lines="1"
+            android:maxLength="50"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            zbv:existShow="true" />
+
+        <com.telit.zhkt_three.CustomView.CustomEditText
+            android:id="@+id/login_pwd_edit"
+            android:layout_width="@dimen/y600"
+            android:layout_height="@dimen/x90"
+            android:layout_below="@+id/login_username_edit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x33"
+            android:background="@drawable/shape_login_bg"
+            android:hint="@string/hint_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLength="18"
+            android:textSize="@dimen/x36"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            zbv:pwdMode="true" />
+
+        <ImageView
+            android:id="@+id/login_btn"
+            android:layout_width="@dimen/y621"
+            android:layout_height="@dimen/x108"
+            android:layout_below="@+id/login_pwd_edit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x57"
+            android:src="@mipmap/login_button" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/login_btn"
+            android:layout_below="@+id/login_btn"
+            android:layout_marginLeft="@dimen/x45"
+            android:layout_marginTop="@dimen/x36">
+
+            <TextView
+                android:id="@+id/login_oauth_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="省平台登录"
+                android:textColor="@drawable/selector_text_cloud_color"
+                android:textSize="@dimen/x24" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_alignLeft="@+id/login_oauth_enter"
+                android:layout_alignRight="@+id/login_oauth_enter"
+                android:layout_below="@+id/login_oauth_enter"
+                android:background="@android:color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/login_btn"
+            android:layout_below="@+id/login_btn"
+            android:layout_marginRight="@dimen/x45"
+            android:layout_marginTop="@dimen/x36">
+
+            <TextView
+                android:id="@+id/login_forget_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="忘记密码"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_alignLeft="@+id/login_forget_pwd"
+                android:layout_alignRight="@+id/login_forget_pwd"
+                android:layout_below="@+id/login_forget_pwd"
+                android:background="@android:color/white" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

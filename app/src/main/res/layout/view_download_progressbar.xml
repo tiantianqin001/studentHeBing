@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_circle_black_70"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/icon_download_ready" />
+
+    <com.telit.zhkt_three.CustomView.Download.CircleProgressBar
+        android:id="@+id/cpb_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/x2"
+        app:background_color="@android:color/white"
+        app:background_width="@dimen/x2"
+        app:progress_color="#4562CF"
+        app:progress_width="@dimen/x3" />
+
+    <TextView
+        android:id="@+id/tv_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="100%"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x16" />
+</FrameLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x92"
+    android:gravity="center_vertical"
+    android:background="#4562CF"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/tbs_img_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:src="@drawable/ic_tbs_delete" />
+
+    <!--<TextView-->
+    <!--android:id="@+id/tbs_text_url"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@drawable/shape_tbs_txt"-->
+    <!--android:paddingBottom="@dimen/x10"-->
+    <!--android:paddingLeft="@dimen/x30"-->
+    <!--android:paddingRight="@dimen/x30"-->
+    <!--android:paddingTop="@dimen/x10"-->
+    <!--android:text="http://localhost:8080/LearningSelf"-->
+    <!--android:textSize="@dimen/x33" />-->
+
+    <TextView
+        android:id="@+id/tbs_text_url"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x30"
+        android:paddingRight="@dimen/x30"
+        android:paddingTop="@dimen/x10"
+        android:text="个人空间"
+        android:textColor="@color/word_white"
+        android:textSize="@dimen/x33" />
+
+    <ImageView
+        android:id="@+id/tbs_img_more"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:src="@drawable/ic_tbs_more" />
+</LinearLayout>

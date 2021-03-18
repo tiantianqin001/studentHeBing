@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--第一个图片-->
+<!--    <LinearLayout
+
+        android:id="@+id/ll_fist_system_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_shop_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/auto_learning"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            >
+            <com.telit.zhkt_three.CustomView.SummerLayout
+                android:id="@+id/vp_item_summerlayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/x200"
+                android:paddingTop="@dimen/x150"
+                zbv:columnNum="4"
+                zbv:rowNum="2">
+            </com.telit.zhkt_three.CustomView.SummerLayout>
+        </LinearLayout>
+
+    </LinearLayout>-->
+
+    <!--剩下的图片-->
+
+    <com.telit.zhkt_three.CustomView.SummerLayout
+        android:id="@+id/vp_item_summerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/x200"
+        android:paddingTop="@dimen/x150"
+        zbv:columnNum="6"
+        zbv:rowNum="2"
+        >
+    </com.telit.zhkt_three.CustomView.SummerLayout>
+
+
+
+
+
+</LinearLayout>

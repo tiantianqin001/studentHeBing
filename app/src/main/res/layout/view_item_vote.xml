@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/vote_item_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/vote_item_img"
+            android:layout_width="@dimen/x90"
+            android:layout_height="@dimen/x90"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/vote_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/x33"
+        android:layout_marginLeft="@dimen/x33"
+        android:layout_marginTop="@dimen/x33"
+        android:layout_toRightOf="@+id/vote_item_linear"
+        android:background="@drawable/selector_vote_item_bg"
+        android:gravity="center"
+        android:text="选项一"
+        android:textColor="@drawable/selector_vote_item_color_bg"
+        android:textSize="@dimen/x36" />
+</RelativeLayout>

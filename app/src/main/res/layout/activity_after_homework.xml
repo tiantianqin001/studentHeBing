@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AutonomousLearning.AutoLearningActivity">
+
+    <!--标准头布局-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x99"
+        android:background="#4562CF">
+
+        <com.telit.zhkt_three.CustomView.CustomHeadLayout
+            android:id="@+id/after_work_head_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.telit.zhkt_three.CustomView.CustomHeadLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="课后作业"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+
+        <ImageView
+            android:id="@+id/iv_collect_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/collect_question_icon"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y63"/>
+
+        <ImageView
+            android:id="@+id/after_work_calendar"
+            android:layout_width="@dimen/x69"
+            android:layout_height="@dimen/x69"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y63"
+            android:src="@mipmap/calendar"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <!--指示器-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x99"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/y348"
+            android:layout_marginRight="@dimen/y348"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/after_work_todo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="未完成作业"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/after_work_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已完成作业"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/after_work_indicator"
+            android:layout_width="@dimen/y201"
+            android:layout_height="@dimen/x9"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/y339"
+            android:background="#4562CF" />
+    </FrameLayout>
+
+    <com.telit.zhkt_three.CusomPater
+        android:id="@+id/after_work_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.telit.zhkt_three.CusomPater>
+</LinearLayout>

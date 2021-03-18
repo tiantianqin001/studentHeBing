@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/fill_blank_answer_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y18"
+        android:background="@drawable/shape_circle_blank"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="#0A89FF"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/fill_blank_answer_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/y12"
+        android:layout_marginTop="@dimen/y18"
+        android:text="正确答案1"
+        android:textColor="#0A89FF"
+        android:textSize="@dimen/x36" />
+</LinearLayout>

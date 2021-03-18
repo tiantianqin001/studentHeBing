@@ -1,0 +1,42 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!--忘记密码弹框-->
+    <style name="dialogForgetPwd" parent="Theme.AppCompat.Dialog">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否有背景色 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 灰色的百分比 0就是全透明了-->
+        <item name="android:backgroundDimAmount">0.6</item>
+        <!--是否触摸外界消失-->
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <!--是否有遮盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--不显示背景色-->
+    <style name="dialogForgetPwdTwo" parent="Theme.AppCompat.Dialog">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否有背景色 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 灰色的百分比 0就是全透明了-->
+        <item name="android:backgroundDimAmount">0</item>
+        <!--是否触摸外界消失-->
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <!--是否有遮盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+</resources>

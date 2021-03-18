@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/y460"
+        android:layout_height="@dimen/x340"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/tip_forget_pwd" />
+
+    <ImageView
+        android:id="@+id/forget_pwd_del"
+        android:layout_width="@dimen/x50"
+        android:layout_height="@dimen/x50"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x30"
+        android:src="@mipmap/close" />
+</LinearLayout>

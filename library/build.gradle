@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        consumerProguardFiles 'proguard-rules.pro'
+
+        buildConfigField 'boolean', 'MEDIA_DEBUG', 'false'
+    }
+    buildTypes {
+        release {
+//            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'library.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    mavenCentral()
+    google()
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.android.support:support-v4:28.0.0"
+
+}

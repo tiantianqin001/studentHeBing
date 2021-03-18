@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x80"
+        android:background="@color/colorPrimary"
+        >
+        <TextView
+            android:id="@+id/tv_click_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录"
+            android:layout_centerInParent="true"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            />
+        <ImageView
+            android:id="@+id/iv_open_wifi"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/wifi"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_show_login"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+
+        >
+        <TextView
+            android:id="@+id/tv_last_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上次登录:"
+            android:textSize="22dp"
+            android:textColor="@color/word_gray_deep"
+            />
+        <TextView
+            android:id="@+id/tv_next_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="立即登录"
+            android:textSize="22dp"
+            android:textColor="@color/word_white"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/shape_version_login_bg"
+            android:gravity="center"
+            android:padding="5dp"
+           />
+    </LinearLayout>
+
+
+            <org.xwalk.core.XWalkView
+                android:id="@+id/webView"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+</LinearLayout>

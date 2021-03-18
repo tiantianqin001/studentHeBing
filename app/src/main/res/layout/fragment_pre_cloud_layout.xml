@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--面包屑视图
+    一、可横向滚动
+    二、添加一个屑是个组合layout > xxx
+    三、tag保存ids
+    -->
+    <HorizontalScrollView
+        android:id="@+id/pre_cloud_horizontal_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x80"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:id="@+id/pre_cloud_bread"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!--回到分享的网盘主界面-->
+            <TextView
+                android:id="@+id/pre_bread_tv_home"
+                android:layout_width="@dimen/x150"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/selector_tv_bread_color"
+                android:text="/"
+                android:textSize="@dimen/x30" />
+            <!--新增子集目录名-->
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!--内容展示视图-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/pre_cloud_content_swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_margin="5dp"
+                android:id="@+id/pre_cloud_content_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <!--访问出错-->
+        <LinearLayout
+            android:id="@+id/request_retry_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/x20"
+                android:text="访问出错"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/request_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="重试"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <!--无资源-->
+        <LinearLayout
+            android:id="@+id/leak_resource_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/leak_resource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_resource" />
+        </LinearLayout>
+
+        <!--无网络-->
+        <LinearLayout
+            android:id="@+id/leak_net_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_network" />
+
+            <TextView
+                android:id="@+id/link_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="连接网络"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

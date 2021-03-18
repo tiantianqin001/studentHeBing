@@ -1,0 +1,6 @@
+总的说明：包含课后作业类：AfterHomeWorkActivity [这一部分和2.0的接口一致]
+          关联的Fragment：Fragment.AfterHomeWork.CompletedHomeWorkFragment(已完成作业)
+                          Fragment.AfterHomeWork.ToDoHomeWorkFragment(要完成作业)
+              作业报告类：JobReportActivity [暂时不需要统计，后续可能按需求增加]
+
+          

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ScrollView
+        android:layout_width="@dimen/y1719"
+        android:layout_height="@dimen/x900"
+        android:layout_marginBottom="@dimen/x54"
+        android:layout_marginTop="@dimen/x45"
+        android:background="@drawable/shape_round_corner_tips_bg">
+
+        <LinearLayout
+            android:id="@+id/vote_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/x54">
+
+            <TextView
+                android:id="@+id/vote_topic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/x42"
+                android:layout_marginTop="@dimen/x93"
+                android:gravity="center"
+                android:maxWidth="@dimen/y1434"
+                android:text="中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？中美贸易大战你怎么看？"
+                android:textColor="#404040"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/vote_title"
+        android:layout_width="@dimen/y282"
+        android:layout_height="@dimen/x87"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/vote_title_bg" />
+
+    <Button
+        android:id="@+id/vote_confirm"
+        android:layout_width="@dimen/y441"
+        android:layout_height="@dimen/x108"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@mipmap/vote_btn_bg"
+        android:gravity="center"
+        android:text="确  定"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+</FrameLayout>

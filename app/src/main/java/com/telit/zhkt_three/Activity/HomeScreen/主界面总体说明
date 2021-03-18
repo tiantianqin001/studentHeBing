@@ -1,0 +1,10 @@
+总的说明：包含主界面类：MainActivity
+            登录界面类：LoginActivity
+            个人中心类：PersonInfoActivity
+              课程表类：TimeTableActivity
+          【ForgetPwdActivity没有用到，用Fragment代替】
+
+关于版本：因为兼容智慧课堂2.0版本，因为用的包名就是 “com.telit.smartclass.desktop”
+          因此使用版本可以迭代为3.0
+
+URL接口：Constant/UrlUtils 中放置所有接口Api以及使用接口示例

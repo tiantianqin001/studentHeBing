@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/x10">
+
+    <TextView
+        android:id="@+id/dicuss_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_toRightOf="@+id/receive_file_icon"
+        android:ellipsize="start"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:text="资源名称A资源名称A资源名称A.pdf"
+        android:textColor="@color/word_white"
+        android:textSize="@dimen/x36" />
+
+    <ImageView
+        android:id="@+id/discuss_file_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x5"
+        android:layout_toRightOf="@id/dicuss_file_name"
+        android:src="@mipmap/file" />
+
+    <TextView
+        android:id="@+id/discuss_file_look"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="预览"
+        android:textColor="@color/word_white"
+        android:textSize="@dimen/x36" />
+</RelativeLayout>

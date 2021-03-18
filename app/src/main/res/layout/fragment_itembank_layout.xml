@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/pull_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x20"
+        android:orientation="horizontal">
+
+        <com.telit.zhkt_three.CustomView.PullView
+            android:id="@+id/pullView_subject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.PullView>
+
+        <com.telit.zhkt_three.CustomView.PullView
+            android:id="@+id/pullView_section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.PullView>
+
+        <com.telit.zhkt_three.CustomView.PullView
+            android:id="@+id/pullView_paper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.PullView>
+
+        <com.telit.zhkt_three.CustomView.PullView
+            android:id="@+id/pullView_grade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.PullView>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/itembank_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/pull_layout"></android.support.v7.widget.RecyclerView>
+</RelativeLayout>

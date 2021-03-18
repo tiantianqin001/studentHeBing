@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="com.telit.zhkt_three.Activity.PersonalSpace.PersonalSpaceActivity">
+
+    <com.telit.zhkt_three.CustomView.tbs.TBSHeadView
+        android:id="@+id/tbsHeadView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x72"></com.telit.zhkt_three.CustomView.tbs.TBSHeadView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x7" />
+
+
+    <org.xwalk.core.XWalkView
+        android:id="@+id/personal_space_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

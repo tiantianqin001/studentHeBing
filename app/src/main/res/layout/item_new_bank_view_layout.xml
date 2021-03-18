@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <!--作业头部-->
+        <RelativeLayout
+            android:id="@+id/Item_Bank_Work_Head_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/Item_Bank_head_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1、[选择题]"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24" />
+
+            <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/Item_Bank_head_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y21"
+                android:layout_toRightOf="@+id/Item_Bank_head_title"
+                android:text="基友三只腿对不对"
+                android:textColor="#5D5D5D"
+                android:textSize="@dimen/x24" />
+
+
+            <!--显示问题：如果上面的Item_Bank_head_content太长了就会导致Item_Bank_head_score看不见并且增加所谓的留白-->
+            <TextView
+                android:id="@+id/Item_Bank_head_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@id/Item_Bank_head_content"
+                android:text="(1分)"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/x24"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/Item_Bank_head_score"
+                android:src="@mipmap/collect_gray_icon" />
+
+
+            <!--优秀答案-->
+            <TextView
+                android:id="@+id/Item_Bank_head_good_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看优秀答案"
+                android:layout_toLeftOf="@+id/Item_Bank_head_promote"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24"
+                android:layout_marginRight="@dimen/x20"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/Item_Bank_head_promote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="去巩固>>"
+                android:textColor="#FF9600"
+                android:textSize="@dimen/x24"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+        <!--选项 选择、填空、主观 List为空-->
+        <LinearLayout
+            android:id="@+id/Item_Bank_options_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Item_Bank_Work_Head_layout"
+            android:orientation="vertical"
+            android:visibility="gone"></LinearLayout>
+
+        <!--存在List下,不给作答-->
+        <LinearLayout
+            android:id="@+id/Item_Bank_list_question_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Item_Bank_Work_Head_layout"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/Item_Bank_Answer_Scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Item_Bank_options_layout"
+            android:layout_marginLeft="10dp"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:id="@+id/Item_Bank_Answer_Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x33"
+                android:orientation="vertical"
+
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/word_gray" />
+
+                <TextView
+                    android:id="@+id/Item_Bank_Show_Remark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x33"
+                    android:layout_marginTop="@dimen/x33"
+                    android:background="@drawable/shape_rating_bg"
+                    android:gravity="center"
+                    android:text="查阅老师评阅"
+                    android:textColor="#FEFEFE"
+                    android:textSize="@dimen/x36" />
+
+                <TextView
+                    android:id="@+id/Item_Bank_my_Answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你的答案："
+                    android:layout_marginTop="@dimen/x33"
+                    android:textSize="@dimen/x36"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/Item_Bank_right_Answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="正确答案："
+                    android:textSize="@dimen/x36" />
+
+                <LinearLayout
+                    android:id="@+id/Item_Bank_Point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Item_Bank_Tv_Point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="考点："
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/x36" />
+
+                    <ImageView
+                        android:id="@+id/Item_Bank_Img_Point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/Item_Bank_Analysis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Item_Bank_Tv_Analysis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="解析："
+                        android:textSize="@dimen/x36" />
+
+                    <ImageView
+                        android:id="@+id/Item_Bank_Img_Analysis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/Item_Bank_Answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Item_Bank_Tv_Answer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="答案："
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/x36" />
+
+                    <ImageView
+                        android:id="@+id/Item_Bank_Img_Answer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+</ScrollView>

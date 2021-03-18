@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_round_corner_bg"
+    android:padding="@dimen/x6">
+
+    <com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView
+        android:id="@+id/item_practice_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView>
+</RelativeLayout>

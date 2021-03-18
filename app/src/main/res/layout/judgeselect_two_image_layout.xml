@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <!--随堂练习 head-->
+    <LinearLayout
+        android:id="@+id/practice_head_layout"
+        android:layout_width="@dimen/y300"
+        android:layout_height="@dimen/x51"
+        android:background="@mipmap/practice_head_bg"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/practice_head_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/y9"
+            android:text="[填空]"
+            android:textColor="#FFDA0D"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/practice_head_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/y15"
+            android:text="第1题 共25题"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/practise_head_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="(1分)"
+            android:visibility="gone"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/x24" />
+    </LinearLayout>
+
+    <include layout="@layout/judge_select_option_complete_layout_two"/>
+
+    <include layout="@layout/judge_select_option_complete_layout_two"/>
+    <include layout="@layout/judge_select_option_complete_layout_two"/>
+    <include layout="@layout/judge_select_option_complete_layout_two"/>
+    <include layout="@layout/judge_select_option_complete_layout_two"/>
+</LinearLayout>

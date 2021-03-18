@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!--再次包一层的原因是让@dimen/dp_100起作用-->
+    <LinearLayout
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/x200"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!--这里图片的外边距设置为10dp，假象删除图标在其右上方
+        不过有个问题，图标大小不一致，看起来很丑，需要设置具体尺寸？？？
+        -->
+        <ImageView
+            android:id="@+id/vp_item_icon"
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x120"
+            android:layout_margin="@dimen/x10"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/vp_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="夏目友人帐"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_red_del" />
+</FrameLayout>

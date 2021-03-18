@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.telit.zhkt_three.Activity.ClassRecord.RecordDiscussShowActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/record_discuss_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="分组讨论详情"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--讨论主题头-->
+        <RelativeLayout
+            android:id="@+id/discuss_topic_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#4562CF">
+
+            <TextView
+                android:id="@+id/discuss_topic_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="请选择加入的主题"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:layout_width="@dimen/y117"
+                android:layout_height="@dimen/x48"
+                android:layout_marginBottom="@dimen/x14"
+                android:layout_marginTop="@dimen/x14"
+                android:layout_toRightOf="@+id/discuss_topic_name"
+                android:background="@mipmap/discuss_topic_bg"
+                android:gravity="center"
+                android:text="话题"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <!--分享的文件-->
+            <FrameLayout
+                android:id="@+id/discuss_file_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x30"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/x50"
+                    android:layout_height="@dimen/x50"
+                    android:padding="@dimen/x5"
+                    android:src="@mipmap/file" />
+
+                <ImageView
+                    android:id="@+id/discuss_file_dot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|top"
+                    android:src="@drawable/shape_red_dot"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/discuss_topic_head"
+            android:orientation="horizontal">
+            <!--分组讨论成员-->
+            <LinearLayout
+                android:layout_width="@dimen/y435"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_discuss_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/x9"
+                    android:layout_marginTop="@dimen/x9"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/y45"
+                        android:layout_height="@dimen/x39"
+                        android:src="@mipmap/discuss_group" />
+
+                    <!--小组名+小组人数-->
+                    <TextView
+                        android:id="@+id/discuss_member_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y9"
+                        android:text="1讨论组成员（无）"
+                        android:textColor="#4562CF"
+                        android:textSize="@dimen/x24" />
+                </LinearLayout>
+
+                <!--组员展示-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/discuss_rv_member"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:text="聊天信息："
+                    android:textColor="#4562CF"
+                    android:textSize="@dimen/x36" />
+                <!--聊天内容展示-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/discuss_rv_communication"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:text="结论展示："
+                    android:textColor="#4562CF"
+                    android:textSize="@dimen/x36" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/show_discuss_file_relative"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/show_discuss_file"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/upload_white_board" />
+
+                        <TextView
+                            android:id="@+id/show_discuss_file_tip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/show_discuss_file"
+                            android:layout_alignLeft="@+id/show_discuss_file"
+                            android:layout_alignRight="@+id/show_discuss_file"
+                            android:background="@color/alpha_line_gray"
+                            android:gravity="center"
+                            android:text="结论文件"
+                            android:textColor="@color/word_white" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/show_discuss_conclusion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:layout_toRightOf="@+id/show_discuss_file"
+                        android:maxLength="50"
+                        android:text="这是个世界性难题这是个世界性难题"
+                        android:textSize="@dimen/x42"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

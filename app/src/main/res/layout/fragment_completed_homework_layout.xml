@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/homework_completed_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/y48"
+        android:layout_marginRight="@dimen/y48"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+
+    <!--无资源-->
+    <ImageView
+        android:id="@+id/leak_resource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/leak_resource"
+        android:visibility="gone" />
+
+    <!--无网络-->
+    <LinearLayout
+        android:id="@+id/leak_net_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_network" />
+
+        <TextView
+            android:id="@+id/link_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_link_net_bg"
+            android:gravity="center"
+            android:text="连接网络"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</FrameLayout>

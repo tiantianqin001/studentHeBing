@@ -1,0 +1,99 @@
+<resources>
+    <string name="app_name">智慧课堂3.0</string>
+
+    <string name="close">关闭</string>
+    <string name="open">打开</string>
+    <string name="cancel">取消</string>
+
+    <!--登录-->
+    <string name="hint_username">您的用户名</string>
+    <string name="hint_password">您的密码</string>
+    <string name="tips_account">账号不得为空</string>
+    <string name="tips_pwd">密码不得为空</string>
+    <string name="wifi_desc">设置网络</string>
+    <string name="btn_login">登录</string>
+    <string name="login_ing">正在登录</string>
+
+    <!--主界面-->
+    <string name="timetable">班级课表</string>
+
+    <string name="interactive">课堂互动</string>
+    <string name="preview_before">课前预习</string>
+    <string name="homework_after">课后作业</string>
+    <string name="mistaked_connection">错题集</string>
+    <string name="auto_learning">自主学习</string>
+
+    <string name="offline_tips">"您的账号已在另一台平板上登录，您已被迫下线！"</string>
+
+    <!--个人中心-->
+    <string name="back">返回</string>
+    <string name="person_center">个人中心</string>
+    <string name="login_out">退出登录</string>
+    <string name="change_pwd">修改密码</string>
+
+    <string name="school">所在学校</string>
+    <string name="clazz">所在班级</string>
+    <string name="address">家庭住址</string>
+    <string name="phoneNum">联系号码</string>
+    <string name="sex">性别</string>
+    <string name="hobby">爱好</string>
+
+    <!--互动更多-->
+    <string name="record_class">记录课堂</string>
+    <string name="board_save">白板保存</string>
+    <string name="file_receive">文件接收</string>
+
+    <!--互动项-->
+    <string name="responder">抢答</string>
+    <string name="vote">投票</string>
+    <string name="judge">判断题</string>
+    <string name="choose">选择题</string>
+    <string name="single_choose">单选题</string>
+    <string name="multi_choose">多选题</string>
+    <string name="linkLine">连线题</string>
+    <string name="fillBlank">填空题</string>
+    <string name="subjective">主观题</string>
+    <string name="discuss">分组讨论</string>
+
+    <!--自主学习-->
+    <string name="item_bank">题库</string>
+    <string name="teaching_material">教材</string>
+    <string name="micro_lesson">微课</string>
+    <string name="audio_resource">音频</string>
+    <string name="picture_resource">图片</string>
+
+    <string name="subject">学科：</string>
+    <string name="learning_section">学段：</string>
+    <string name="manual_paper">手动组卷：</string>
+    <string name="grade">年级：</string>
+    <string name="question_type">题型：</string>
+    <string name="difficulty">难度：</string>
+
+    <string name="knowledge_point">知识点</string>
+    <string name="primary_school">小学</string>
+    <string name="junior_middle_school">初中</string>
+    <string name="high_school">高中</string>
+
+    <string name="answer_analysis">答案解析</string>
+    <string name="examination_point">【考点】</string>
+    <string name="answer">【答案】</string>
+    <string name="analysis">【解析】</string>
+
+    <!--记录评价-->
+    <string name="note">我的笔记</string>
+
+    <!--题型-->
+    <string name="answer_words">文本作答</string>
+    <string name="answer_board">画板作答</string>
+    <string name="answer_camera">拍照作答</string>
+    <string name="answer_annotation">批注作答</string>
+
+    <!--作业-->
+    <string name="homework_detail">作业详情</string>
+
+    <string name="hint_rtsp">rtsp://yourendpoint</string>
+    <string name="start_button">Start stream</string>
+    <string name="stop_button">Stop stream</string>
+
+
+</resources>

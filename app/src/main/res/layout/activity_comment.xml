@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="com.telit.zhkt_three.MediaTools.CommentActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/comment_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="学习笔记"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/x18"
+        android:layout_marginLeft="@dimen/y81"
+        android:layout_marginRight="@dimen/y81"
+        android:layout_marginTop="@dimen/x18"
+        android:layout_weight="1"
+        android:background="@drawable/shape_round_corner_bg"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/comment_words"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="填写笔记"
+            android:paddingLeft="@dimen/y45"
+            android:paddingTop="@dimen/x30"
+            android:textColor="@color/word_gray"
+            android:textColorHint="#D5D5D5"
+            android:textSize="@dimen/x36" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/y48"
+            android:layout_marginRight="@dimen/y48"
+            android:background="@color/bg_stroke" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x24"
+            android:layout_marginRight="@dimen/y48"
+            android:layout_marginTop="@dimen/x24">
+
+            <TextView
+                android:id="@+id/comment_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/y51"
+                android:layout_toLeftOf="@+id/comment_rating_bar"
+                android:text="“0分”"
+                android:textColor="#ffff9b00"
+                android:textSize="@dimen/x72" />
+
+            <RatingBar
+                android:id="@+id/comment_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x27"
+            android:layout_marginRight="@dimen/y48"
+            android:gravity="right"
+            android:text="给自己的掌握情况评个分呗!"
+            android:textColor="#B8C0CB"
+            android:textSize="@dimen/x30" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/comment_btn_commit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/x18"
+        android:background="@mipmap/commit_bg"
+        android:gravity="center"
+        android:text="提交"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+</LinearLayout>

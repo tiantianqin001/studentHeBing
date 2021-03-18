@@ -1,0 +1,8 @@
+总的说明：包含作业详情类：HomeWorkDetailActivity [题库出题详情以及2.0出题模式兼容]
+                  白板类：WhiteBoardActivity [一开始的白板Activity类，只用在主观题画画中，界面样式与NewWhiteBoardFragment不同]
+
+
+
+
+
+          

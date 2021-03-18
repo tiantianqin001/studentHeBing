@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="@dimen/y705"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_corner_tips_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/x10">
+
+        <TextView
+            android:id="@+id/url_tv_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="修改连接地址(点击自动获取通讯Ip)"
+            android:textColor="@color/word_gray_deep"
+            android:textSize="@dimen/x48" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_server_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="修改根服务IP"
+                android:lines="1"
+                android:text="http://" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_socket_ip"
+                android:layout_width="match_parent"
+                android:lines="1"
+                android:layout_height="wrap_content"
+                android:hint="修改通讯IP" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_socket_port"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="修改通讯Port"
+                android:lines="1"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_img_server_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="修改图片服务IP"
+                android:text="http://" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_point_server_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="修改埋点服务IP"
+                android:lines="1"
+                android:text="http://" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E5E5E5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:minHeight="@dimen/x93"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/url_change_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#FF4444"
+                android:textSize="@dimen/x36" />
+
+            <View
+                android:id="@+id/tips_bottom_line"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#E5E5E5" />
+
+            <TextView
+                android:id="@+id/url_change_confirm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

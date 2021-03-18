@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_comment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rating_bg"
+    android:gravity="center"
+    android:visibility="gone"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="@dimen/x48"
+        android:layout_height="@dimen/x48"
+        android:src="@mipmap/pen_comment" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/y18"
+        android:gravity="center"
+        android:text="去写点评"
+        android:textColor="#FEFEFE"
+        android:textSize="@dimen/x36" />
+</LinearLayout>

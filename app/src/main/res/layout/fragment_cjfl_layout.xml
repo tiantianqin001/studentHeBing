@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cjfl_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/cjfl_moon_bg"
+    android:orientation="vertical">
+
+    <!--72+33+18=123   110 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x33"
+        android:layout_marginLeft="@dimen/y21"
+        android:layout_marginRight="@dimen/y21"
+        android:layout_marginTop="@dimen/x18">
+
+        <TextView
+            android:id="@+id/cjfl_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="请输入标题"
+            android:textColor="#67C3E0"
+            android:textSize="@dimen/x36" />
+
+        <LinearLayout
+            android:id="@+id/practice_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_clock_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/x51"
+                android:layout_height="@dimen/x51"
+                android:src="@mipmap/clock" />
+
+            <TextView
+                android:id="@+id/cjfl_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用时：05:29"
+                android:textColor="#FF930A"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--超级分类主体-->
+    <com.telit.zhkt_three.CustomView.interactive.CJFL.InterestingSuperClassificationLayout
+        android:id="@+id/cjfl_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.telit.zhkt_three.CustomView.interactive.CJFL.InterestingSuperClassificationLayout>
+
+    <ImageView
+        android:id="@+id/cjfl_reset"
+        android:layout_width="@dimen/x108"
+        android:layout_height="@dimen/x108"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/x60"
+        android:layout_marginRight="@dimen/x60"
+        android:src="@mipmap/reset" />
+</FrameLayout>

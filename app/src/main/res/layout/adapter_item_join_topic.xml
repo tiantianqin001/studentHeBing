@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x15"
+    android:layout_marginTop="@dimen/x15"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/join_topic_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:maxEms="12"
+            android:singleLine="true"
+            android:text="话题五：阿双方爱上方桑葚干"
+            android:textColor="@color/word_gray_deep"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/join_topic_btn"
+            android:layout_width="@dimen/y96"
+            android:layout_height="@dimen/x60"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/y225"
+            android:background="@drawable/shape_select_clazz"
+            android:gravity="center"
+            android:text="加入"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginBottom="@dimen/x24"
+        android:layout_marginTop="@dimen/x12"
+        android:background="#F0F0F0" />
+</LinearLayout>

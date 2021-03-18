@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="@dimen/x246"
+        android:layout_height="@dimen/x169"
+        android:src="@mipmap/qwfl_plane_item" />
+
+    <TextView
+        android:id="@+id/qwfl_plane_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:gravity="center"
+        android:maxWidth="@dimen/x246"
+        android:minHeight="@dimen/x54"
+        android:minWidth="@dimen/x180"
+        android:text="你好世界"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+</FrameLayout>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="com.telit.zhkt_three.MediaTools.video.VideoPlayerActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@mipmap/bg_home"
+        >
+
+        <ImageView
+            android:id="@+id/video_close"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_margin="10dp"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+          android:id="@+id/tv_top_video_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x10"
+            android:text="视频名称"
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"/>
+    </RelativeLayout>
+
+
+    <com.telit.zhkt_three.MediaTools.video.CustomJZVideoPlayerStandard
+        android:id="@+id/jzVideoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+
+        />
+
+    <com.telit.zhkt_three.MediaTools.video.NiceVideoPlayer
+        android:id="@+id/nice_video_player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <com.pili.pldroid.player.widget.PLVideoView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/video_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jzVideoPlayer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/x57"
+        android:background="@drawable/shape_rating_bg"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/x48"
+            android:layout_height="@dimen/x48"
+            android:src="@mipmap/pen_comment" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y18"
+            android:gravity="center"
+            android:text="去写点评"
+            android:textColor="#FEFEFE"
+
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</LinearLayout>

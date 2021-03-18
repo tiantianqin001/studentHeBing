@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/y39"
+    android:layout_marginTop="@dimen/x33"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/option_do_tv_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_circle_bg"
+        android:gravity="center"
+        >
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/check_current_two" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/option_do_tv_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_circle_bg"
+        android:layout_marginTop="20dp"
+        >
+        <ImageView
+
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x40"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/check_err_ome"
+            />
+    </RelativeLayout>
+        <!--显示正确答案-->
+    <LinearLayout
+        android:id="@+id/ll_current_quint_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="right|center"
+        android:visibility="gone"
+
+        >
+        <TextView
+            android:id="@+id/tv_check_quint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正确答案: "
+            android:layout_gravity="center"
+            android:textSize="24dp"
+            android:textColor="@color/bg_blue"
+            android:layout_marginRight="6dp"
+            />
+        <RelativeLayout
+            android:id="@+id/rl_current_quint_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="18dp"
+            android:background="@drawable/shape_circle_selected"
+            android:layout_gravity="end"
+            >
+            <ImageView
+                android:id="@+id/iv_current_quint_show"
+                android:layout_width="@dimen/x40"
+                android:layout_height="@dimen/x40"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

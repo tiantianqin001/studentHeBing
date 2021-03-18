@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".Activity.InteractiveScreen.InteractiveActivity">
+
+    <!--显示主界面头部栏-->
+    <RelativeLayout
+        android:id="@+id/board_rl_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/x9"
+            android:layout_marginLeft="@dimen/y30"
+            android:layout_marginTop="@dimen/x12">
+
+            <com.telit.zhkt_three.CustomView.CircleImageView
+                android:id="@+id/board_avatar"
+                android:layout_width="@dimen/x81"
+                android:layout_height="@dimen/x81"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_user" />
+
+            <TextView
+                android:id="@+id/board_name"
+                android:layout_width="@dimen/x380"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/board_avatar"
+                android:layout_marginLeft="@dimen/x21"
+                android:layout_toRightOf="@+id/board_avatar"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="七子笑"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/board_clazz"
+                android:layout_width="@dimen/x144"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/board_avatar"
+                android:layout_alignLeft="@+id/board_name"
+                android:layout_toRightOf="@+id/board_avatar"
+                android:ellipsize="end"
+                android:hint="一年级二班"
+                android:lines="1"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:id="@+id/board_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_toRightOf="@+id/board_name"
+                android:background="@drawable/shape_white_grade_bg"
+                android:gravity="center"
+                android:text="离线"
+                android:textColor="#ff4562cf"
+                android:textSize="@dimen/x24" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_address_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="加入课堂"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_wifi_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="显示wifi名称"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/x36"
+            android:layout_marginEnd="@dimen/x248"
+            />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/y21"
+                android:text="远程班级"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_white_grade_bg"
+                android:gravity="center"
+                android:text="一年级2班"
+                android:textColor="#ff4562cf"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y96"
+                android:layout_marginRight="@dimen/y21"
+                android:text="授课老师"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_white_grade_bg"
+                android:gravity="center"
+                android:text="张老师"
+                android:textColor="#ff4562cf"
+                android:textSize="@dimen/x24" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/board_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y30"
+            android:layout_toLeftOf="@+id/board_more"
+            android:src="@mipmap/wifi" />
+
+        <ImageView
+            android:id="@+id/board_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y36"
+            android:paddingBottom="@dimen/x10"
+            android:paddingTop="@dimen/x10"
+            android:src="@mipmap/more_white"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/board_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/board_rl_head"></FrameLayout>
+</RelativeLayout>

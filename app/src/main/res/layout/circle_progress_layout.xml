@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+
+    <ProgressBar
+        android:id="@+id/progressbar_home"
+        android:layout_width="@dimen/x70"
+        android:layout_height="@dimen/x70"
+        android:indeterminateDrawable="@drawable/progressbar"
+        android:visibility="gone"
+        />
+
+    <com.telit.zhkt_three.CustomView.MultiColorPBView
+        android:id="@+id/multiColorPBView"
+        android:layout_width="@dimen/x70"
+        android:layout_height="@dimen/x70"
+
+
+        />
+</LinearLayout>

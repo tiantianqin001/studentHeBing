@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/y39"
+        android:layout_marginTop="@dimen/x100"
+        android:layout_marginBottom="@dimen/x150"
+        >
+
+        <ImageView
+            android:id="@+id/iv_fist_viewpage_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/class_fu_dong"
+            android:scaleType="fitXY"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/y49"
+        android:layout_marginTop="@dimen/x100"
+        android:layout_marginBottom="@dimen/x150"
+
+        >
+
+        <ImageView
+            android:id="@+id/iv_fist_viewpage_shop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/join_shop"
+            android:scaleType="fitXY"
+            />
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/vp_item_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:layout_marginRight="@dimen/y39"
+        android:layout_marginTop="@dimen/x100">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/vote_bg">
+
+    <!--互动头部-->
+    <RelativeLayout
+        android:id="@+id/interactive_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x10">
+
+        <TextView
+            android:id="@+id/interactive_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="@string/vote"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/interactive_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/x10"
+            android:gravity="center"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x48" />
+    </RelativeLayout>
+
+    <!--&lt;!&ndash;互动主体&ndash;&gt;-->
+    <!--<ImageView-->
+        <!--android:id="@+id/vote_result_see"-->
+        <!--android:layout_width="@dimen/y540"-->
+        <!--android:layout_height="@dimen/x132"-->
+        <!--android:layout_below="@+id/interactive_head_layout"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="@dimen/x75"-->
+        <!--android:src="@mipmap/vote_result_look" />-->
+</RelativeLayout>

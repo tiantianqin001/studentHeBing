@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <TextView
+            android:id="@+id/report_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="个人分析报告"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+        <ImageView
+            android:id="@+id/report_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x10"
+            android:src="@mipmap/delete" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_marginBottom="@dimen/x30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x18"
+                android:layout_marginTop="@dimen/x18">
+
+                <View
+                    android:id="@+id/report_pie_bg"
+                    android:layout_width="@dimen/y9"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/report_pie_title"
+                    android:layout_alignTop="@+id/report_pie_title"
+                    android:layout_marginBottom="@dimen/x5"
+                    android:layout_marginRight="@dimen/y9"
+                    android:layout_marginTop="@dimen/x5"
+                    android:background="#1282FF" />
+
+                <TextView
+                    android:id="@+id/report_pie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/report_pie_bg"
+                    android:text="本次作业正确率"
+                    android:textColor="@color/word_gray_deep"
+                    android:textSize="@dimen/x36" />
+            </RelativeLayout>
+
+            <!--本次作业正确率 === 馅饼图-->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_marginBottom="@dimen/x30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x18"
+                android:layout_marginTop="@dimen/x18">
+
+                <View
+                    android:id="@+id/report_bar_bg"
+                    android:layout_width="@dimen/y9"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/report_bar_title"
+                    android:layout_alignTop="@+id/report_bar_title"
+                    android:layout_marginBottom="@dimen/x5"
+                    android:layout_marginRight="@dimen/y9"
+                    android:layout_marginTop="@dimen/x5"
+                    android:background="#1282FF" />
+
+                <TextView
+                    android:id="@+id/report_bar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/report_bar_bg"
+                    android:text="本次作业得分情况"
+                    android:textColor="@color/word_gray_deep"
+                    android:textSize="@dimen/x36" />
+            </RelativeLayout>
+
+            <!--本次作业得分情况 === 柱状图-->
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/bar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_marginBottom="@dimen/x30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x18"
+                android:layout_marginTop="@dimen/x18">
+
+                <View
+                    android:id="@+id/report_radar_bg"
+                    android:layout_width="@dimen/y9"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/report_radar_title"
+                    android:layout_alignTop="@+id/report_radar_title"
+                    android:layout_marginBottom="@dimen/x5"
+                    android:layout_marginRight="@dimen/y9"
+                    android:layout_marginTop="@dimen/x5"
+                    android:background="#1282FF" />
+
+                <TextView
+                    android:id="@+id/report_radar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/report_radar_bg"
+                    android:text="整体题型势力分布"
+                    android:textColor="@color/word_gray_deep"
+                    android:textSize="@dimen/x36" />
+            </RelativeLayout>
+
+            <!--学生题型的综合雷达图-->
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/radar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/report_enter_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/x30"
+        android:layout_marginTop="@dimen/x30"
+        android:background="@drawable/select_login_btn"
+        android:gravity="center"
+        android:text="进入作业详情"
+        android:textColor="@android:color/white" />
+</LinearLayout>

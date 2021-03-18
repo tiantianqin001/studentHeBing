@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--head view-->
+    <RelativeLayout
+        android:id="@+id/class_record_left_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/head_class_record_linear"
+        android:layout_alignBottom="@+id/head_class_record_linear">
+
+        <!--日期视图-->
+        <LinearLayout
+            android:id="@+id/class_record_date_view"
+            android:layout_width="@dimen/y208"
+            android:layout_height="@dimen/x66"
+            android:background="@mipmap/date_bg"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/x36"
+                android:layout_height="@dimen/x36"
+                android:src="@mipmap/calendar_icon" />
+
+            <TextView
+                android:id="@+id/class_record_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y12"
+                android:text="2019/03/26"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x21" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/class_record_one_circle"
+            android:layout_width="@dimen/x18"
+            android:layout_height="@dimen/x18"
+            android:layout_below="@+id/class_record_date_view"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_date_circle" />
+
+        <View
+            android:id="@+id/class_record_one_circle_opaque"
+            android:layout_width="@dimen/x10"
+            android:layout_height="@dimen/x10"
+            android:layout_below="@+id/class_record_date_view"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x4"
+            android:background="@drawable/shape_date_circle_opaque" />
+
+        <View
+            android:id="@+id/class_record_line"
+            android:layout_width="@dimen/x2"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/class_record_one_circle"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="#637EDA" />
+
+    </RelativeLayout>
+
+    <!--four item view-->
+    <LinearLayout
+        android:id="@+id/head_class_record_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_toRightOf="@+id/class_record_left_view"
+        android:orientation="horizontal">
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/head_class_record_one"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/head_class_record_two"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/head_class_record_three"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+
+        <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
+            android:id="@+id/head_class_record_four"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+    </LinearLayout>
+</RelativeLayout>

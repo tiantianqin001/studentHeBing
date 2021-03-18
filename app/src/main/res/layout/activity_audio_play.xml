@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    tools:context="com.telit.zhkt_three.MediaTools.audio.AudioPlayActivity">
+
+    <TextView
+        android:id="@+id/audio_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/audio_musicView"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x99"
+        android:text="关闭"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+    <com.telit.zhkt_three.MediaTools.audio.CustomMyMusicView
+        android:id="@+id/audio_musicView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/audio_close"
+        android:layout_centerHorizontal="true"></com.telit.zhkt_three.MediaTools.audio.CustomMyMusicView>
+
+    <LinearLayout
+        android:id="@+id/audio_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/audio_musicView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/x75"
+        android:background="@drawable/shape_rating_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/x48"
+            android:layout_height="@dimen/x48"
+            android:src="@mipmap/pen_comment" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y18"
+            android:gravity="center"
+            android:text="去写点评"
+            android:textColor="#FEFEFE"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AutonomousLearning.ItemBankBookActivity">
+
+    <!--头部-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/knowledge_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="题库知识点资源"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--题库试题展示-->
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/knowledge_questions_swipeRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nsl_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/knowledge_rv_questions"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        />
+                </android.support.v4.widget.NestedScrollView>
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <!--无资源-->
+            <ImageView
+                android:id="@+id/leak_resource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_resource"
+                android:visibility="gone" />
+
+            <!--无网络-->
+            <LinearLayout
+                android:id="@+id/leak_net_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/leak_network" />
+
+                <TextView
+                    android:id="@+id/link_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/shape_link_net_bg"
+                    android:gravity="center"
+                    android:text="连接网络"
+                    android:textColor="#4562CF"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!--侧拉-->
+        <LinearLayout
+            android:id="@+id/item_bank_left_pull_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/item_bank_pull_tag"
+                android:layout_width="@dimen/y54"
+                android:layout_height="@dimen/x207"
+                android:layout_gravity="center"
+                android:background="@mipmap/left_pull_bg">
+
+                <ImageView
+                    android:id="@+id/item_bank_pull_icon"
+                    android:layout_width="@dimen/y21"
+                    android:layout_height="@dimen/x36"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@mipmap/left_pull" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:background="@drawable/shape_tree_bg"
+                android:id="@+id/item_bank_pull_content_layout"
+                android:layout_width="@dimen/y532"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/knowledge_rv_chapter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/item_bank_pull_linearLayout"
+                    android:padding="@dimen/x20"></android.support.v7.widget.RecyclerView>
+
+                <LinearLayout
+                    android:id="@+id/item_bank_pull_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x72"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/y9"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:layout_marginRight="@dimen/y9"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/item_bank_pull_question_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_item_bank_pull_bg">
+
+                        <com.telit.zhkt_three.CustomView.ToUsePullView
+                            android:id="@+id/item_bank_pull_question_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            zbv:distance_txt_img="@dimen/y30"
+                            zbv:hint_text="选择题型"
+                            zbv:is_pull_up="true"
+                            zbv:pop_menu_bg="@android:color/white"
+                            zbv:pop_text_color="@color/word_gray_deep"
+                            zbv:pull_icon="@mipmap/up_pull"
+                            zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/item_bank_pull_difficulty_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/y12"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_item_bank_pull_bg">
+
+                        <com.telit.zhkt_three.CustomView.ToUsePullView
+                            android:id="@+id/item_bank_pull_difficulty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            zbv:distance_txt_img="@dimen/y30"
+                            zbv:is_pull_up="true"
+                            zbv:hint_text="选择难度"
+                            zbv:pop_menu_bg="@android:color/white"
+                            zbv:pop_text_color="@color/word_gray_deep"
+                            zbv:pull_icon="@mipmap/up_pull"
+                            zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

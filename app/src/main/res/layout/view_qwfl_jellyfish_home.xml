@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/qwfl_jellyfish_home_img"
+        android:layout_width="@dimen/x468"
+        android:layout_height="@dimen/x590"
+        android:src="@mipmap/qwfl_jellyfish" />
+
+    <TextView
+        android:id="@+id/qwfl_jellyfish_home_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/x30"
+        android:gravity="center"
+        android:maxWidth="@dimen/x332"
+        android:text="你好世界"
+        android:textColor="#67C3E0"
+        android:textSize="@dimen/x48" />
+</FrameLayout>

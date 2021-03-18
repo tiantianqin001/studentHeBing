@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x33"
+   android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="@dimen/x51"
+        android:layout_height="@dimen/x51"
+        android:src="@mipmap/room_join_clesson"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tv_select_class"
+        android:layout_width="@dimen/x240"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/y21"
+        android:text="一年级1班"
+        android:textColor="@color/word_gray_deep"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="@dimen/x30" />
+
+    <TextView
+        android:id="@+id/tv_join_class"
+        android:layout_width="@dimen/y190"
+        android:layout_height="@dimen/x70"
+        android:layout_marginLeft="@dimen/y225"
+        android:background="@drawable/shape_select_clazz"
+        android:gravity="center"
+        android:text="加入课堂"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x26" />
+</LinearLayout>

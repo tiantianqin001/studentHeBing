@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/receive_file_icon"
+            android:layout_width="@dimen/y36"
+            android:layout_height="@dimen/x42"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/pdf" />
+
+        <TextView
+            android:id="@+id/receive_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toRightOf="@+id/receive_file_icon"
+            android:ellipsize="start"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:text="资源名称A资源名称A资源名称A.pdf"
+            android:textColor="@color/word_gray_deep"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/receive_delete_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/y100"
+            android:layout_marginRight="@dimen/x36"
+            android:layout_toLeftOf="@+id/receive_open_file"
+            android:text="删除"
+            android:textColor="#2C97FF"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/receive_open_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="打开"
+            android:textColor="#2C97FF"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginBottom="@dimen/x24"
+        android:layout_marginTop="@dimen/x24"
+        android:background="#F0F0F0" />
+</LinearLayout>

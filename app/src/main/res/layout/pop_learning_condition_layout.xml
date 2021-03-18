@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/learning_pull_all"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/learning_pull_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x99"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/learning_pull_subject_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.telit.zhkt_three.CustomView.ToUsePullView
+                android:id="@+id/learning_pull_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                zbv:hint_text="选择学科"
+                zbv:pop_menu_bg="@android:color/white"
+                zbv:pop_text_color="@color/word_gray_deep"
+                zbv:pull_icon="@mipmap/down_gray"
+                zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/learning_pull_section_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.telit.zhkt_three.CustomView.ToUsePullView
+                android:id="@+id/learning_pull_section"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                zbv:hint_text="选择学段"
+                zbv:pop_menu_bg="@android:color/white"
+                zbv:pop_text_color="@color/word_gray_deep"
+                zbv:pull_icon="@mipmap/down_gray"
+                zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/learning_pull_select_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.telit.zhkt_three.CustomView.ToUsePullView
+                android:id="@+id/learning_pull_select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                zbv:hint_text="手动组卷"
+                zbv:pop_menu_bg="@android:color/white"
+                zbv:pop_text_color="@color/word_gray_deep"
+                zbv:pull_icon="@mipmap/down_gray"
+                zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/learning_pull_grade_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.telit.zhkt_three.CustomView.ToUsePullView
+                android:id="@+id/learning_pull_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                zbv:hint_text="选择年级"
+                zbv:pop_menu_bg="@android:color/white"
+                zbv:pop_text_color="@color/word_gray_deep"
+                zbv:pull_icon="@mipmap/down_gray"
+                zbv:text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

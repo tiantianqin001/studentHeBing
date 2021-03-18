@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x9"
+    android:layout_marginLeft="@dimen/y33"
+    android:layout_marginRight="@dimen/y33"
+    android:layout_marginTop="@dimen/x9">
+
+    <com.telit.zhkt_three.CustomView.CircleImageView
+        android:id="@+id/discuss_member_item_avatar"
+        android:layout_width="@dimen/x66"
+        android:layout_height="@dimen/x66"
+        android:layout_marginRight="@dimen/y15"
+        android:src="@mipmap/icon_user" />
+
+    <TextView
+        android:id="@+id/discuss_member_item_name"
+        android:layout_width="@dimen/y190"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/discuss_member_item_avatar"
+        android:layout_marginTop="@dimen/x3"
+        android:layout_toRightOf="@+id/discuss_member_item_avatar"
+        android:text="张二强"
+        android:textColor="@color/word_gray_deep"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textSize="@dimen/x24" />
+
+    <TextView
+        android:id="@+id/discuss_member_item_class"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/discuss_member_item_avatar"
+        android:layout_marginBottom="@dimen/x3"
+        android:layout_toRightOf="@+id/discuss_member_item_avatar"
+        android:text="一年级1班"
+        android:textColor="#8C95B8"
+
+        android:textSize="@dimen/x18" />
+
+    <TextView
+        android:id="@+id/discuss_member_item_is_leader"
+        android:layout_width="@dimen/y73"
+        android:layout_height="@dimen/x37"
+        android:layout_alignBottom="@+id/discuss_member_item_name"
+        android:layout_alignTop="@+id/discuss_member_item_name"
+        android:layout_marginLeft="@dimen/y15"
+        android:layout_toRightOf="@+id/discuss_member_item_name"
+        android:background="@drawable/shape_discuss_leader_bg"
+        android:gravity="center"
+        android:text="组长"
+        android:textColor="#FF6161"
+        android:textSize="@dimen/x18"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/discuss_member_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/discuss_member_item_class"
+        android:layout_alignParentRight="true"
+        android:text="一分钟前"
+        android:textColor="#8C95B8"
+        android:textSize="@dimen/x18" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/x1"
+        android:layout_alignLeft="@+id/discuss_member_item_name"
+        android:layout_alignRight="@+id/discuss_member_item_time"
+        android:layout_below="@+id/discuss_member_item_avatar"
+        android:layout_marginTop="@dimen/x6"
+        android:background="#D7DBE9" />
+</RelativeLayout>

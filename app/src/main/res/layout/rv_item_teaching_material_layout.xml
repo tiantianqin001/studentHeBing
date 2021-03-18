@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rv_item_book_main_content"
+            android:layout_width="@dimen/y393"
+            android:layout_height="@dimen/x258"
+            android:background="@mipmap/book_bg">
+
+            <com.telit.zhkt_three.CustomView.RoundCornerImageView
+                android:id="@+id/rv_item_book_face"
+                android:layout_width="@dimen/y159"
+                android:layout_height="@dimen/x231"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/x15"
+                android:layout_marginLeft="@dimen/x15"
+                android:layout_marginTop="@dimen/x15"
+                android:src="@mipmap/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/y30"
+                android:layout_marginTop="@dimen/x15"
+                android:layout_toRightOf="@+id/rv_item_book_face"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rv_item_book_book"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="一年级语文下册"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x24" />
+
+                <TextView
+                    android:id="@+id/rv_item_book_press"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(人教版)"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x21"
+                    android:text="教材"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x48" />
+            </LinearLayout>
+
+            <!--下载标志-->
+            <com.telit.zhkt_three.CustomView.Download.DownloadProgressBar
+                android:id="@+id/rv_item_book_download_tags"
+                android:layout_width="@dimen/x50"
+                android:layout_height="@dimen/x50"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/x15"></com.telit.zhkt_three.CustomView.Download.DownloadProgressBar>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rv_item_book_main_content"
+            android:layout_alignRight="@+id/rv_item_book_main_content"
+            android:layout_below="@+id/rv_item_book_main_content"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y6"
+            android:layout_marginRight="@dimen/y6"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rv_item_book_topic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:inputType="text"
+                android:lines="1"
+                android:text="明天预习课程"
+                android:textColor="@color/word_gray_deep"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/rv_item_book_subType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_round_corner_subject_bg"
+                android:gravity="center"
+                android:text="语文"
+                android:textColor="#008AFF"
+                android:textSize="@dimen/x21" />
+
+            <TextView
+                android:id="@+id/rv_item_book_colorType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y9"
+                android:background="@drawable/shape_round_corner_book_bg"
+                android:gravity="center"
+                android:text="教材"
+                android:textColor="#36ACEA"
+                android:textSize="@dimen/x21" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/y81"
+    android:layout_marginRight="@dimen/y81">
+
+    <RelativeLayout
+        android:id="@+id/practice_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x33"
+        android:layout_marginTop="@dimen/x18">
+
+        <ImageView
+            android:layout_width="@dimen/y282"
+            android:layout_height="@dimen/x87"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/answer" />
+
+        <RelativeLayout
+            android:id="@+id/practice_collect_layout"
+            android:layout_width="@dimen/y216"
+            android:layout_height="@dimen/x72"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y54"
+            android:layout_toLeftOf="@+id/practice_time_layout"
+            android:background="@mipmap/collect_bg"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:id="@+id/practice_collect_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/y30">
+
+                <ImageView
+                    android:id="@+id/practice_collect_white"
+                    android:layout_width="@dimen/x45"
+                    android:layout_height="@dimen/x42"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/collect_heart_white"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/practice_collect_red"
+                    android:layout_width="@dimen/x60"
+                    android:layout_height="@dimen/x60"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/collect_heart"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x36"
+                android:text="收藏"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x36" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/practice_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_clock_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/x51"
+                android:layout_height="@dimen/x51"
+                android:src="@mipmap/clock" />
+
+            <TextView
+                android:id="@+id/practice_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用时：05:29"
+                android:textColor="#FF930A"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <!--练习题主体内容-->
+    <com.telit.zhkt_three.CusomPater
+        android:id="@+id/practice_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/practice_commit_layout"
+        android:layout_below="@+id/practice_head"></com.telit.zhkt_three.CusomPater>
+
+    <!--底部按钮-->
+    <LinearLayout
+        android:id="@+id/practice_commit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x33"
+        android:layout_marginLeft="@dimen/y81"
+        android:layout_marginRight="@dimen/y81"
+        android:layout_marginTop="@dimen/x33"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/practice_commit"
+            android:layout_width="@dimen/y420"
+            android:layout_height="@dimen/x87"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/x18"
+            android:background="@mipmap/commit_bg"
+            android:gravity="center"
+            android:text="提交"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"
+             />
+
+        <!--起到占位平衡位置作用-->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/practice_left"
+            android:layout_width="@dimen/y195"
+            android:layout_height="@dimen/x72"
+            android:background="@drawable/selector_next_prev_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/y18"
+                android:layout_height="@dimen/x36"
+                android:src="@mipmap/left_shape" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x15"
+                android:gravity="center"
+                android:text="上一题"
+                android:textColor="#FEFEFE"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/practice_right"
+            android:layout_width="@dimen/y195"
+            android:layout_height="@dimen/x72"
+            android:layout_marginLeft="@dimen/y24"
+            android:background="@drawable/selector_next_prev_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/x15"
+                android:gravity="center"
+                android:text="下一题"
+                android:textColor="#FEFEFE"
+                android:textSize="@dimen/x36" />
+
+            <ImageView
+                android:layout_width="@dimen/y18"
+                android:layout_height="@dimen/x36"
+                android:src="@mipmap/right_shape" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

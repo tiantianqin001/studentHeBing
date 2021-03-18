@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_home_work_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4562CF"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:id="@+id/homework_back"
+            android:layout_width="@dimen/y93"
+            android:layout_height="@dimen/x63"
+            android:layout_marginBottom="@dimen/x18"
+            android:layout_marginLeft="@dimen/y21"
+            android:layout_marginTop="@dimen/x18"
+            android:src="@mipmap/button_back" />
+
+        <TextView
+            android:id="@+id/homework_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x18"
+            android:text="作业详情"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/homework_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x21"
+            android:layout_marginTop="@dimen/x18"
+            android:text="共3题"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <com.telit.zhkt_three.CusomPater
+        android:id="@+id/homework_detail_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></com.telit.zhkt_three.CusomPater>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x63"
+        android:layout_marginLeft="@dimen/y81"
+        android:layout_marginRight="@dimen/y81"
+        android:layout_marginTop="@dimen/x33">
+
+        <!--批改作业-->
+        <TextView
+            android:id="@+id/tv_comment_teacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x18"
+            android:textSize="@dimen/x32"
+            android:layout_toLeftOf="@+id/rl"
+            android:textColor="@color/practice_text_color"
+            android:visibility="gone"
+            />
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_left_collect"
+                android:layout_width="@dimen/y195"
+                android:layout_height="@dimen/x72"
+                android:background="@drawable/selector_next_prev_bg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_toLeftOf="@+id/layout_right_collect"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="@dimen/y18"
+                    android:layout_height="@dimen/x36"
+                    android:src="@mipmap/left_shape" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x15"
+                    android:gravity="center"
+                    android:text="上一题"
+                    android:textColor="#FEFEFE"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_right_collect"
+                android:layout_width="@dimen/y195"
+                android:layout_height="@dimen/x72"
+                android:layout_marginLeft="@dimen/y24"
+                android:background="@drawable/selector_next_prev_bg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:visibility="invisible"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/x15"
+                    android:gravity="center"
+                    android:text="下一题"
+                    android:textColor="#FEFEFE"
+                    android:textSize="@dimen/x36" />
+
+                <ImageView
+                    android:layout_width="@dimen/y18"
+                    android:layout_height="@dimen/x36"
+                    android:src="@mipmap/right_shape" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/bread_right_arrow" />
+
+    <TextView
+        android:id="@+id/pre_cloud_tv_bread"
+        android:layout_width="@dimen/x150"
+        android:layout_height="@dimen/x80"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:background="@drawable/selector_tv_bread_color"
+        android:text="你叫什么不为什么啊"
+        android:textSize="@dimen/x30" />
+</LinearLayout>

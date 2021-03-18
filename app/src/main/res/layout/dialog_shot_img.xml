@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/shot_img"
+        android:layout_width="@dimen/y920"
+        android:layout_height="@dimen/x575" />
+</android.support.constraint.ConstraintLayout>

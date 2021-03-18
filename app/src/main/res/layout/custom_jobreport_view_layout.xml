@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/y606"
+    android:layout_height="@dimen/x456"
+    android:background="@drawable/shape_after_homework_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x18"
+        android:layout_marginTop="@dimen/x18">
+
+        <View
+            android:id="@+id/job_report_head_bg"
+            android:layout_width="@dimen/y9"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/job_report_head_title"
+            android:layout_alignTop="@+id/job_report_head_title"
+            android:layout_marginBottom="@dimen/x5"
+            android:layout_marginRight="@dimen/y9"
+            android:layout_marginTop="@dimen/x5"
+            android:background="#1282FF" />
+
+        <TextView
+            android:id="@+id/job_report_head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/job_report_head_bg"
+            android:text="作业完成率"
+            android:textColor="@color/word_gray_deep"
+            android:textSize="@dimen/x36" />
+    </RelativeLayout>
+
+    <com.telit.zhkt_three.CustomView.JobReport.JobReportCircleView
+        android:id="@+id/JobReportCircleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x27"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/job_report_result_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y117"
+            android:text="完成"
+            android:textColor="#ff93a5b9"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/job_report_result_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y15"
+            android:text="5题"
+            android:textColor="#ff1282ff"
+            android:textSize="@dimen/x48" />
+
+        <TextView
+            android:id="@+id/job_report_result_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y78"
+            android:text="未完成"
+            android:textColor="#ff93a5b9"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/job_report_result_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y15"
+            android:text="5题"
+            android:textColor="#FFFF9601"
+            android:textSize="@dimen/x48" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/qwfl_plane_home_img"
+        android:layout_width="@dimen/x446"
+        android:layout_height="@dimen/x168"
+        android:src="@mipmap/qwfl_plane" />
+
+    <TextView
+        android:id="@+id/qwfl_plane_home_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:maxWidth="@dimen/x446"
+        android:text="你好世界"
+        android:textColor="#67C3E0"
+        android:textSize="@dimen/x48" />
+</FrameLayout>

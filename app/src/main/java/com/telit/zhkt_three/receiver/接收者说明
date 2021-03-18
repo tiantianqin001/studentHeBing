@@ -1,0 +1,7 @@
+总体说明：
+          AppChangeReceiver：App安装、卸载监听器【安卓7.0以上需要动态注册】
+          PushMessageReceiver:极光3.0版本的推送，新版本
+          jpushReceiver：极光2.0版本的推送，老版本
+          NotificationBroadcastReceiver：通知栏点击操作处理
+          NetworkChangeBroadcastReceiver:暂时没用到，用于网络监听
+

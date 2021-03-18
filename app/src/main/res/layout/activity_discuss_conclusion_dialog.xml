@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="@dimen/y1280"
+        android:layout_height="@dimen/x760"
+        android:layout_marginBottom="@dimen/x29"
+        android:layout_marginTop="@dimen/x37"
+        android:background="@drawable/shape_round_corner_tips_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="@dimen/y1168"
+            android:layout_height="@dimen/x572"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x50"
+            android:background="@drawable/shape_round_corner_commit_bg"
+            android:orientation="vertical">
+
+            <!--文字layout-->
+            <RelativeLayout
+                android:id="@+id/conclusion_words_relative"
+                android:layout_width="@dimen/y1125"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x19">
+
+                <TextView
+                    android:id="@+id/conclusion_words_title"
+                    android:layout_width="@dimen/x124"
+                    android:layout_height="@dimen/x32"
+                    android:background="@drawable/shape_round_corner_commit_title_bg"
+                    android:gravity="center"
+                    android:text="文字结论"
+                    android:textColor="#516776"
+                    android:textSize="@dimen/x14" />
+
+                <ImageView
+                    android:id="@+id/conclusion_words_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/conclusion_words_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/conclusion_words_title"
+                    android:src="@drawable/selector_del_pre" />
+
+                <TextView
+                    android:id="@+id/conclusion_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/conclusion_words_del"
+                    android:layout_marginTop="@dimen/x6"
+                    android:background="@drawable/shape_round_corner_commit_content_bg"
+                    android:maxLength="300"
+                    android:minHeight="@dimen/x96"
+                    android:padding="@dimen/x10"
+                    android:textColor="#646464"
+                    android:textSize="@dimen/x14" />
+            </RelativeLayout>
+
+            <!--音频layout 限时3分钟-->
+            <RelativeLayout
+                android:id="@+id/conclusion_audio_relative"
+                android:layout_width="@dimen/y1125"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x35">
+
+                <RelativeLayout
+                    android:layout_width="@dimen/y562"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/conclusion_audio_title"
+                        android:layout_width="@dimen/x124"
+                        android:layout_height="@dimen/x32"
+                        android:background="@drawable/shape_round_corner_commit_title_bg"
+                        android:gravity="center"
+                        android:text="录音结论"
+                        android:textColor="#516776"
+                        android:textSize="@dimen/x14" />
+
+                    <ImageView
+                        android:id="@+id/conclusion_audio_del"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/conclusion_audio_title"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/conclusion_audio_title"
+                        android:src="@drawable/selector_del_pre" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/conclusion_audio_del"
+                        android:layout_marginTop="@dimen/x6"
+                        android:background="@drawable/shape_round_corner_commit_content_bg">
+
+                        <RelativeLayout
+                            android:id="@+id/conclusion_audio_layout"
+                            android:layout_width="@dimen/x140"
+                            android:layout_height="@dimen/x45"
+                            android:layout_margin="@dimen/x10"
+                            android:background="@drawable/shape_round_corner_commit_audio_bg">
+
+                            <ImageView
+                                android:id="@+id/conclusion_audio_img"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/x20"
+                                android:src="@drawable/audio_animation_left_list" />
+
+                            <TextView
+                                android:id="@+id/conclusion_audio_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/x20"
+                                android:layout_toRightOf="@id/conclusion_audio_img"
+                                android:text="1′2″"
+                                android:textColor="@color/word_white"
+                                android:textSize="@dimen/x20" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <!--图片或者视频layout，拍视频限时15秒-->
+            <RelativeLayout
+                android:id="@+id/conclusion_camera_relative"
+                android:layout_width="@dimen/y1125"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x35">
+
+                <RelativeLayout
+                    android:layout_width="@dimen/y562"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/conclusion_camera_title"
+                        android:layout_width="@dimen/x124"
+                        android:layout_height="@dimen/x32"
+                        android:background="@drawable/shape_round_corner_commit_title_bg"
+                        android:gravity="center"
+                        android:text="拍摄结论"
+                        android:textColor="#516776"
+                        android:textSize="@dimen/x14" />
+
+                    <ImageView
+                        android:id="@+id/conclusion_video_or_img_del"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/conclusion_camera_title"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/conclusion_camera_title"
+                        android:src="@drawable/selector_del_pre" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x300"
+                        android:layout_below="@+id/conclusion_video_or_img_del"
+                        android:layout_marginTop="@dimen/x6"
+                        android:background="@drawable/shape_round_corner_commit_content_bg">
+
+                        <ImageView
+                            android:id="@+id/conclusion_img_video_thumbnail"
+                            android:layout_width="@dimen/x200"
+                            android:layout_height="@dimen/x200"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_conclusion_img_border"
+                            android:padding="@dimen/x2"
+                            android:src="@mipmap/icon_user" />
+
+                        <ImageView
+                            android:id="@+id/conclusion_video_sign"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@mipmap/icon_video"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x15">
+
+            <LinearLayout
+                android:id="@+id/conclusion_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/conclusion_audio"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/x48"
+                    android:layout_height="@dimen/x48"
+                    android:src="@drawable/selector_word_pre" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x9"
+                    android:text="文字记录"
+                    android:textColor="#646464"
+                    android:textSize="@dimen/x16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/conclusion_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/x216"
+                android:layout_marginRight="@dimen/x216"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/x48"
+                    android:layout_height="@dimen/x48"
+                    android:src="@drawable/selector_audio_pre" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x9"
+                    android:text="按住录音"
+                    android:textColor="#646464"
+                    android:textSize="@dimen/x16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/conclusion_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/conclusion_audio"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/x48"
+                    android:layout_height="@dimen/x48"
+                    android:src="@drawable/selector_camera_pre" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x9"
+                    android:text="相机记录"
+                    android:textColor="#646464"
+                    android:textSize="@dimen/x16" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/conclusion_tv_title"
+        android:layout_width="@dimen/y268"
+        android:layout_height="@dimen/x74"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/conclusion_title" />
+
+    <ImageView
+        android:id="@+id/conclusion_submit"
+        android:layout_width="@dimen/y158"
+        android:layout_height="@dimen/x58"
+        android:layout_gravity="bottom|center_horizontal"
+        android:src="@mipmap/conclusion_commit" />
+</FrameLayout>

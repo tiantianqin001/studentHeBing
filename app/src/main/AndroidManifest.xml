@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.telit.zhkt_three"
+    >
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 采用Jcenter方式自动集成，不需要再清单Manifest中配置 -->
+    <!--位置信息-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!--android 10.0使用wifi api新添加的权限-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Android8.0+安装 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- 录屏需要 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- 手机震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- //悬浮窗权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--声音的全新-->
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+    <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+
+    <!-- bugly -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!--android 9.0上使用前台服务，需要添加权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+
+    <!-- 读写SDCard权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Jpush Required -->
+    <permission
+        android:name="com.telit.smartclass.desktop.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <!-- Jpush Required -->
+    <uses-permission android:name="com.zbv.testJpush.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- 相机权限 -->
+    <uses-permission android:name = "android.permission.CAMERA" />
+    <uses-feature android:name = "android.hardware.camera" />
+    <uses-feature android:name = "android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" ></uses-permission>
+
+
+    <!-- networkSecurityConfig:安卓9.0及以上必须要https，这里重新配置网络安全，降低级别 -->
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/nlogo"
+        android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/nlogo"
+        android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="true"
+        android:theme="@style/MyAppTheme"
+        >
+
+        <!-- 兼容安卓7.0拍照 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.telit.smartclass.desktop.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
+
+        <receiver android:name="com.telit.zhkt_three.receiver.LingChangReceiver">
+            <intent-filter>
+                <action android:name="com.android.launcher3.mdm.LOGOUT"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".ForUnityResourceActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.UnityResource.ForUnityResourceActivity"
+            android:screenOrientation="landscape" />
+
+        <!-- 安徽省平台AuthActivity声明 -->
+        <activity
+            android:name="com.iflytek.oauth.activity.AuthActivity"
+            android:launchMode="singleTask"
+
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".receiver.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.zbv.notification.CANCEL" />
+                <action android:name="com.zbv.notification.CLICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- -                  Jpush -->
+        <!-- 极光自定义接收广播接收者 -->
+        <receiver
+            android:name=".receiver.jpushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.telit.smartclass.desktop" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+        如果你使用的 JCore 是 2.0.0 及以上的版本，需要额外在 Androidmanifest 中配置一个Service，
+        以在更多手机平台上获得更稳定的支持，示例如下。（JCore1.x版本不需要）
+        -->
+        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调 -->
+        <!-- since 3.3.0 接收JPush相关事件 -->
+        <receiver
+            android:name=".receiver.PushMessageReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+
+                <category android:name="com.telit.smartclass.desktop" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Since JCore2.0.0 Required SDK核心功能 -->
+        <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
+        <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
+        <service
+            android:name=".Service.PushService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":pushcore">
+            <intent-filter>
+                <action android:name="cn.jiguang.user.service.action" />
+            </intent-filter>
+        </service>
+        <!-- -                  Jpush -->
+
+        <receiver android:name=".receiver.AppChangeReceiver">
+            <intent-filter>
+
+                <!-- 一个新应用包已经安装在设备上，数据包括包名（监听所在的app，新安装时，不能接收到这个广播） -->
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <!-- 一个新版本的应用安装到设备，替换之前已经存在的版本  替换时会先收到卸载的再收到替换的， 替换自身也能收到 -->
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <!-- 一个已存在的应用程序包已经从设备上移除，包括包名（卸载监听所在的app，则无法接收到） -->
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!--领创获取app 列表-->
+        <receiver android:name="com.telit.zhkt_three.receiver.AppLingchuangListsReceiver">
+            <intent-filter>
+                <action android:name="com.android.launcher3.mdm.hide_show_apps" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".Service.AppInfoService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".Service.SimpleSocketLinkServer"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".Service.SimpleSocketLinkServerTwo"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+
+        <activity
+            android:name=".Activity.HomeScreen.LoginActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+
+
+        <activity android:name="com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivityOne"
+            android:screenOrientation="landscape"
+            />
+
+        <activity
+            android:name=".Activity.HomeScreen.PersonInfoActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.InteractiveScreen.InteractiveActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AutonomousLearning.AutoLearningActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AutonomousLearning.ItemBankBookActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AutonomousLearning.ItemBankKnowledgeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".MediaTools.image.ImageLookActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ForgetPwdActivityTheme" />
+        <!-- 没有用到ForgetPwdActivity用Dialog代替 -->
+        <activity
+            android:name=".Activity.HomeScreen.ForgetPwdActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ForgetPwdActivityTheme" />
+        <activity
+            android:name=".Activity.HomeWork.HomeWorkDetailActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AfterHomeWork.CollectQuestionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AfterHomeWork.CollectQuestionDetailActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.HomeScreen.TimeTableActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.HomeWork.WhiteBoardActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".MediaTools.CommentActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.MistakesCollection.MistakesCollectionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AfterHomeWork.AfterHomeWorkActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.AfterHomeWork.JobReportActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.PreView.PreViewActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".MediaTools.audio.AudioPlayActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ForgetPwdActivityTheme" />
+        <activity
+            android:name=".MediaTools.ebook.ElectronicResourceActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".MediaTools.ebook.FlipEBookResourceActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.PersonalSpace.PersonalSpaceActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.MistakesCollection.MistakesImproveActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.ClassRecord.ClassRecordActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.ClassRecord.RecordVoteResultActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.ClassRecord.RecordPracticeDoneActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.ClassRecord.RecordDiscussShowActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.telit.zhkt_three.MediaTools.CommentCommitActivity"
+            android:screenOrientation="landscape" />
+        <activity
+
+            android:name=".MediaTools.video.VideoPlayerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ForgetPwdActivityTheme"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Activity.OauthMy.ProviceActivity"
+            android:screenOrientation="landscape"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            tools:ignore="LockedOrientationActivity" >
+
+
+        </activity>
+
+        <activity
+            android:name=".Activity.HomeScreen.MainActivity"
+            android:screenOrientation="landscape">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- <category android:name="android.intent.category.HOME"/> -->
+                <!-- <category android:name="android.intent.category.DEFAULT"/> -->
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".Activity.AfterHomeWork.NewJobReportActivity"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Activity.HomeScreen.OffLineWarningActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/TransparentActivity"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Activity.InteractiveScreen.SelectClassActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.MicroClass.MicroClassCenterActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity.ClassRecord.NewClassRecordActivity"
+            android:screenOrientation="landscape" />
+
+        <service
+            android:name=".Service.ScreenShotService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".Service.ScreenRecordService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".RtspDisplayPush.DisplayService"
+            android:enabled="true"
+            android:exported="false" />
+        <service android:name=".Service.SockUserServer"
+            android:enabled="true"
+            android:exported="false"
+            />
+
+        <activity android:name=".MediaTools.CropActivity" />
+
+        <activity android:name=".Activity.MistakesCollection.PerfectAnswerActivity"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BaseModel</string>
+    <string name="accessibility_tips">自动更新apk服务</string>
+</resources>

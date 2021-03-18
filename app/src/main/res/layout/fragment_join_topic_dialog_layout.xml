@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_round_corner_tips_bg">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/join_topic_dialog_recycler"
+        android:layout_width="@dimen/y705"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/x450"
+        android:paddingLeft="@dimen/y39"
+        android:paddingRight="@dimen/y39"></android.support.v7.widget.RecyclerView>
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_marginBottom="@dimen/x9"
+    android:layout_marginLeft="@dimen/y30"
+    android:layout_marginTop="@dimen/x12">
+
+    <com.telit.zhkt_three.CustomView.CircleImageView
+        android:id="@+id/head_avatar"
+        android:layout_width="@dimen/x81"
+        android:layout_height="@dimen/x81"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/icon_user" />
+
+    <TextView
+        android:id="@+id/head_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/head_avatar"
+        android:layout_marginLeft="@dimen/x21"
+        android:layout_toRightOf="@+id/head_avatar"
+        android:text="七子笑"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/head_clazz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/head_avatar"
+        android:layout_alignLeft="@+id/head_name"
+        android:layout_toRightOf="@+id/head_avatar"
+        android:gravity="center"
+        android:hint="一年级二班"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="@dimen/x24" />
+</RelativeLayout>

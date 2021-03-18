@@ -1,0 +1,3 @@
+include ':app', ':libflip',':materialcalendar', ':vectorchildfinder',':HtmlTextView', ':MPChartLib',
+        ':ijkplayer-java', ':basemodel', ':docxmodel',':encoder', ':rtsp',':rtplibrary',
+        ':library_popview',':video_library',':rtmp'

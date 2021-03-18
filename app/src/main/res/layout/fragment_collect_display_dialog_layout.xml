@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_round_corner_tips_bg">
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/collect_display_recycler"
+        android:layout_width="@dimen/y705"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/x450"
+        android:padding="@dimen/x33"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+
+    <!--访问出错-->
+    <LinearLayout
+        android:id="@+id/request_retry_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/x20"
+            android:text="访问出错"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/request_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_link_net_bg"
+            android:gravity="center"
+            android:text="重试"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+
+    <!--无资源-->
+    <LinearLayout
+        android:id="@+id/leak_resource_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/leak_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_resource" />
+    </LinearLayout>
+
+    <!--无网络-->
+    <LinearLayout
+        android:id="@+id/leak_net_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_network" />
+
+        <TextView
+            android:id="@+id/link_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shape_link_net_bg"
+            android:gravity="center"
+            android:text="连接网络"
+            android:textColor="#4562CF"
+            android:textSize="@dimen/x36" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <size
+        android:width="@dimen/y291"
+        android:height="@dimen/x99" />
+
+    <!--代表渐变颜色的角度， 0 is left to right, 90 is bottom to top. 必须是45的整数倍
+    问题：为什么270度角度的，一个颜色是全透明的00就无法显示
+          270度从不透明到透明无效？？？
+    -->
+    <gradient
+        android:angle="270"
+        android:endColor="#004562CF"
+        android:startColor="#FF324CAB"
+        android:type="linear"
+        android:useLevel="true" />
+</shape>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.telit.zhkt_three.Activity.PreView.PreViewActivity">
+
+    <LinearLayout
+        android:id="@+id/pre_left_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/word_white"
+        android:orientation="vertical">
+        <!--标准头布局改版 左右布局 头部在左-->
+        <RelativeLayout
+            android:id="@+id/preview_head"
+            android:layout_width="@dimen/x520"
+            android:layout_height="@dimen/x99"
+            android:background="#4562CF">
+
+            <com.telit.zhkt_three.CustomView.CustomHeadLayout
+                android:id="@+id/preview_head_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></com.telit.zhkt_three.CustomView.CustomHeadLayout>
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x30"-->
+            <!--android:text="课前预习"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textSize="@dimen/x36" />-->
+        </RelativeLayout>
+
+        <!--总条目
+        notes：下面这个直接一个View就可代替LinearLayout的组合View,这个选择更好,但是唯一的缺点是总体形状不好控制以及背景透明问题
+                <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平台资源"
+            android:drawablePadding="@dimen/x30"
+            android:padding="@dimen/x30"
+            android:textColor="@android:color/black"
+            android:drawableLeft="@drawable/cloud_resource"
+            android:textSize="@dimen/x36" />
+        -->
+        <LinearLayout
+            android:id="@+id/pre_cloud_click_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_line_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x30">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cloud_resource" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="班级分享"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pre_ele_click_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_line_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x30">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ele_resource" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="平台资源"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <!--清理缓存-->
+        <LinearLayout
+            android:id="@+id/pre_cache_click_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_line_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x30">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_clear_disable" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="清理缓存"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/pre_cache_size"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:text="3M"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x32" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--右侧内容展示界面-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/pre_left_layout"
+        android:orientation="vertical">
+
+        <!--固定头：来自教师端分享的云盘资源和平台资源-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x99"
+            android:background="@color/bg_blue"
+            android:orientation="horizontal"
+            android:padding="@dimen/x10">
+
+            <ImageView
+                android:id="@+id/pre_left_pull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x20"
+                android:src="@drawable/pre_left_pull" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30">
+
+                <ImageView
+                    android:id="@+id/pre_cloud_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/cloud_icon_gray"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/pre_cloud_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_alpha_round_corner_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/x10">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cloud_icon_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:text="网盘"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/x36" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30">
+
+                <ImageView
+                    android:id="@+id/pre_ele_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ele_icon_gray" />
+
+
+                <LinearLayout
+                    android:id="@+id/pre_ele_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_alpha_round_corner_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/x10"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ele_icon_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:text="平台"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/x36" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!--VP展示内容-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pre_vp_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+    </LinearLayout>
+
+</RelativeLayout>

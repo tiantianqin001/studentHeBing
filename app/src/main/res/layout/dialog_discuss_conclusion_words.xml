@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/group_conclusion_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x30"
+        android:text="记录讨论结论"
+        android:textColor="@color/bg_blue"
+        android:textSize="@dimen/x36"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="tips：不超过300字"
+        android:textColor="@color/red"
+        android:textSize="@dimen/x20"
+        app:layout_constraintBottom_toBottomOf="@+id/group_conclusion_title"
+        app:layout_constraintRight_toRightOf="@+id/group_conclusion_et_text"
+        app:layout_constraintTop_toTopOf="@+id/group_conclusion_title" />
+
+    <EditText
+        android:id="@+id/group_conclusion_et_text"
+        android:layout_width="@dimen/x1080"
+        android:layout_height="@dimen/x400"
+        android:background="@drawable/shape_round_corner_bg"
+        android:gravity="start"
+        android:hint="请填写本次分组讨论的文字结论"
+        android:maxLength="300"
+        android:padding="@dimen/x30"
+        android:textColor="@color/word_gray_deep"
+        android:textSize="@dimen/x30"
+        android:text="请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论写本次分组讨论的文字结论请填写本次分组讨论的文字结论请填写本次分组讨论的文字结论"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_conclusion_title" />
+
+    <ImageView
+        android:id="@+id/group_conclusion_img_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:src="@drawable/red_del"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/group_conclusion_et_text"
+        app:layout_constraintEnd_toEndOf="@+id/group_conclusion_et_text" />
+
+    <TextView
+        android:id="@+id/group_conclusion_commit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x18"
+        android:background="@mipmap/commit_bg"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_conclusion_et_text" />
+
+</android.support.constraint.ConstraintLayout>

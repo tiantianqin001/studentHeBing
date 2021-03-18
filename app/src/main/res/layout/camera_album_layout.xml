@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_camera"
+        android:layout_width="@dimen/y429"
+        android:layout_height="@dimen/x99"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x369"
+        android:background="@mipmap/camera"
+        android:gravity="center"
+        android:text="拍照"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/tv_camera_video"
+        android:layout_width="@dimen/y429"
+        android:layout_height="@dimen/x99"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x30"
+        android:background="@mipmap/camera_video"
+        android:gravity="center"
+        android:text="录像"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_album"
+        android:layout_width="@dimen/y429"
+        android:layout_height="@dimen/x99"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x30"
+        android:background="@mipmap/picture_btn_bg"
+        android:gravity="center"
+        android:text="相册选取"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+    <TextView
+        android:id="@+id/tv_dismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x45"
+        android:text="取消"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36" />
+
+</LinearLayout>

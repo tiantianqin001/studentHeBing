@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_round_corner_tips_bg">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/file_receive_dialog_recycler"
+        android:layout_width="@dimen/y705"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/x450"
+        android:padding="@dimen/x33"></android.support.v7.widget.RecyclerView>
+
+    <!--无资源-->
+    <LinearLayout
+        android:id="@+id/leak_resource_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/leak_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_resource" />
+    </LinearLayout>
+</FrameLayout>

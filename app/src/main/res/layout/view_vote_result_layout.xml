@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/y1434"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x20"
+    android:layout_marginTop="@dimen/x20">
+
+
+    <ImageView
+        android:id="@+id/vote_item_img"
+        android:layout_width="@dimen/x90"
+        android:layout_height="@dimen/x90"
+        android:layout_marginBottom="@dimen/x21"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_user" />
+
+    <TextView
+        android:id="@+id/vote_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/vote_item_img"
+        android:layout_alignTop="@+id/vote_item_img"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_toRightOf="@+id/vote_item_img"
+        android:gravity="center"
+        android:text="选项一"
+        android:textColor="#858585"
+        android:textSize="@dimen/x36" />
+
+    <com.telit.zhkt_three.CustomView.VoteResult.VoteProgressView
+        android:id="@+id/voteProgressView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vote_item_img"></com.telit.zhkt_three.CustomView.VoteResult.VoteProgressView>
+
+    <!--自定义样式的进度条,还是无法让背景图大进度稍小-->
+    <!--<ProgressBar-->
+    <!--android:id="@+id/vote_item_progress"-->
+    <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/vote_item_name"-->
+    <!--android:layout_toLeftOf="@+id/vote_item_count"-->
+    <!--android:indeterminate="false"-->
+    <!--android:maxHeight="@dimen/x27"-->
+    <!--android:minHeight="@dimen/x27"-->
+    <!--android:progressDrawable="@drawable/vote_progressbar_style" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/vote_item_count"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_below="@+id/vote_item_name"-->
+    <!--android:layout_marginLeft="@dimen/x30"-->
+    <!--android:text="12票"-->
+    <!--android:textColor="#1391FF"-->
+    <!--android:textSize="@dimen/x36" />-->
+</RelativeLayout>

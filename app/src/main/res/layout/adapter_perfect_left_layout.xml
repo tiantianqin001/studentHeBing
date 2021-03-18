@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x500"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        android:background="@drawable/shape_perfect_bg">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x20">
+
+            <FrameLayout
+                android:id="@+id/perfect_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/perfect_rank"
+                    android:layout_width="@dimen/x72"
+                    android:layout_height="@dimen/x72"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/x36"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/perfect_rank_img"
+                    android:layout_width="@dimen/x72"
+                    android:layout_height="@dimen/x72"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/num_one"
+                    android:visibility="visible" />
+
+            </FrameLayout>
+
+            <com.telit.zhkt_three.CustomView.CircleImageView
+                android:id="@+id/perfect_avatar"
+                android:layout_width="@dimen/x103"
+                android:layout_height="@dimen/x103"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_toRightOf="@+id/perfect_frame"
+                android:src="@mipmap/icon_user" />
+
+            <TextView
+                android:id="@+id/perfect_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/perfect_avatar"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_toRightOf="@+id/perfect_avatar"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxEms="4"
+                android:text="七子笑七子笑"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/perfect_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/perfect_avatar"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_toRightOf="@+id/perfect_avatar"
+                android:text="得分：5" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/perfect_up_index"
+            android:layout_width="@dimen/x79"
+            android:layout_height="@dimen/x79"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@mipmap/good_one" />
+    </RelativeLayout>
+</RelativeLayout>

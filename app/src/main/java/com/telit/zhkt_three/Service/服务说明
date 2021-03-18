@@ -1,0 +1,5 @@
+总体说明：
+         AppInfoService：App更新、卸载等
+         PushService：极光推送3.0需要
+         SimpleSocketLinkServer：开服务加载Netty的初始化
+

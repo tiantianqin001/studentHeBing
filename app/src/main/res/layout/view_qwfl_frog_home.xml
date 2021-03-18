@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/qwfl_frog_home_img"
+        android:layout_width="@dimen/x332"
+        android:layout_height="@dimen/x392"
+        android:src="@mipmap/qwfl_frog_left" />
+
+    <TextView
+        android:id="@+id/qwfl_frog_home_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:maxWidth="@dimen/x332"
+        android:text="你好世界"
+        android:textColor="#67C3E0"
+        android:textSize="@dimen/x48" />
+</FrameLayout>
