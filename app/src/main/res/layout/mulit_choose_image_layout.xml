@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/y9"
-            android:text="[单选]"
+            android:text="[多选]"
             android:textColor="#FFDA0D"
             android:textSize="@dimen/x24" />
 
@@ -48,7 +48,9 @@
     </LinearLayout>
 
     <!--单选题内容-->
+
     <LinearLayout
+        android:id="@+id/ll_single_image_one"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -57,6 +59,7 @@
         tools:ignore="MissingConstraints">
 
         <TextView
+            android:id="@+id/tv_single_image_one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
@@ -68,6 +71,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_single_image_two"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -76,17 +80,19 @@
         tools:ignore="MissingConstraints">
 
         <TextView
+            android:id="@+id/tv_single_image_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
             android:gravity="center"
-            android:text="A"
+            android:text="B"
             android:textColor="@drawable/selector_text_color"
             android:textSize="@dimen/x36" />
 
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_single_image_three"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -95,17 +101,19 @@
         tools:ignore="MissingConstraints">
 
         <TextView
+            android:id="@+id/tv_single_image_three"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
             android:gravity="center"
-            android:text="A"
+            android:text="C"
             android:textColor="@drawable/selector_text_color"
             android:textSize="@dimen/x36" />
 
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_single_image_fore"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -114,17 +122,19 @@
         tools:ignore="MissingConstraints">
 
         <TextView
+            android:id="@+id/tv_single_image_fore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
             android:gravity="center"
-            android:text="A"
+            android:text="D"
             android:textColor="@drawable/selector_text_color"
             android:textSize="@dimen/x36" />
 
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_single_image_five"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -133,17 +143,18 @@
         tools:ignore="MissingConstraints">
 
         <TextView
+            android:id="@+id/tv_single_image_five"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
             android:gravity="center"
-            android:text="A"
+            android:text="E"
             android:textColor="@drawable/selector_text_color"
             android:textSize="@dimen/x36" />
-
-
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/ll_single_image_sex"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:layout_marginLeft="@dimen/y39"
@@ -152,12 +163,12 @@
         tools:ignore="MissingConstraints">
 
         <TextView
-            android:id="@+id/option_do_tv"
+            android:id="@+id/tv_single_image_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_circle_bg"
             android:gravity="center"
-            android:text="A"
+            android:text="F"
             android:textColor="@drawable/selector_text_color"
             android:textSize="@dimen/x36" />
 

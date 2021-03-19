@@ -46,6 +46,7 @@
     </LinearLayout>
 
     <LinearLayout
+       android:id="@+id/ll_fill_balank_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -73,6 +74,7 @@
             android:textSize="@dimen/x36" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_fill_balank_two"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -84,7 +86,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_circle_blank"
             android:gravity="center"
-            android:text="1"
+            android:text="2"
             android:textColor="#0A89FF"
             android:textSize="@dimen/x36" />
 
@@ -99,6 +101,7 @@
             android:textSize="@dimen/x36" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_fill_balank_three"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -110,7 +113,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_circle_blank"
             android:gravity="center"
-            android:text="1"
+            android:text="3"
             android:textColor="#0A89FF"
             android:textSize="@dimen/x36" />
 
@@ -125,6 +128,7 @@
             android:textSize="@dimen/x36" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_fill_balank_fore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -137,7 +141,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_circle_blank"
             android:gravity="center"
-            android:text="1"
+            android:text="4"
             android:textColor="#0A89FF"
             android:textSize="@dimen/x36" />
 
@@ -152,6 +156,7 @@
             android:textSize="@dimen/x36" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_fill_balank_five"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -164,7 +169,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_circle_blank"
             android:gravity="center"
-            android:text="1"
+            android:text="5"
             android:textColor="#0A89FF"
             android:textSize="@dimen/x36" />
 
@@ -180,6 +185,7 @@
             android:textSize="@dimen/x36" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_fill_balank_sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
@@ -192,7 +198,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_circle_blank"
             android:gravity="center"
-            android:text="1"
+            android:text="6"
             android:textColor="#0A89FF"
             android:textSize="@dimen/x36" />
 
@@ -207,60 +213,5 @@
             android:textColorHint="#BEBEBE"
             android:textSize="@dimen/x36" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/y66"
-        android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
 
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_circle_blank"
-            android:gravity="center"
-            android:text="1"
-            android:textColor="#0A89FF"
-            android:textSize="@dimen/x36" />
-
-        <EditText
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="请输入答案,最大不超过40字"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLength="40"
-            android:textColorHint="#BEBEBE"
-            android:textSize="@dimen/x36" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/y66"
-        android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_circle_blank"
-            android:gravity="center"
-            android:text="1"
-            android:textColor="#0A89FF"
-            android:textSize="@dimen/x36" />
-
-        <EditText
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="请输入答案,最大不超过40字"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLength="40"
-            android:textColorHint="#BEBEBE"
-            android:textSize="@dimen/x36" />
-    </LinearLayout>
 </LinearLayout>

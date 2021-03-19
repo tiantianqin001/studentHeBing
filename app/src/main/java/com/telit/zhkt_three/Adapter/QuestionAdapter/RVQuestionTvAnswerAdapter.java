@@ -122,112 +122,93 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     .inflate(R.layout.mulit_choose_image_layout, viewGroup, false));
         }
         return null;
-
-
-       /* return new RVQuestionTvAnswerViewHolder(LayoutInflater.from(mContext)
-                .inflate(R.layout.rv_total_question_item_layout,
-                viewGroup, false));*/
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof SingleChooseHolder) {
+            //单选题
+            List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
+            if (selectBeans.size() == 1) {
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 2) {
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 3) {
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 4) {
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 5) {
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            }
+        }else if (viewHolder instanceof MultiChooseHolder){
+            //多选题
+
+            List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
+            if (selectBeans.size() == 1) {
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 2) {
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 3) {
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 4) {
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.GONE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            } else if (selectBeans.size() == 5) {
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
+            }
+        }else if (viewHolder instanceof FillBlankHolder){
+            //填空题
+            List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
+            if (selectBeans.size() == 1){
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.GONE);
+            }else if (selectBeans.size() ==2 ){
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.GONE);
+            }else if (selectBeans.size() == 3){
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.GONE);
+            }else if (selectBeans.size() == 4){
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.GONE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.GONE);
+            }else if (selectBeans.size() == 5){
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.GONE);
+            }else if (viewHolder instanceof JudgeItemHolder){
+                //判断题
+               // ((JudgeItemHolder) viewHolder)
+            }else if (viewHolder instanceof SubjectItemHolder ){
+                //主观题
+
+            }
 
         }
 
     }
-
-/*    @Override
-    public void onBindViewHolder(@NonNull RVQuestionTvAnswerViewHolder rvQuestionTvAnswerViewHolder, int i) {
-        if (!TextUtils.isEmpty(xd)) {
-            Bundle bundle = new Bundle();
-            bundle.putString("xd", "1");
-            bundle.putString("subject", questionInfoList.get(i).getChid() + "");
-            bundle.putString("difficulty", difficulty);
-            bundle.putString("type", type);
-            //types 0 是互动，  1是作业
-            bundle.putInt("types",types);
-
-            if (!TextUtils.isEmpty(questionInfoList.get(i).getKnowledge())) {
-                bundle.putString("knowledge_json", questionInfoList.get(i).getKnowledge());
-            }
-            rvQuestionTvAnswerViewHolder.totalQuestionView.setBundle(bundle);
-            rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setBundle(bundle);
-        }
-
-        //设置homeworkId
-        if (!TextUtils.isEmpty(homeworkId)) {
-            questionInfoList.get(i).setHomeworkId(homeworkId);
-            Bundle bundle = new Bundle();
-            //types 0 是互动，  1是作业
-            bundle.putInt("types",types);
-            //判断作业是不是已经完成
-            bundle.putString("comType",comType);
-            rvQuestionTvAnswerViewHolder.totalQuestionView.setBundle(bundle);
-            rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setBundle(bundle);
-        }
-
-        //如果是错题集，接下来判断是否图片出题
-        if (isMistakesShown) {
-            //这里是错题集的适配器入口
-
-            int byHand = questionInfoList.get(i).getByhand();
-            if (byHand != 1) {
-                //题库出题
-                rvQuestionTvAnswerViewHolder.linearLayout.setVisibility(View.GONE);
-                isImageTask = false;
-
-                rvQuestionTvAnswerViewHolder.totalQuestionView.setVisibility(View.GONE);
-                rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setVisibility(View.VISIBLE);
-
-                QuestionBank questionBank = new QuestionBank();
-                questionBank.setHomeworkId(questionInfoList.get(i).getHomeworkId());
-                questionBank.setQuestionId(Integer.parseInt(questionInfoList.get(i).getId()));
-                questionBank.setQuestionChannelType(questionInfoList.get(i).getQuestionType());
-                questionBank.setQuestionText(questionInfoList.get(i).getQuestionContent());
-                questionBank.setAnswerOptions(questionInfoList.get(i).getAnswerOption());
-                questionBank.setAnswerText(questionInfoList.get(i).getAnswer());
-                questionBank.setAnswer(questionInfoList.get(i).getAnswerImg());
-                questionBank.setExplanation(questionInfoList.get(i).getAnalysis());
-                questionBank.setOwnList(questionInfoList.get(i).getOwnList());
-                questionBank.setScore(questionInfoList.get(i).getScore());
-                questionBank.setOwnscore(questionInfoList.get(i).getOwnscore());
-                questionBank.setQuestionBanks(questionInfoList.get(i).getQuestionBanks());
-                //传入主观题图片
-                questionBank.setImgFile(questionInfoList.get(i).getImgFile());
-                //因为之前根据List是否存在判断是否有子List的
-                questionBank.setList(questionInfoList.get(i).getqBankList());
-                questionBank.setShownAnswer(true);
-                rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setQuestionInfo(questionBank,
-                        i, "2", true);
-            } else {
-                //图片出题
-                rvQuestionTvAnswerViewHolder.linearLayout.setVisibility(View.VISIBLE);
-                String attachUrl = questionInfoList.get(i).getAttachment();
-                if (!TextUtils.isEmpty(attachUrl)) {
-                    addAttachImgs(rvQuestionTvAnswerViewHolder.linearLayout, attachUrl);
-                    isImageTask = true;
-                }
-
-                rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setVisibility(View.GONE);
-                rvQuestionTvAnswerViewHolder.totalQuestionView.setQuestionInfo(questionInfoList.size(), i, taskStatus, isImageTask,
-                        isMistakesShown, questionInfoList.get(i));
-            }
-        } else {
-//            rvQuestionTvAnswerViewHolder.scrollView.setVisibility(View.GONE);
-            rvQuestionTvAnswerViewHolder.linearLayout.setVisibility(View.GONE);
-            rvQuestionTvAnswerViewHolder.newKnowledgeQuestionView.setVisibility(View.GONE);
-
-            if (needShowAnswer) {
-                rvQuestionTvAnswerViewHolder.totalQuestionView.needShowTiWenAnswer();
-            }
-            //另外写答案公布时间   主要是显示答案时间
-            rvQuestionTvAnswerViewHolder.totalQuestionView.setShowAnswerDate(showAnswerDate);
-            //设置数据
-            rvQuestionTvAnswerViewHolder.totalQuestionView.setQuestionInfo(questionInfoList.size(), i, taskStatus, isImageTask,
-                    isMistakesShown, questionInfoList.get(i));
-        }
-    }*/
 
 
     @Override
@@ -269,6 +250,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final TextView tv_single_image_sex;
 
         public SingleChooseHolder(@NonNull View itemView) {
+
+
             super(itemView);
             ll_single_image_one = itemView.findViewById(R.id.ll_single_image_one);
             ll_single_image_two = itemView.findViewById(R.id.ll_single_image_two);
@@ -289,9 +272,36 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public class MultiChooseHolder extends RecyclerView.ViewHolder {
+        private final LinearLayout ll_single_image_one;
+        private final LinearLayout ll_single_image_two;
+        private final LinearLayout ll_single_image_three;
+        private final LinearLayout ll_single_image_fore;
+        private final LinearLayout ll_single_image_five;
+        private final LinearLayout ll_single_image_sex;
+        private final TextView tv_single_image_one;
+        private final TextView tv_single_image_two;
+        private final TextView tv_single_image_three;
+        private final TextView tv_single_image_fore;
+        private final TextView tv_single_image_five;
+        private final TextView tv_single_image_sex;
 
         public MultiChooseHolder(@NonNull View itemView) {
             super(itemView);
+
+            ll_single_image_one = itemView.findViewById(R.id.ll_single_image_one);
+            ll_single_image_two = itemView.findViewById(R.id.ll_single_image_two);
+            ll_single_image_three = itemView.findViewById(R.id.ll_single_image_three);
+            ll_single_image_fore = itemView.findViewById(R.id.ll_single_image_fore);
+            ll_single_image_five = itemView.findViewById(R.id.ll_single_image_five);
+            ll_single_image_sex = itemView.findViewById(R.id.ll_single_image_sex);
+
+
+            tv_single_image_one = itemView.findViewById(R.id.tv_single_image_one);
+            tv_single_image_two = itemView.findViewById(R.id.tv_single_image_two);
+            tv_single_image_three = itemView.findViewById(R.id.tv_single_image_three);
+            tv_single_image_fore = itemView.findViewById(R.id.tv_single_image_fore);
+            tv_single_image_five = itemView.findViewById(R.id.tv_single_image_five);
+            tv_single_image_sex = itemView.findViewById(R.id.tv_single_image_sex);
         }
     }
 
@@ -304,8 +314,21 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class FillBlankHolder extends RecyclerView.ViewHolder {
 
+        private final LinearLayout ll_fill_balank_one;
+        private final LinearLayout ll_fill_balank_two;
+        private final LinearLayout ll_fill_balank_three;
+        private final LinearLayout ll_fill_balank_fore;
+        private final LinearLayout ll_fill_balank_five;
+        private final LinearLayout ll_fill_balank_sex;
+
         public FillBlankHolder(@NonNull View itemView) {
             super(itemView);
+            ll_fill_balank_one = itemView.findViewById(R.id.ll_fill_balank_one);
+            ll_fill_balank_two = itemView.findViewById(R.id.ll_fill_balank_two);
+            ll_fill_balank_three = itemView.findViewById(R.id.ll_fill_balank_three);
+            ll_fill_balank_fore = itemView.findViewById(R.id.ll_fill_balank_fore);
+            ll_fill_balank_five = itemView.findViewById(R.id.ll_fill_balank_five);
+            ll_fill_balank_sex = itemView.findViewById(R.id.ll_fill_balank_sex);
         }
     }
 
@@ -378,7 +401,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         }
         return -1;
     }
-
 
 
 }

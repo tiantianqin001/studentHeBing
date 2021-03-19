@@ -46,10 +46,5 @@
             android:textSize="@dimen/x24" />
     </LinearLayout>
     <include layout="@layout/subjective_option_complete_layout"/>
-    <include layout="@layout/subjective_option_complete_layout"/>
-    <include layout="@layout/subjective_option_complete_layout"/>
-    <include layout="@layout/subjective_option_complete_layout"/>
-    <include layout="@layout/subjective_option_complete_layout"/>
-    <include layout="@layout/subjective_option_complete_layout"/>
 
 </LinearLayout>
