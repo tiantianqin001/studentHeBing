@@ -150,6 +150,180 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             } else if (selectBeans.size() == 5) {
                 ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.GONE);
             }
+
+            ((SingleChooseHolder) viewHolder).tv_single_image_one.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_one.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(true);
+                    }
+
+                    if (selectBeans.size() ==2){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                    }else if (selectBeans.size() == 3){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                    }else if (selectBeans.size() == 4){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                    }else if (selectBeans.size() == 5){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                    }else if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_sex.setSelected(false);
+                    }
+                }
+            });
+            ((SingleChooseHolder) viewHolder).tv_single_image_two.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_two.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                    }
+
+                    if (selectBeans.size() ==2){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                    }else if (selectBeans.size() == 3){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                    }else if (selectBeans.size() == 4){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                    }else if (selectBeans.size() == 5){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                    }else if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_sex.setSelected(false);
+                    }
+                }
+            });
+            ((SingleChooseHolder) viewHolder). tv_single_image_three.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_three.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(true);
+                    }
+
+                   if (selectBeans.size() == 3){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                    }else if (selectBeans.size() == 4){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                    }else if (selectBeans.size() == 5){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                    }else if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_sex.setSelected(false);
+                    }
+                }
+            });
+            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_fore.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+                    }
+
+                   if (selectBeans.size() == 4){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                    }else if (selectBeans.size() == 5){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                    }else if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_sex.setSelected(false);
+                    }
+                }
+            });
+            ((SingleChooseHolder) viewHolder).tv_single_image_five.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_five.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder).  tv_single_image_five.setSelected(true);
+                    }
+                   if (selectBeans.size() == 5){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                    }else if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_sex.setSelected(false);
+                    }
+                }
+            });
+
+            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((SingleChooseHolder) viewHolder).tv_single_image_sex.isSelected()) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+
+                    } else {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
+                    }
+
+                     if (selectBeans.size() == 6){
+                        ((SingleChooseHolder) viewHolder). tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder). tv_single_image_two.setSelected(false);
+                    }
+                }
+            });
+
+
+
+
+
         }else if (viewHolder instanceof MultiChooseHolder){
             //多选题
 
@@ -267,6 +441,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             tv_single_image_fore = itemView.findViewById(R.id.tv_single_image_fore);
             tv_single_image_five = itemView.findViewById(R.id.tv_single_image_five);
             tv_single_image_sex = itemView.findViewById(R.id.tv_single_image_sex);
+
+
 
         }
     }
