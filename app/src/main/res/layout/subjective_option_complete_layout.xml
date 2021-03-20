@@ -12,12 +12,16 @@
         android:id="@+id/subjective_imgs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/x180">
+        android:minHeight="@dimen/x180"
+        android:visibility="invisible"
+        >
 
         <FrameLayout
             android:id="@+id/subjective_answer_frame_one"
             android:layout_width="@dimen/y288"
-            android:layout_height="@dimen/x180">
+            android:layout_height="@dimen/x180"
+
+            >
 
             <ImageView
                 android:id="@+id/subjective_img_one"

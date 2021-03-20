@@ -17,10 +17,10 @@ public class UrlUtils {
      public static String MaiDianUrl = "http://172.16.4.149:8080";
      public static String ImgBaseUrl = "http://172.16.4.149:8080/Resource/";*/
 
-     //葛伟
- /*    public static String BaseUrl = "http://192.168.3.24:8080";
-     public static String MaiDianUrl = "http://192.168.3.24:8080";
-     public static String ImgBaseUrl = "http://192.168.3.24:8080/Resource/";*/
+     //祁能飞
+    /* public static String BaseUrl = "http://172.16.4.168:8080";
+     public static String MaiDianUrl = "http://172.16.4.168:8080";
+     public static String ImgBaseUrl = "http://172.16.4.168:8080/Resource/";*/
     //蒋福源
 /*    public static String BaseUrl = "http://172.16.4.136:8080";
     public static String MaiDianUrl = "http://172.16.4.136:8080";

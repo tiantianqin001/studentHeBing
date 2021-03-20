@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/y200"
+    android:layout_height="@dimen/y55"
+    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/y15"
+    android:layout_marginTop="@dimen/x15"
+    android:gravity="center"
+    android:background="@drawable/shape_line_item_bg"
+    android:textSize="@dimen/x36"
+    android:textColor="@color/word_gray_deep"
+    android:id="@+id/tv_item_line_word"
+    >
+
+
+</TextView>

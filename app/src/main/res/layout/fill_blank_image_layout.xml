@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     >
     <!--随堂练习 head-->
@@ -51,7 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -79,7 +81,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,7 +110,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -133,7 +139,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
 
@@ -161,7 +169,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
             android:id="@+id/fill_blank_option"
@@ -190,7 +200,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y66"
         android:layout_marginTop="@dimen/x42"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <TextView
 
