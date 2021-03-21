@@ -13,7 +13,7 @@ android {
       //  applicationId "com.telit.zhkt_three"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 63
+        versionCode 70
         versionName "3.0.0.0.63"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -93,6 +93,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation files('libs\\bugly_crash_release.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -186,8 +187,8 @@ dependencies {
     implementation project(':MPChartLib')
 
     //引入bugly,记录异常crash
-    implementation 'com.tencent.bugly:crashreport:latest.release'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+ /*   implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'*/
 
     // implementation 'cn.yc:WebViewLib:1.2.2'
     implementation files('libs/pinyin4j-2.5.0.jar')

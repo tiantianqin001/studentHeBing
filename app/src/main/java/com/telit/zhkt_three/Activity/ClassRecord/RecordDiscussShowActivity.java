@@ -40,7 +40,7 @@ import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.greendao.DiscussBeanDao;
-import com.tencent.bugly.crashreport.CrashReport;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -343,7 +343,7 @@ public class RecordDiscussShowActivity extends BaseActivity implements View.OnCl
                 //服务端错误
                 mHandler.sendEmptyMessage(Server_Error);
                 fetchGroupInfo();
-                CrashReport.postCatchedException(e);
+              //  CrashReport.postCatchedException(e);
             }
 
             @Override

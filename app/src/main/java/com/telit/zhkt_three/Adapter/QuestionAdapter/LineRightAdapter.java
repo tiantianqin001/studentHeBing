@@ -16,6 +16,7 @@ import java.util.List;
 public class LineRightAdapter extends RecyclerView.Adapter<LineRightAdapter.MyHolder> {
     private final Context mContext;
     private List<QuestionInfo.RightListBean> leftList;
+    private onRightOnClickListener listener;
 
 
     public LineRightAdapter(Context mContext, List<QuestionInfo.RightListBean> leftList) {
@@ -33,7 +34,7 @@ public class LineRightAdapter extends RecyclerView.Adapter<LineRightAdapter.MyHo
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
-        myHolder.tv_item_line_word.setText(leftList.get(i).getTitle());
+
     }
 
 
@@ -44,11 +45,22 @@ public class LineRightAdapter extends RecyclerView.Adapter<LineRightAdapter.MyHo
 
   protected   class   MyHolder extends RecyclerView.ViewHolder{
 
-      private final TextView tv_item_line_word;
+      //private final TextView tv_item_line_word;
 
       public MyHolder(@NonNull View itemView) {
           super(itemView);
-          tv_item_line_word = itemView.findViewById(R.id.tv_item_line_word);
+          //tv_item_line_word = itemView.findViewById(R.id.tv_item_line_word);
       }
   }
+
+
+    public interface onRightOnClickListener{
+        void onLeftItemCheck(int position);
+    }
+
+    public void setOnRightOnClickListener(onRightOnClickListener listener){
+
+
+        this.listener = listener;
+    }
 }

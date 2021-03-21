@@ -19,29 +19,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/y240"
-        android:layout_marginRight="@dimen/y240">
+        android:layout_marginRight="@dimen/y240"
+        android:layout_marginTop="@dimen/x30"
+        >
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_matching_show"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_matching_left"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="left"
-              />
+            android:layout_height="match_parent"
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_matching_right"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="right"
-                />
 
-        </LinearLayout>
+            />
 
         <!--ToLineView必须放在FrameLayout的最后-->
         <com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView
