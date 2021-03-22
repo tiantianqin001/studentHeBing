@@ -27,8 +27,6 @@
             android:id="@+id/rv_matching_show"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-
             />
 
         <!--ToLineView必须放在FrameLayout的最后-->

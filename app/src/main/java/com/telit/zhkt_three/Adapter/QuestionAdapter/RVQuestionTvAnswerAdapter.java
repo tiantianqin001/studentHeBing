@@ -28,11 +28,14 @@ import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
+import com.telit.zhkt_three.JavaBean.LineMatchBean;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author: qzx
@@ -81,6 +84,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     private String chid;
     private String difficulty;
     private String type;
+
+    //保存连线题 在复用后不能显示的问题
+    private List<LineMatchBean> lineMatchs=new ArrayList<>();
 
     /**
      * 塞入错题巩固必传信息:
@@ -483,7 +489,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //主观题
 
         } else if (viewHolder instanceof LinkedLineHolder) {
-            //viewHolder.setIsRecyclable(false);
+           // viewHolder.setIsRecyclable(false);
             List<Integer> leftPositions=new ArrayList<>();
             List<Integer> rightPositions=new ArrayList<>();
             //连线题
@@ -548,10 +554,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         leftPosition=position;
                         liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
                     }
-
-
-
-
                     if (firstChooseView == rightTextView){
                         //点击第一个是右边的view
                         ex = liftTextView.getLeft()+liftTextView.getWidth();
@@ -569,6 +571,16 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         leftPositions.add(position);
                         rightPositions.add(rightPosition);
                         rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
+
+                        //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
+                        LineMatchBean lineMatchBean=new LineMatchBean();
+                        lineMatchBean.setPosition(i);
+                        lineMatchBean.setStartX(sx);
+                        lineMatchBean.setStartY(sy);
+                        lineMatchBean.setEndX(ex);
+                        lineMatchBean.setEndY(ey);
+
+                        lineMatchs.add(lineMatchBean);
 
                     }
 
@@ -621,6 +633,17 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                        rightPositions.add(position);
                        leftPositions.add(leftPosition);
                        liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
+
+                       //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
+                       LineMatchBean lineMatchBean=new LineMatchBean();
+                       lineMatchBean.setPosition(i);
+                       lineMatchBean.setStartX(sx);
+                       lineMatchBean.setStartY(sy);
+                       lineMatchBean.setEndX(ex);
+                       lineMatchBean.setEndY(ey);
+
+                       lineMatchs.add(lineMatchBean);
+
                    }
                 }
             });
@@ -639,6 +662,18 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
             ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
 
+            //保存连接的数据
+            if (lineMatchs.size()>0){
+                for (int j = 0; j < lineMatchs.size(); j++) {
+                    LineMatchBean lineMatchBean = lineMatchs.get(j);
+                    if (lineMatchBean.getPosition() == i){
+
+                    }else {
+                        continue;
+                    }
+
+                }
+            }
         }
 
     }
