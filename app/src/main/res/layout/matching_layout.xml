@@ -47,6 +47,7 @@
         <com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView
             android:id="@+id/matching_toLine"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
     </FrameLayout>
 </LinearLayout>

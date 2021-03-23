@@ -7,6 +7,20 @@ public class LineMatchBean {
     private float endX;
     private float endY;
 
+
+    private String id;
+
+    public LineMatchBean() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public int getPosition() {
         return position;
     }

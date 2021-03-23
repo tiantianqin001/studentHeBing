@@ -2,14 +2,10 @@ package com.telit.zhkt_three.Adapter.QuestionAdapter;
 
 import android.content.Context;
 import android.graphics.Path;
-import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +22,14 @@ import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
-import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
 import com.telit.zhkt_three.JavaBean.LineMatchBean;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * author: qzx
@@ -68,7 +62,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     /**
      * 选中的第一个item
      */
-    private View firstChooseView=null;
+    private View firstChooseView = null;
 
     /**
      * 如果homeworkid为空字符串表示没有homeworkid，在QuestionInfo中存在homeworkid
@@ -86,7 +80,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     private String type;
 
     //保存连线题 在复用后不能显示的问题
-    private List<LineMatchBean> lineMatchs=new ArrayList<>();
+    private List<LineMatchBean> lineMatchs = new ArrayList<>();
 
     /**
      * 塞入错题巩固必传信息:
@@ -489,12 +483,16 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //主观题
 
         } else if (viewHolder instanceof LinkedLineHolder) {
-           // viewHolder.setIsRecyclable(false);
-            List<Integer> leftPositions=new ArrayList<>();
-            List<Integer> rightPositions=new ArrayList<>();
+            // viewHolder.setIsRecyclable(false);
+            QZXTools.logE("ToLine viewHolder instanceof LinkedLineHolder......" + questionInfoList.get(i), null);
+
+            Log.i("qin008", "onBindViewHolder: " + questionInfoList.get(i));
+            List<Integer> leftPositions = new ArrayList<>();
+            List<Integer> rightPositions = new ArrayList<>();
             //连线题
             List<QuestionInfo.LeftListBean> leftList = questionInfoList.get(i).getLeftList();
             List<QuestionInfo.RightListBean> rightList = questionInfoList.get(i).getRightList();
+
             LineLeftAdapter lineLeftAdapter = new LineLeftAdapter(mContext, leftList, rightList);
 
 
@@ -504,10 +502,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     return false;
                 }
             };
-
-
-
-
             //左边点击连线
             lineLeftAdapter.setOnLeftOnClickListener(new LineLeftAdapter.onLeftOnClickListener() {
                 private TextView rightTextView;
@@ -519,8 +513,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 Path path = null;
                 int leftPosition;
                 int rightPosition;
-                boolean isLiftContains=false;
-                boolean isRightContains=false;
+                boolean isLiftContains = false;
+                boolean isRightContains = false;
 
                 @Override
                 public void onLeftItemCheck(int position) {
@@ -529,34 +523,34 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     //从左边开始点击画线
 
                     liftTextView = view.findViewById(R.id.tv_item_line_word_left);
-                    if (isRightContains){
+                    if (isRightContains) {
                         //点击左边第一个已经被连线了，右边的也就不能连线了
-                        isRightContains=false;
+                        isRightContains = false;
                         return;
                     }
                     //同一区域的不能选中
-                    if (firstChooseView!=null && firstChooseView == liftTextView){
-                        isLiftContains=true;
+                    if (firstChooseView != null && firstChooseView == liftTextView) {
+                        isLiftContains = true;
                         return;
                     }
-                    isLiftContains=false;
+                    isLiftContains = false;
                     //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
-                    if (leftPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()){
+                    if (leftPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
                         return;
                     }
 
 
-                    if (firstChooseView== null){
-                        firstChooseView= liftTextView;
+                    if (firstChooseView == null) {
+                        firstChooseView = liftTextView;
                         sx = liftTextView.getLeft() + liftTextView.getWidth();
                         sy = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
                         path = new Path();
-                        leftPosition=position;
+                        leftPosition = position;
                         liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
                     }
-                    if (firstChooseView == rightTextView){
+                    if (firstChooseView == rightTextView) {
                         //点击第一个是右边的view
-                        ex = liftTextView.getLeft()+liftTextView.getWidth();
+                        ex = liftTextView.getLeft() + liftTextView.getWidth();
                         ey = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
                         path.addCircle(sx, sy, 10, Path.Direction.CW);
                         path.moveTo(sx, sy);
@@ -566,14 +560,15 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         //绘制Path   这里开始画
                         ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
                         //初始化左边的view
-                        firstChooseView=null;
+                        firstChooseView = null;
                         //处理集合中有视图表示已经连接过了就不要再连接了
                         leftPositions.add(position);
                         rightPositions.add(rightPosition);
                         rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
 
                         //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
-                        LineMatchBean lineMatchBean=new LineMatchBean();
+                        LineMatchBean lineMatchBean = new LineMatchBean();
+                        lineMatchBean.setId(questionInfoList.get(i).getId());
                         lineMatchBean.setPosition(i);
                         lineMatchBean.setStartX(sx);
                         lineMatchBean.setStartY(sy);
@@ -591,60 +586,61 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onRightItemClick(int position) {
                     RelativeLayout view = (RelativeLayout) layoutManager.findViewByPosition(position);
                     rightTextView = view.findViewById(R.id.tv_item_line_word_right);
-                    if (isLiftContains){
+                    if (isLiftContains) {
                         //点击左边第一个已经被连线了，右边的也就不能连线了 下次再次点击就还原
-                        isLiftContains=false;
+                        isLiftContains = false;
                         return;
                     }
                     //同一区域的不能选中
-                    if (firstChooseView!=null && firstChooseView == rightTextView){
+                    if (firstChooseView != null && firstChooseView == rightTextView) {
                         return;
                     }
 
                     //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
-                    if (rightPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()){
-                        isRightContains=true;
+                    if (rightPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
+                        isRightContains = true;
                         return;
                     }
-                    isRightContains=false;
+                    isRightContains = false;
                     //从右边第一次点击画view
-                    if (firstChooseView == null){
-                        firstChooseView=rightTextView;
+                    if (firstChooseView == null) {
+                        firstChooseView = rightTextView;
                         sx = rightTextView.getLeft();
                         sy = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
                         path = new Path();
-                        rightPosition=position;
+                        rightPosition = position;
                         rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
                     }
                     QZXTools.logE("sx=" + sx + ";sy=" + sy + ";ex=" + ex + ";ey=" + ey, null);
-                   if (firstChooseView == liftTextView){
-                       //点击第一个是左边的view
-                       ex = rightTextView.getLeft();
-                       ey = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
-                       path.addCircle(sx, sy, 10, Path.Direction.CW);
-                       path.moveTo(sx, sy);
-                       path.lineTo(ex, ey);
-                       path.addCircle(ex, ey, 10, Path.Direction.CW);
+                    if (firstChooseView == liftTextView) {
+                        //点击第一个是左边的view
+                        ex = rightTextView.getLeft();
+                        ey = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
+                        path.addCircle(sx, sy, 10, Path.Direction.CW);
+                        path.moveTo(sx, sy);
+                        path.lineTo(ex, ey);
+                        path.addCircle(ex, ey, 10, Path.Direction.CW);
 
-                       //绘制Path   这里开始画
-                       ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
-                       //初始化左边的view
-                       firstChooseView=null;
-                       rightPositions.add(position);
-                       leftPositions.add(leftPosition);
-                       liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
+                        //绘制Path   这里开始画
+                        ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
+                        //初始化左边的view
+                        firstChooseView = null;
+                        rightPositions.add(position);
+                        leftPositions.add(leftPosition);
+                        liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
 
-                       //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
-                       LineMatchBean lineMatchBean=new LineMatchBean();
-                       lineMatchBean.setPosition(i);
-                       lineMatchBean.setStartX(sx);
-                       lineMatchBean.setStartY(sy);
-                       lineMatchBean.setEndX(ex);
-                       lineMatchBean.setEndY(ey);
+                        //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
+                        LineMatchBean lineMatchBean = new LineMatchBean();
+                        lineMatchBean.setId(questionInfoList.get(i).getId());
+                        lineMatchBean.setPosition(i);
+                        lineMatchBean.setStartX(sx);
+                        lineMatchBean.setStartY(sy);
+                        lineMatchBean.setEndX(ex);
+                        lineMatchBean.setEndY(ey);
 
-                       lineMatchs.add(lineMatchBean);
+                        lineMatchs.add(lineMatchBean);
 
-                   }
+                    }
                 }
             });
 
@@ -656,24 +652,65 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         firstChooseView = null;
                     }
                     ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine();
+
+                    //同时要清空保存的集合数据
+                    Iterator<LineMatchBean> iterator = lineMatchs.iterator();
+                    while (iterator.hasNext()){
+                        LineMatchBean lineMatchBean = iterator.next();
+                        if (lineMatchBean.getId().equals(questionInfoList.get(i).getId())) {
+                            iterator.remove();
+                        }
+                    }
+
                 }
             });
+
+            ((LinkedLineHolder) viewHolder).ll_match_bind_tag.setTag(questionInfoList.get(i).getId());
+
 
             ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
             ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
 
-            //保存连接的数据
-            if (lineMatchs.size()>0){
+            //设置当前连线题是不是已经绘制过；
+            List<LineMatchBean> currentLineMatchBeans = new ArrayList<>();
+
+            //保存连接的数据已经保存了，现在要回显
+            //数据的保存就是根据后台返回的数据题的id 封装成一个javabean  然后遍历回显当前条目是不是保存了 主要是数据驱动视图
+            if (lineMatchs.size() > 0) {
                 for (int j = 0; j < lineMatchs.size(); j++) {
                     LineMatchBean lineMatchBean = lineMatchs.get(j);
-                    if (lineMatchBean.getPosition() == i){
+                    if (lineMatchBean.getId().equals(questionInfoList.get(i).getId())) {
+                        //当前的连线已经连线过现在要回显、
+                        Path pathC = new Path();
+                        pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
+                        pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
+                        Path pathL = new Path();
+                        pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
+                        pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
+                        //添加点路径和线路径
+                        ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC, false, questionInfoList.get(i).getId());
+                        ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL, false);
 
-                    }else {
-                        continue;
+                        currentLineMatchBeans.add(lineMatchBean);
+
+                    } else {
+                        if (currentLineMatchBeans.size() > 0) {
+                            ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
+                        } else {
+                            ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine(questionInfoList.get(i).getId());
+                        }
+
+
                     }
 
+
                 }
+            } else {
+
             }
+
+            ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
+            ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
         }
 
     }
@@ -807,6 +844,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final TextView matching_reset;
         private final ToLineView matching_toLine;
         private final RecyclerView rv_matching_show;
+        private final LinearLayout ll_match_bind_tag;
 
 
         public LinkedLineHolder(@NonNull View itemView) {
@@ -816,6 +854,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //连线的view
             matching_toLine = itemView.findViewById(R.id.matching_toLine);
             rv_matching_show = itemView.findViewById(R.id.rv_matching_show);
+            ll_match_bind_tag = itemView.findViewById(R.id.ll_match_bind_tag);
 
 
         }

@@ -45,6 +45,8 @@ public class ToLineView extends View {
     private List<Path> dotPathList;
     private List<Path> linePathList;
 
+    private List<String> isClearList;
+
     /**
      * 正确答案路径
      */
@@ -77,6 +79,7 @@ public class ToLineView extends View {
 
         dotPathList = new ArrayList<>();
         linePathList = new ArrayList<>();
+        isClearList=new ArrayList<>();
         answerDotPathlist = new ArrayList<>();
         answerLinePathList = new ArrayList<>();
 
@@ -111,12 +114,13 @@ public class ToLineView extends View {
     /**
      * 添加点路径
      */
-    public void addDotPath(Path path, boolean isAnswer) {
+    public void addDotPath(Path path, boolean isAnswer, String id) {
         if (isAnswer) {
             answerDotPathlist.add(path);
         } else {
             dotPathList.add(path);
         }
+        isClearList.add(id);
     }
 
     /**
@@ -132,8 +136,30 @@ public class ToLineView extends View {
 
     /**
      * 重置视图
+     * @param id
      */
+    public void resetDrawLine(String id) {
+        if (isClearList.contains(id)){
+            return;
+        }
+
+        mStartDotPath.reset();
+        mStartDotPath.lineTo(0, 0);
+        mEndDotPath.reset();
+        mEndDotPath.lineTo(0, 0);
+        mLinePath.reset();
+        mLinePath.lineTo(0, 0);
+
+        dotPathList.clear();
+        linePathList.clear();
+
+        invalidate();
+    }
+
+
     public void resetDrawLine() {
+
+
         mStartDotPath.reset();
         mStartDotPath.lineTo(0, 0);
         mEndDotPath.reset();
@@ -310,6 +336,12 @@ public class ToLineView extends View {
         if (listner != null) {
             listner.onSizeChange();
         }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        QZXTools.logE("ToLine onFinishInflate......", null);
     }
 
     /**
