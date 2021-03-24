@@ -136,6 +136,8 @@ public class MyApplication extends Application {
         DaoMaster daoMaster = new DaoMaster(database);
         daoSession = daoMaster.newSession();
     }
+
+
     /**
      * 获取MediaProjectionManager对象
      */

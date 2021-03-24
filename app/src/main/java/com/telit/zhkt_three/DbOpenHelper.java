@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.telit.zhkt_three.greendao.AppInfoDao;
 import com.telit.zhkt_three.greendao.DaoMaster;
 import com.telit.zhkt_three.greendao.DiscussBeanDao;
+import com.telit.zhkt_three.greendao.LineMatchBeanDao;
 import com.telit.zhkt_three.greendao.LocalResourceRecordDao;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
@@ -31,7 +32,8 @@ public class DbOpenHelper extends DaoMaster.DevOpenHelper {
         //切记不要调用super.onUpgrade(db,oldVersion,newVersion)
         if (oldVersion < newVersion) {
             MigrationHelper.migrate(db, AppInfoDao.class, DiscussBeanDao.class,
-                    StudentInfoDao.class, LocalResourceRecordDao.class, LocalTextAnswersBeanDao.class);
+                    StudentInfoDao.class, LocalResourceRecordDao.class,
+                    LocalTextAnswersBeanDao.class, LineMatchBeanDao.class);
         }
     }
 }
