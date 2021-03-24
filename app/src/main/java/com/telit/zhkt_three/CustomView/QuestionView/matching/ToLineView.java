@@ -11,7 +11,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
+import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
+import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +65,10 @@ public class ToLineView extends View {
     private int normalColor;
     private int wrongColor;
     private int rightColor;
+    private String homeworkId;
+    private List<QuestionInfo> questionInfoList;
+    private QuestionInfo questionInfo;
+    private String saveTrack;
 
     public ToLineView(Context context) {
         this(context, null);
@@ -123,6 +131,14 @@ public class ToLineView extends View {
         isClearList.add(id);
     }
 
+
+    public void addDotPath(Path path) {
+
+            dotPathList.add(path);
+
+
+    }
+
     /**
      * 添加线路径
      */
@@ -132,6 +148,10 @@ public class ToLineView extends View {
         } else {
             linePathList.add(path);
         }
+    }
+
+    public void addLinePath(Path path) {
+        linePathList.add(path);
     }
 
     /**
@@ -327,6 +347,19 @@ public class ToLineView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 //        QZXTools.logE("toLine onDetachedFromWindow......", null);
+        //-------------------------答案保存，依据作业题目id
+        //主要是退出的时候要保留正确的答案
+        if (questionInfo!=null){
+            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+            localTextAnswersBean.setHomeworkId(homeworkId);
+            localTextAnswersBean.setQuestionId(questionInfo.getId());
+            localTextAnswersBean.setUserId(UserUtils.getUserId());
+            localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+            localTextAnswersBean.setAnswerContent(saveTrack);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+            //插入或者更新数据库
+            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+        }
     }
 
     @Override
@@ -351,6 +384,13 @@ public class ToLineView extends View {
 
     public void setOnSizeChangedCallback(OnSizeChangedCallback listner) {
         this.listner = listner;
+    }
+
+    public void setLocalSave(String homeworkId, QuestionInfo questionInfo, String saveTrack) {
+
+        this.homeworkId = homeworkId;
+        this.questionInfo = questionInfo;
+        this.saveTrack = saveTrack;
     }
 
     public interface OnSizeChangedCallback {

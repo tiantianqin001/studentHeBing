@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.projection.MediaProjectionManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -135,7 +136,6 @@ public class MyApplication extends Application {
         DaoMaster daoMaster = new DaoMaster(database);
         daoSession = daoMaster.newSession();
     }
-
     /**
      * 获取MediaProjectionManager对象
      */

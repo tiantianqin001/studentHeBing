@@ -62,7 +62,7 @@ android {
     }
     //配置greendao数据库相关的信息
     greendao {
-        schemaVersion 3                                                                                                                                                                             //数据库版本号
+        schemaVersion 4                                                                                                                                                                             //数据库版本号
         daoPackage 'com.telit.zhkt_three.greendao' //设置生成dao一系列类的包名
         targetGenDir 'src/main/java' //设置生成dao一系列类所在目录
     }
@@ -113,6 +113,7 @@ dependencies {
 
     //GreenDao
     implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.3'
 
     //ButterKnife
     implementation 'com.jakewharton:butterknife:8.8.1'
