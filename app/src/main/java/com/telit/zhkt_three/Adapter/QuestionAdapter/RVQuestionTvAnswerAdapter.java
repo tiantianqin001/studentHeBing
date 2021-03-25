@@ -504,489 +504,368 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //连线题
             List<QuestionInfo.LeftListBean> leftList = questionInfoList.get(i).getLeftList();
             List<QuestionInfo.RightListBean> rightList = questionInfoList.get(i).getRightList();
-
             LineLeftAdapter lineLeftAdapter = new LineLeftAdapter(mContext, leftList, rightList);
-
-
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext) {
                 @Override
                 public boolean canScrollVertically() {
                     return false;
                 }
             };
-            //左边点击连线
-            lineLeftAdapter.setOnLeftOnClickListener(new LineLeftAdapter.onLeftOnClickListener() {
-                private TextView rightTextView;
-                private TextView liftTextView;
-                float sx;
-                float sy;
-                float ex;
-                float ey;
-                Path path = null;
-                int leftPosition;
-                int rightPosition;
-                boolean isLiftContains = false;
-                boolean isRightContains = false;
-
-                @Override
-                public void onLeftItemCheck(int position) {
-                    //  ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine();
-                    View view = layoutManager.findViewByPosition(position);
-                    //从左边开始点击画线
-                    StringBuffer stringBuffer = new StringBuffer();
-                    //清空一下
-                    stringBuffer.setLength(0);
-                    LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
-                            .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
-                                    LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
-                                    LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
-
-                    Log.i(TAG, "onBindViewHolder: " + linkLocal);
-                    if (linkLocal != null) {
-                        //回显上次点击的数据  根据id 获取是左边的列表还是右边的列表
-                        //获取到下标，然后开始连线
-                        String ownAnswer = linkLocal.getAnswerContent();
-                        stringBuffer.append(ownAnswer);
-                    }
-                    if (!TextUtils.isEmpty(saveTrack)) {
-                        //stringBuffer.append(saveTrack);
-                        stringBuffer.append("|");
-                    }
-
-                    liftTextView = view.findViewById(R.id.tv_item_line_word_left);
-                    if (isRightContains) {
-                        //点击左边第一个已经被连线了，右边的也就不能连线了
-                        isRightContains = false;
-                        return;
-                    }
-                    //同一区域的不能选中
-                    if (firstChooseView != null && firstChooseView == liftTextView) {
-                        isLiftContains = true;
-                        return;
-                    }
-                    isLiftContains = false;
-                    //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
-                    if (leftPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
-                        return;
-                    }
+            //获取所有的recycleview 的item  的布局添加到view 中
+            for (int j = 0; j <leftList.size() ; j++) {
+                View view = layoutManager.findViewByPosition(j);
+                //获取左边的view
+                view.findViewById(R.id.tv_item_line_word_left);
+                view.findViewById(R.id.tv_item_line_word_right);
+            }
 
 
-                    if (firstChooseView == null) {
-                        firstChooseView = liftTextView;
-                        sx = liftTextView.getLeft() + liftTextView.getWidth();
-                        sy = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
-                        path = new Path();
-                        leftPosition = position;
-                        liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
-                    }
-                    if (firstChooseView == rightTextView) {
-
-                        //点击第一个是右边的view
-                        ex = liftTextView.getLeft() + liftTextView.getWidth();
-                        ey = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
-                        path.addCircle(sx, sy, 10, Path.Direction.CW);
-                        path.moveTo(sx, sy);
-                        path.lineTo(ex, ey);
-                        path.addCircle(ex, ey, 10, Path.Direction.CW);
-
-                        //绘制Path   这里开始画
-                        ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
-                        //初始化左边的view
-                        firstChooseView = null;
-                        //处理集合中有视图表示已经连接过了就不要再连接了
-                        leftPositions.add(position);
-                        rightPositions.add(rightPosition);
-                        rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
-
-                        //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
-                        LineMatchBean lineMatchBean = new LineMatchBean();
-                        lineMatchBean.setTypeId(questionInfoList.get(i).getId());
-                        lineMatchBean.setPosition(i);
-                        lineMatchBean.setStartX(sx);
-                        lineMatchBean.setStartY(sy);
-                        lineMatchBean.setEndX(ex);
-                        lineMatchBean.setEndY(ey);
-
-                        lineMatchBean.setLeftId(leftList.get(position).getId());
-                        lineMatchBean.setRightId(rightList.get(rightPosition).getId());
-
-                        lineMatchs.add(lineMatchBean);
-                        MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().insertOrReplace(lineMatchBean);
-                        // saveTrack 是显示绘制的状态 的保留  点击每一个获取点击的id的保存
-
-                        stringBuffer.append(questionInfoList.get(i).getRightList().get(rightPosition).getId());
-                        stringBuffer.append(",");
-                        stringBuffer.append(questionInfoList.get(i).getLeftList().get(position).getId());
-                        saveTrack = stringBuffer.toString();
-
-                        //连线题把连线画好的线保存数据库下次回显
-                        //-------------------------答案保存，依据作业题目id   主要就是这个作业id 不一样
-                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
-                        localTextAnswersBean.setHomeworkId(homeworkId);
-                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
-                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
-                        localTextAnswersBean.setAnswerContent(saveTrack);
-                        localTextAnswersBean.setUserId(UserUtils.getUserId());
-//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
-                        //插入或者更新数据库
-                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
-
-
-                        //关闭的时候保留saveTrack
-                        ((LinkedLineHolder) viewHolder).matching_toLine.setLocalSave(homeworkId, questionInfoList.get(i), saveTrack);
-
-                    }
-
-
-                }
-
-                @Override
-                public void onRightItemClick(int position) {
-                    RelativeLayout view = (RelativeLayout) layoutManager.findViewByPosition(position);
-                    rightTextView = view.findViewById(R.id.tv_item_line_word_right);
-
-                    StringBuffer stringBuffer = new StringBuffer();
-                    //清空一下
-                    stringBuffer.setLength(0);
-                    LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
-                            .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
-                                    LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
-                                    LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
-
-                    Log.i(TAG, "onBindViewHolder: " + linkLocal);
-                    if (linkLocal != null) {
-                        //回显上次点击的数据  根据id 获取是左边的列表还是右边的列表
-                        //获取到下标，然后开始连线
-                        String ownAnswer = linkLocal.getAnswerContent();
-                        stringBuffer.append(ownAnswer);
-                    }
-                    if (!TextUtils.isEmpty(saveTrack)) {
-                        //  stringBuffer.append(saveTrack);
-                        stringBuffer.append("|");
-                    }
-                    if (isLiftContains) {
-                        //点击左边第一个已经被连线了，右边的也就不能连线了 下次再次点击就还原
-                        isLiftContains = false;
-                        return;
-                    }
-                    //同一区域的不能选中
-                    if (firstChooseView != null && firstChooseView == rightTextView) {
-                        return;
-                    }
-
-                    //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
-                    if (rightPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
-                        isRightContains = true;
-                        return;
-                    }
-                    isRightContains = false;
-                    //从右边第一次点击画view
-                    if (firstChooseView == null) {
-                        firstChooseView = rightTextView;
-                        sx = rightTextView.getLeft();
-                        sy = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
-                        path = new Path();
-                        rightPosition = position;
-                        rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
-                    }
-                    QZXTools.logE("sx=" + sx + ";sy=" + sy + ";ex=" + ex + ";ey=" + ey, null);
-                    if (firstChooseView == liftTextView) {
-
-                        //点击第一个是左边的view
-                        ex = rightTextView.getLeft();
-                        ey = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
-                        path.addCircle(sx, sy, 10, Path.Direction.CW);
-                        path.moveTo(sx, sy);
-                        path.lineTo(ex, ey);
-                        path.addCircle(ex, ey, 10, Path.Direction.CW);
-
-                        //绘制Path   这里开始画
-                        ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
-                        //初始化左边的view
-                        firstChooseView = null;
-                        rightPositions.add(position);
-                        leftPositions.add(leftPosition);
-                        liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
-
-                        //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
-                        LineMatchBean lineMatchBean = new LineMatchBean();
-                        //设置当前题型的id
-                        lineMatchBean.setTypeId(questionInfoList.get(i).getId());
-                        lineMatchBean.setLeftId(leftList.get(leftPosition).getId());
-                        lineMatchBean.setRightId(rightList.get(position).getId());
-                        lineMatchBean.setPosition(i);
-                        lineMatchBean.setStartX(sx);
-                        lineMatchBean.setStartY(sy);
-                        lineMatchBean.setEndX(ex);
-                        lineMatchBean.setEndY(ey);
-
-
-
-                        lineMatchs.add(lineMatchBean);
-                        //把所有的点保存到数据库
-                        MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().insertOrReplace(lineMatchBean);
-
-                        stringBuffer.append(questionInfoList.get(i).getLeftList().get(leftPosition).getId());
-                        stringBuffer.append(",");
-                        stringBuffer.append(questionInfoList.get(i).getRightList().get(position).getId());
-                        saveTrack = stringBuffer.toString();
-
-                        //连线题把连线画好的线保存数据库下次回显
-                        //-------------------------答案保存，依据作业题目id   主要就是这个作业id 不一样
-                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
-                        localTextAnswersBean.setHomeworkId(homeworkId);
-                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
-                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
-                        localTextAnswersBean.setAnswerContent(saveTrack);
-                        localTextAnswersBean.setUserId(UserUtils.getUserId());
-//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
-                        //插入或者更新数据库
-                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
-
-                        //关闭的时候保留saveTrack
-                        ((LinkedLineHolder) viewHolder).matching_toLine.setLocalSave(homeworkId, questionInfoList.get(i), saveTrack);
-
-                    }
-                }
-            });
-
-            //重置的点击事件
-            ((LinkedLineHolder) viewHolder).matching_reset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (firstChooseView != null) {
-                        firstChooseView = null;
-                    }
-                    saveTrack = "";
-                    ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine();
-
-                    //同时要清空保存的集合数据
-                    Iterator<LineMatchBean> iterator = lineMatchs.iterator();
-                    while (iterator.hasNext()) {
-                        LineMatchBean lineMatchBean = iterator.next();
-                        if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())) {
-                            iterator.remove();
-                            MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().delete(lineMatchBean);
-                        }
-                    }
-
-
-                    //TODO 重置要删除数据库中的数据
-                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteAll();
-                    //todo 现在的问题是回显返回的saveTrack  还不对，还在想怎么正确获取
-
-                }
-
-
-            });
-
-            ((LinkedLineHolder) viewHolder).ll_match_bind_tag.setTag(questionInfoList.get(i).getId());
 
 
             ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
             ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
 
-            //设置当前连线题是不是已经绘制过；
-            List<LineMatchBean> currentLineMatchBeans = new ArrayList<>();
 
-            //保存连接的数据已经保存了，现在要回显
-            //数据的保存就是根据后台返回的数据题的id 封装成一个javabean  然后遍历回显当前条目是不是保存了 主要是数据驱动视图
-            if (lineMatchs.size() > 0) {
-                for (int j = 0; j < lineMatchs.size(); j++) {
-                    LineMatchBean lineMatchBean = lineMatchs.get(j);
-                    if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())) {
-                        //当前的连线已经连线过现在要回显、
-                        Path pathC = new Path();
-                        pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                        pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                        Path pathL = new Path();
-                        pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                        pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                        //添加点路径和线路径
-                        ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC, false, questionInfoList.get(i).getId());
-                        ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL, false);
+            //0未提交  1 已提交  2 已批阅
+             if (taskStatus.equals(Constant.Todo_Status)){
+                 //重置的点击事件
+                 ((LinkedLineHolder) viewHolder).matching_reset.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         if (firstChooseView != null) {
+                             firstChooseView = null;
+                         }
+                         saveTrack = "";
+                         ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine();
 
-                        currentLineMatchBeans.add(lineMatchBean);
+                         //同时要清空保存的集合数据
+                         Iterator<LineMatchBean> iterator = lineMatchs.iterator();
+                         while (iterator.hasNext()) {
+                             LineMatchBean lineMatchBean = iterator.next();
+                             if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())) {
+                                 iterator.remove();
+                                 MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().delete(lineMatchBean);
+                             }
+                         }
 
-                    } else {
-                        if (currentLineMatchBeans.size() > 0) {
-                            ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
-                        } else {
-                            ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine(questionInfoList.get(i).getId());
-                        }
-                    }
-                }
-            }
+                         MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().deleteAll();
+                         //TODO 重置要删除数据库中的数据
+                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteAll();
+                         //todo 现在的问题是回显返回的saveTrack  还不对，还在想怎么正确获取
 
-            ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
-            ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
-            //答案的回显
-            //查询保存的答案,这是多选，所以存在多个答案
-            LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
-                    .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
-                            LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
-                            LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
-
-            List<LineMatchBean> lineMatchBeans = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().loadAll();
-            Log.i(TAG, "onBindViewHolder: " + linkLocal + ".............." + lineMatchBeans);
-            for (int j = 0; j <lineMatchBeans.size() ; j++) {
-                LineMatchBean lineMatchBean = lineMatchBeans.get(j);
-                if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())){
-                    Path pathC = new Path();
-                    pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                    pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                    Path pathL = new Path();
-                    pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                    pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                    //添加点路径和线路径
-                    ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                    ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
-                }
-            }
-
-            //开始划线
-            ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
-
-           /* if (linkLocal != null) {
-                //回显上次点击的数据  根据id 获取是左边的列表还是右边的列表
-                //获取到下标，然后开始连线
-                String ownAnswer = linkLocal.getAnswerContent();
-                if (!TextUtils.isEmpty(ownAnswer)) {
-                    if (ownAnswer.contains("|")) {
-                        String[] split = ownAnswer.split("\\|");
-                        for (String item : split) {
-                            String[] ans = item.split("\\,");
-                            if (ans.length > 1) {
-                                //  drawLigature(ans[0], ans[1], false);
-                                //画左边的线
-                                for (int j = 0; j < leftList.size(); j++) {
-                                    QuestionInfo.LeftListBean leftListBean = leftList.get(j);
-                                    //显示左边的第几个
-                                    if (ans[0].equals(leftListBean.getId())) {
-                                        //设置坐标
-                                        LineMatchBean lineMatchBean = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao()
-                                                .queryBuilder().where(LineMatchBeanDao.Properties.LeftId.eq(ans[0]))
-                                                .where(LineMatchBeanDao.Properties.RightId.eq(ans[1]))
-                                                .list().get(0);
-                                        Path pathC = new Path();
-                                        pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                                        pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                                        Path pathL = new Path();
-                                        pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                                        pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                                        //添加点路径和线路径
-                                        ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                                        ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
+                     }
 
 
-                                    }
-                                }
-                                //画右边的线
-                                for (int j = 0; j < rightList.size(); j++) {
-                                    QuestionInfo.RightListBean rightListBean = rightList.get(j);
-                                    //显示左边的第几个
-                                    if (ans[1].equals(rightListBean.getId())) {
-                                        //设置坐标
-                                        LineMatchBean lineMatchBean = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao()
-                                                .queryBuilder().where(LineMatchBeanDao.Properties.RightId.eq(ans[1]))
-                                                .where(LineMatchBeanDao.Properties.LeftId.eq(ans[0]))
-                                                .list().get(0);
+                 });
 
-                                        if (lineMatchBean != null) {
-                                            Path pathC = new Path();
-                                            pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                                            pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                                            Path pathL = new Path();
-                                            pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                                            pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                                            //添加点路径和线路径
-                                            ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                                            ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
-                                        }
+                 //左边点击连线
+                 lineLeftAdapter.setOnLeftOnClickListener(new LineLeftAdapter.onLeftOnClickListener() {
+                     private TextView rightTextView;
+                     private TextView liftTextView;
+                     float sx;
+                     float sy;
+                     float ex;
+                     float ey;
+                     Path path = null;
+                     int leftPosition;
+                     int rightPosition;
+                     boolean isLiftContains = false;
+                     boolean isRightContains = false;
 
+                     @Override
+                     public void onLeftItemCheck(int position) {
+                         //  ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine();
+                         View view = layoutManager.findViewByPosition(position);
+                         //从左边开始点击画线
+                         StringBuffer stringBuffer = new StringBuffer();
+                         //清空一下
+                         stringBuffer.setLength(0);
+                         LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                 .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                         LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                         LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
-                                    }
-                                }
+                         Log.i(TAG, "onBindViewHolder: " + linkLocal);
+                         if (linkLocal != null) {
+                             //回显上次点击的数据  根据id 获取是左边的列表还是右边的列表
+                             //获取到下标，然后开始连线
+                             String ownAnswer = linkLocal.getAnswerContent();
+                             stringBuffer.append(ownAnswer);
+                         }
+                         if (!TextUtils.isEmpty(saveTrack)) {
+                             //stringBuffer.append(saveTrack);
+                             stringBuffer.append("|");
+                         }
 
-                            }
-                            //开始划线
-                            ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
-                        }
-                    } else {
-                        //这个是只画一条线
-                        String[] ans = ownAnswer.split("\\,");
-                        if (ans.length > 1) {
-                            // drawLigature(ans[0], ans[1], false);
-                            //画左边的线
-                            for (int j = 0; j < leftList.size(); j++) {
-                                QuestionInfo.LeftListBean leftListBean = leftList.get(j);
-                                //显示左边的第几个
-                                if (ans[0].equals(leftListBean.getId())) {
-                                    //设置坐标
-                                    LineMatchBean lineMatchBean = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao()
-                                            .queryBuilder().where(LineMatchBeanDao.Properties.LeftId.eq(ans[0]))
-                                            .where(LineMatchBeanDao.Properties.RightId.eq(ans[1]))
-                                            .list().get(0);
-
-                                    Path pathC = new Path();
-                                    pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                                    pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                                    Path pathL = new Path();
-                                    pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                                    pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                                    //添加点路径和线路径
-                                    ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                                    ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
-
-
-                                }
-                            }
-                            //画右边的线
-                            for (int j = 0; j < rightList.size(); j++) {
-                                QuestionInfo.RightListBean rightListBean = rightList.get(j);
-                                //显示左边的第几个
-                                if (ans[1].equals(rightListBean.getId())) {
-                                    //设置坐标
-                                    LineMatchBean lineMatchBean = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao()
-                                            .queryBuilder().where(LineMatchBeanDao.Properties.RightId.eq(ans[1]))
-                                            .where(LineMatchBeanDao.Properties.LeftId.eq(ans[0]))
-                                            .list().get(0);
-
-                                    Path pathC = new Path();
-                                    pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
-                                    pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
-                                    Path pathL = new Path();
-                                    pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
-                                    pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
-                                    //添加点路径和线路径
-                                    ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                                    ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
+                         liftTextView = view.findViewById(R.id.tv_item_line_word_left);
+                         if (isRightContains) {
+                             //点击左边第一个已经被连线了，右边的也就不能连线了
+                             isRightContains = false;
+                             return;
+                         }
+                         //同一区域的不能选中
+                         if (firstChooseView != null && firstChooseView == liftTextView) {
+                             isLiftContains = true;
+                             return;
+                         }
+                         isLiftContains = false;
+                         //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
+                         if (leftPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
+                             return;
+                         }
 
 
-                                }
-                            }
+                         if (firstChooseView == null) {
+                             firstChooseView = liftTextView;
+                             sx = liftTextView.getLeft() + liftTextView.getWidth();
+                             sy = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
+                             path = new Path();
+                             leftPosition = position;
+                             liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
+                         }
+                         if (firstChooseView == rightTextView) {
 
-                            //开始划线
-                            ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(1);
+                             //点击第一个是右边的view
+                             ex = liftTextView.getLeft() + liftTextView.getWidth();
+                             ey = view.getTop() + liftTextView.getHeight() * 1.0f / 2.0f;
+                             path.addCircle(sx, sy, 10, Path.Direction.CW);
+                             path.moveTo(sx, sy);
+                             path.lineTo(ex, ey);
+                             path.addCircle(ex, ey, 10, Path.Direction.CW);
 
-                        }
-                    }
-                }
+                             //绘制Path   这里开始画
+                             ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
+                             //初始化左边的view
+                             firstChooseView = null;
+                             //处理集合中有视图表示已经连接过了就不要再连接了
+                             leftPositions.add(position);
+                             rightPositions.add(rightPosition);
+                             rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
 
-            *//*    for (int j = 0; j < lineMatchBeans.size(); j++) {
-                    Path pathC = new Path();
-                    pathC.addCircle(lineMatchBeans.get(j).getStartX(), lineMatchBeans.get(j).getStartY(), 10, Path.Direction.CW);
-                    pathC.addCircle(lineMatchBeans.get(j).getEndX(), lineMatchBeans.get(j).getEndY(), 10, Path.Direction.CW);
-                    Path pathL = new Path();
-                    pathL.moveTo(lineMatchBeans.get(j).getStartX(), lineMatchBeans.get(j).getStartY());
-                    pathL.lineTo(lineMatchBeans.get(j).getEndX(), lineMatchBeans.get(j).getEndY());
-                    //添加点路径和线路径
-                    ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
-                    ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
-                }
-                //开始划线
-                ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);*//*
-            }*/
+                             //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
+                             LineMatchBean lineMatchBean = new LineMatchBean();
+                             lineMatchBean.setTypeId(questionInfoList.get(i).getId());
+                             lineMatchBean.setPosition(i);
+                             lineMatchBean.setStartX(sx);
+                             lineMatchBean.setStartY(sy);
+                             lineMatchBean.setEndX(ex);
+                             lineMatchBean.setEndY(ey);
+
+                             lineMatchBean.setLeftId(leftList.get(position).getId());
+                             lineMatchBean.setRightId(rightList.get(rightPosition).getId());
+
+                             lineMatchs.add(lineMatchBean);
+                             MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().insertOrReplace(lineMatchBean);
+                             // saveTrack 是显示绘制的状态 的保留  点击每一个获取点击的id的保存
+
+                             stringBuffer.append(questionInfoList.get(i).getRightList().get(rightPosition).getId());
+                             stringBuffer.append(",");
+                             stringBuffer.append(questionInfoList.get(i).getLeftList().get(position).getId());
+                             saveTrack = stringBuffer.toString();
+
+                             //连线题把连线画好的线保存数据库下次回显
+                             //-------------------------答案保存，依据作业题目id   主要就是这个作业id 不一样
+                             LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                             localTextAnswersBean.setHomeworkId(homeworkId);
+                             localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                             localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                             localTextAnswersBean.setAnswerContent(saveTrack);
+                             localTextAnswersBean.setUserId(UserUtils.getUserId());
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                             //插入或者更新数据库
+                             MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+
+                             //关闭的时候保留saveTrack
+                             ((LinkedLineHolder) viewHolder).matching_toLine.setLocalSave(homeworkId, questionInfoList.get(i), saveTrack);
+
+                         }
+
+
+                     }
+
+                     @Override
+                     public void onRightItemClick(int position) {
+                         RelativeLayout view = (RelativeLayout) layoutManager.findViewByPosition(position);
+                         rightTextView = view.findViewById(R.id.tv_item_line_word_right);
+
+                         StringBuffer stringBuffer = new StringBuffer();
+                         //清空一下
+                         stringBuffer.setLength(0);
+                         LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                 .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                         LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                         LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                         Log.i(TAG, "onBindViewHolder: " + linkLocal);
+                         if (linkLocal != null) {
+                             //回显上次点击的数据  根据id 获取是左边的列表还是右边的列表
+                             //获取到下标，然后开始连线
+                             String ownAnswer = linkLocal.getAnswerContent();
+                             stringBuffer.append(ownAnswer);
+                         }
+                         if (!TextUtils.isEmpty(saveTrack)) {
+                             //  stringBuffer.append(saveTrack);
+                             stringBuffer.append("|");
+                         }
+                         if (isLiftContains) {
+                             //点击左边第一个已经被连线了，右边的也就不能连线了 下次再次点击就还原
+                             isLiftContains = false;
+                             return;
+                         }
+                         //同一区域的不能选中
+                         if (firstChooseView != null && firstChooseView == rightTextView) {
+                             return;
+                         }
+
+                         //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
+                         if (rightPositions.contains(position) || ((LinkedLineHolder) viewHolder).matching_toLine.isAnimRunning()) {
+                             isRightContains = true;
+                             return;
+                         }
+                         isRightContains = false;
+                         //从右边第一次点击画view
+                         if (firstChooseView == null) {
+                             firstChooseView = rightTextView;
+                             sx = rightTextView.getLeft();
+                             sy = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
+                             path = new Path();
+                             rightPosition = position;
+                             rightTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_bg_with_border));
+                         }
+                         QZXTools.logE("sx=" + sx + ";sy=" + sy + ";ex=" + ex + ";ey=" + ey, null);
+                         if (firstChooseView == liftTextView) {
+
+                             //点击第一个是左边的view
+                             ex = rightTextView.getLeft();
+                             ey = view.getTop() + rightTextView.getHeight() * 1.0f / 2.0f;
+                             path.addCircle(sx, sy, 10, Path.Direction.CW);
+                             path.moveTo(sx, sy);
+                             path.lineTo(ex, ey);
+                             path.addCircle(ex, ey, 10, Path.Direction.CW);
+
+                             //绘制Path   这里开始画
+                             ((LinkedLineHolder) viewHolder).matching_toLine.getDrawPath(path);
+                             //初始化左边的view
+                             firstChooseView = null;
+                             rightPositions.add(position);
+                             leftPositions.add(leftPosition);
+                             liftTextView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_item_bg));
+
+                             //保存当前的下表的连线题 状态下的 连线的所有的坐标，然后再滑动的时候回显
+                             LineMatchBean lineMatchBean = new LineMatchBean();
+                             //设置当前题型的id
+                             lineMatchBean.setTypeId(questionInfoList.get(i).getId());
+                             lineMatchBean.setLeftId(leftList.get(leftPosition).getId());
+                             lineMatchBean.setRightId(rightList.get(position).getId());
+                             lineMatchBean.setPosition(i);
+                             lineMatchBean.setStartX(sx);
+                             lineMatchBean.setStartY(sy);
+                             lineMatchBean.setEndX(ex);
+                             lineMatchBean.setEndY(ey);
+
+
+
+                             lineMatchs.add(lineMatchBean);
+                             //把所有的点保存到数据库
+                             MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().insertOrReplace(lineMatchBean);
+
+                             stringBuffer.append(questionInfoList.get(i).getLeftList().get(leftPosition).getId());
+                             stringBuffer.append(",");
+                             stringBuffer.append(questionInfoList.get(i).getRightList().get(position).getId());
+                             saveTrack = stringBuffer.toString();
+
+                             //连线题把连线画好的线保存数据库下次回显
+                             //-------------------------答案保存，依据作业题目id   主要就是这个作业id 不一样
+                             LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                             localTextAnswersBean.setHomeworkId(homeworkId);
+                             localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                             localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                             localTextAnswersBean.setAnswerContent(saveTrack);
+                             localTextAnswersBean.setUserId(UserUtils.getUserId());
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                             //插入或者更新数据库
+                             MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                             //关闭的时候保留saveTrack
+                             ((LinkedLineHolder) viewHolder).matching_toLine.setLocalSave(homeworkId, questionInfoList.get(i), saveTrack);
+
+                         }
+                     }
+                 });
+                 ((LinkedLineHolder) viewHolder).ll_match_bind_tag.setTag(questionInfoList.get(i).getId());
+                 ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
+                 ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
+
+                 //设置当前连线题是不是已经绘制过；
+                 List<LineMatchBean> currentLineMatchBeans = new ArrayList<>();
+
+                 //保存连接的数据已经保存了，现在要回显
+                 //数据的保存就是根据后台返回的数据题的id 封装成一个javabean  然后遍历回显当前条目是不是保存了 主要是数据驱动视图
+                 if (lineMatchs.size() > 0) {
+                     for (int j = 0; j < lineMatchs.size(); j++) {
+                         LineMatchBean lineMatchBean = lineMatchs.get(j);
+                         if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())) {
+                             //当前的连线已经连线过现在要回显、
+                             Path pathC = new Path();
+                             pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
+                             pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
+                             Path pathL = new Path();
+                             pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
+                             pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
+                             //添加点路径和线路径
+                             ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC, false, questionInfoList.get(i).getId());
+                             ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL, false);
+
+                             currentLineMatchBeans.add(lineMatchBean);
+
+                         } else {
+                             if (currentLineMatchBeans.size() > 0) {
+                                 ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
+                             } else {
+                                 ((LinkedLineHolder) viewHolder).matching_toLine.resetDrawLine(questionInfoList.get(i).getId());
+                             }
+                         }
+                     }
+                 }
+
+                 //答案的回显
+                 //查询保存的答案,这是多选，所以存在多个答案
+                 LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                         .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                 LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                 LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                 List<LineMatchBean> lineMatchBeans = MyApplication.getInstance().getDaoSession().getLineMatchBeanDao().loadAll();
+                 Log.i(TAG, "onBindViewHolder: " + linkLocal + ".............." + lineMatchBeans);
+                 for (int j = 0; j <lineMatchBeans.size() ; j++) {
+                     LineMatchBean lineMatchBean = lineMatchBeans.get(j);
+                     if (lineMatchBean.getTypeId().equals(questionInfoList.get(i).getId())){
+                         Path pathC = new Path();
+                         pathC.addCircle(lineMatchBean.getStartX(), lineMatchBean.getStartY(), 10, Path.Direction.CW);
+                         pathC.addCircle(lineMatchBean.getEndX(), lineMatchBean.getEndY(), 10, Path.Direction.CW);
+                         Path pathL = new Path();
+                         pathL.moveTo(lineMatchBean.getStartX(), lineMatchBean.getStartY());
+                         pathL.lineTo(lineMatchBean.getEndX(), lineMatchBean.getEndY());
+                         //添加点路径和线路径
+                         ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
+                         ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
+                     }
+                 }
+
+                 //开始划线
+                 ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(0);
+             }else {
+                 //1 已提交  2 已批阅
+                 ((LinkedLineHolder) viewHolder).matching_reset.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_reset_disable));
+                 ((LinkedLineHolder) viewHolder).matching_reset.setTextColor(0xFFD5D5D5);
+                 ((LinkedLineHolder) viewHolder).matching_reset.setOnClickListener(null);
+
+
+             }
+
+
+
 
         }
 
