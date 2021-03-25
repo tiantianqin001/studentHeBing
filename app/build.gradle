@@ -113,7 +113,7 @@ dependencies {
 
     //GreenDao
     implementation 'org.greenrobot:greendao:3.2.2'
-    implementation 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
+  //  implementation 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
 
     //ButterKnife
     implementation 'com.jakewharton:butterknife:8.8.1'

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -501,6 +502,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             Log.i("qin008", "onBindViewHolder: " + questionInfoList.get(i));
             List<Integer> leftPositions = new ArrayList<>();
             List<Integer> rightPositions = new ArrayList<>();
+            //作业回显正确答案 左边view 的集合，右边view 的集合
+            List<View> leftViews=new ArrayList<>();
             //连线题
             List<QuestionInfo.LeftListBean> leftList = questionInfoList.get(i).getLeftList();
             List<QuestionInfo.RightListBean> rightList = questionInfoList.get(i).getRightList();
@@ -511,21 +514,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     return false;
                 }
             };
-            //获取所有的recycleview 的item  的布局添加到view 中
-            for (int j = 0; j <leftList.size() ; j++) {
-                View view = layoutManager.findViewByPosition(j);
-                //获取左边的view
-                view.findViewById(R.id.tv_item_line_word_left);
-
-            }
-            for (int j = 0; j < rightList.size(); j++) {
-                //获取右边的view
-                View view = layoutManager.findViewByPosition(j);
-                view.findViewById(R.id.tv_item_line_word_right);
-            }
-
-
-
 
             ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
             ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
@@ -865,6 +853,138 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                  ((LinkedLineHolder) viewHolder).matching_reset.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_reset_disable));
                  ((LinkedLineHolder) viewHolder).matching_reset.setTextColor(0xFFD5D5D5);
                  ((LinkedLineHolder) viewHolder).matching_reset.setOnClickListener(null);
+
+
+
+                 //先更具id 判断是左边第一个和右边第几个连接
+                 //View加载完成时回调
+                 ((LinkedLineHolder) viewHolder).rv_matching_show.getViewTreeObserver()
+                         .addOnGlobalLayoutListener(new ViewTreeObserver
+                         .OnGlobalLayoutListener() {
+                     @Override
+                     public void onGlobalLayout() {
+                         //获取所有的recycleview 的item  的布局添加到view 中
+                         for (int j = 0; j <leftList.size() ; j++) {
+                             View view = layoutManager.findViewByPosition(j);
+                             leftViews.add(view);
+
+
+                         }
+
+                         //OnGlobalLayoutListener可能会被多次触发
+                         //所以完成了需求后需要移除OnGlobalLayoutListener
+                         ((LinkedLineHolder) viewHolder).rv_matching_show.getViewTreeObserver()
+                                 .removeOnGlobalLayoutListener(this);
+
+                        //todo 连线提做完了，回显的状态还有点小问题，目前之显示出正确答案
+                         //更具id  获取到左边的坐标和右边的左边
+                         View leftView=null;
+                         View rightView=null;
+                         View leftTextView=null;
+                         View rightTextView=null;
+
+                         String answer = questionInfoList.get(i).getAnswer();
+                        // answer=answer.substring(0,answer.length()-1);
+                         if (answer.contains("|")){
+                             String[] split = answer.split("\\|");
+                             for (String item : split) {
+                                 String[] trackStr = item.split(",");
+                                 //drawLigature(trackStr[0], trackStr[1], false);
+                                 for (int j = 0; j <leftList.size() ; j++) {
+                                     if (trackStr[0].equals(leftList.get(j).getId())){
+                                         leftView= leftViews.get(j);
+                                         //获取左边的view
+                                         leftTextView = leftView.findViewById(R.id.tv_item_line_word_left);
+                                         break;
+
+                                     }
+                                 }
+
+                                 for (int j = 0; j < rightList.size(); j++) {
+                                     if (trackStr[1].equals(rightList.get(j).getId())){
+                                         rightView = leftViews.get(j);
+                                         //获取左边的view
+                                         rightTextView = rightView.findViewById(R.id.tv_item_line_word_right);
+                                         break;
+
+                                     }
+                                 }
+
+                                 float sx = leftView.getLeft() + leftTextView.getLeft() + leftTextView.getWidth();
+                                 float sy = leftView.getTop() + leftTextView.getTop() + (leftTextView.getHeight() * 1.0f) / 2.0f;
+                                 float ex = rightView.getLeft() + rightTextView.getLeft();
+                                 float ey = rightView.getTop() + rightTextView.getTop() + (rightTextView.getHeight() * 1.0f) / 2.0f;
+
+
+                                 //放置同侧相连接
+                                 if (sx == ex) {
+                                     return;
+                                 }
+                                 //画园
+                                 Path pathC = new Path();
+                                 pathC.addCircle(sx, sy, 10, Path.Direction.CW);
+                                 pathC.addCircle(ex, ey, 10, Path.Direction.CW);
+                                 //画线
+                                 Path pathL = new Path();
+                                 pathL.moveTo(sx, sy);
+                                 pathL.lineTo(ex, ey);
+                                 //添加点路径和线路径
+                                 ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
+                                 ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
+
+                             }
+                         }else {
+                             //只有一对曾经作答过
+                             String[] trackStr = answer.split(",");
+                             for (int j = 0; j <leftList.size() ; j++) {
+                                 if (trackStr[0].equals(leftList.get(j).getId())){
+                                     leftView= leftViews.get(j);
+                                     //获取左边的view
+                                     leftTextView = leftView.findViewById(R.id.tv_item_line_word_left);
+                                     break;
+
+                                 }
+                             }
+
+                             for (int j = 0; j < rightList.size(); j++) {
+                                 if (trackStr[1].equals(rightList.get(j).getId())){
+                                     rightView = leftViews.get(j);
+                                     //获取左边的view
+                                     rightTextView = rightView.findViewById(R.id.tv_item_line_word_right);
+                                     break;
+
+                                 }
+                             }
+
+                             float sx = leftView.getLeft() + leftTextView.getLeft() + leftTextView.getWidth();
+                             float sy = leftView.getTop() + leftTextView.getTop() + (leftTextView.getHeight() * 1.0f) / 2.0f;
+                             float ex = rightView.getLeft() + rightTextView.getLeft();
+                             float ey = rightView.getTop() + rightTextView.getTop() + (rightTextView.getHeight() * 1.0f) / 2.0f;
+
+
+                             //放置同侧相连接
+                             if (sx == ex) {
+                                 return;
+                             }
+                             //画园
+                             Path pathC = new Path();
+                             pathC.addCircle(sx, sy, 10, Path.Direction.CW);
+                             pathC.addCircle(ex, ey, 10, Path.Direction.CW);
+                             //画线
+                             Path pathL = new Path();
+                             pathL.moveTo(sx, sy);
+                             pathL.lineTo(ex, ey);
+                             //添加点路径和线路径
+                             ((LinkedLineHolder) viewHolder).matching_toLine.addDotPath(pathC);
+                             ((LinkedLineHolder) viewHolder).matching_toLine.addLinePath(pathL);
+                         }
+
+                         //开始连线  这个主要是显示正确答案
+                         ((LinkedLineHolder) viewHolder).matching_toLine.setDrawStatus(1);
+
+                     }
+                 });
+
 
 
              }
