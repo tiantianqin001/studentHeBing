@@ -516,6 +516,11 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 View view = layoutManager.findViewByPosition(j);
                 //获取左边的view
                 view.findViewById(R.id.tv_item_line_word_left);
+
+            }
+            for (int j = 0; j < rightList.size(); j++) {
+                //获取右边的view
+                View view = layoutManager.findViewByPosition(j);
                 view.findViewById(R.id.tv_item_line_word_right);
             }
 
