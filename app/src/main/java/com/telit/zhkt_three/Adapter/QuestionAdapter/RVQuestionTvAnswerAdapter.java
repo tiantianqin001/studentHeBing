@@ -26,8 +26,10 @@ import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
+import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.AnswerItem;
 import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
 import com.telit.zhkt_three.JavaBean.LineMatchBean;
+import com.telit.zhkt_three.JavaBean.SingleBean;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
@@ -89,6 +91,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     //保存连线题 在复用后不能显示的问题
     private List<LineMatchBean> lineMatchs = new ArrayList<>();
+    //单选题，复用的问题
+    private List<SingleBean> singleBeans=new ArrayList<>();
 
     //保存作答痕迹 连线题
     private String saveTrack;
@@ -144,12 +148,14 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     .inflate(R.layout.mulit_choose_image_layout, viewGroup, false));
         }
         return null;
+
     }
 
     @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof SingleChooseHolder) {
+         //   viewHolder.setIsRecyclable(false);
             //单选题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
             if (selectBeans.size() == 1) {
@@ -157,7 +163,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             } else if (selectBeans.size() == 2) {
                 ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
                 ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ;
+
             } else if (selectBeans.size() == 3) {
                 ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
                 ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
@@ -184,174 +190,552 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
             }
 
-            ((SingleChooseHolder) viewHolder).tv_single_image_one.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_one.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+            //0未提交  1 已提交  2 已批阅
+            //设置作业头信息
+            ((SingleChooseHolder) viewHolder).practice_head_index.setText("第"+(i+1)+"题 共"+questionInfoList.size()+"题");
 
-                    } else {
+
+
+            if (taskStatus.equals(Constant.Todo_Status)) {
+                //答案的回显
+                //查询保存的答案,这是多选，所以存在多个答案
+                LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                        .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                if (linkLocal!=null && linkLocal.questionId.equals(questionInfoList.get(i).getId())){
+                    Log.i(TAG, "onBindViewHolder: "+linkLocal);
+                    String content = linkLocal.getList().get(0).content;
+                    if (content.equals("A")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
-                    }
-
-                    if (selectBeans.size() == 2) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                    } else if (selectBeans.size() == 3) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                    } else if (selectBeans.size() == 4) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                    } else if (selectBeans.size() == 5) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                    } else if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                    }
-                }
-            });
-            ((SingleChooseHolder) viewHolder).tv_single_image_two.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_two.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-
-                    } else {
+                    }else if (content.equals("B")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
-                    }
-
-                    if (selectBeans.size() == 2) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                    } else if (selectBeans.size() == 3) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                    } else if (selectBeans.size() == 4) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                    } else if (selectBeans.size() == 5) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                    } else if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                    }
-                }
-            });
-            ((SingleChooseHolder) viewHolder).tv_single_image_three.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_three.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-
-                    } else {
+                    }else if (content.equals("C")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
-                    }
-
-                    if (selectBeans.size() == 3) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                    } else if (selectBeans.size() == 4) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                    } else if (selectBeans.size() == 5) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                    } else if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                    }
-                }
-            });
-            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_fore.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-
-                    } else {
+                    }else if (content.equals("D")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
-                    }
-
-                    if (selectBeans.size() == 4) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                    } else if (selectBeans.size() == 5) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                    } else if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                    }
-                }
-            });
-            ((SingleChooseHolder) viewHolder).tv_single_image_five.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_five.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-
-                    } else {
+                    }else if (content.equals("E")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
-                    }
-                    if (selectBeans.size() == 5) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                    } else if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                    }
-                }
-            });
-
-            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (((SingleChooseHolder) viewHolder).tv_single_image_sex.isSelected()) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-
-                    } else {
+                    }else if (content.equals("F")){
                         ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
-                    }
 
-                    if (selectBeans.size() == 6) {
-                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
                     }
                 }
-            });
+
+
+
+                ((SingleChooseHolder) viewHolder).tv_single_image_one.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_one.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(i).getId());
+                            answerItem.setContent(selectBeans.get(i).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(0);
+                            singleBeans.add(singleBean);
+
+
+                        }
+
+                        if (selectBeans.size() == 2) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        } else if (selectBeans.size() == 3) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        } else if (selectBeans.size() == 4) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        } else if (selectBeans.size() == 5) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        } else if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+
+
+                    }
+                });
+                ((SingleChooseHolder) viewHolder).tv_single_image_two.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_two.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(1).getId());
+                            answerItem.setContent(selectBeans.get(1).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(1);
+                            singleBeans.add(singleBean);
+                        }
+
+                        if (selectBeans.size() == 2) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        } else if (selectBeans.size() == 3) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        } else if (selectBeans.size() == 4) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        } else if (selectBeans.size() == 5) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        } else if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+                    }
+                });
+                ((SingleChooseHolder) viewHolder).tv_single_image_three.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_three.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(2).getId());
+                            answerItem.setContent(selectBeans.get(2).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(2);
+                            singleBeans.add(singleBean);
+                        }
+
+                        if (selectBeans.size() == 3) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        } else if (selectBeans.size() == 4) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        } else if (selectBeans.size() == 5) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        } else if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+                    }
+                });
+                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_fore.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(3).getId());
+                            answerItem.setContent(selectBeans.get(3).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(3);
+                            singleBeans.add(singleBean);
+                        }
+
+                        if (selectBeans.size() == 4) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        } else if (selectBeans.size() == 5) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        } else if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+                    }
+                });
+                ((SingleChooseHolder) viewHolder).tv_single_image_five.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_five.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(4).getId());
+                            answerItem.setContent(selectBeans.get(4).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(4);
+                            singleBeans.add(singleBean);
+                        }
+                        if (selectBeans.size() == 5) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        } else if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+                    }
+                });
+                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        SingleBean singleBean=new SingleBean();
+                        if (((SingleChooseHolder) viewHolder).tv_single_image_sex.isSelected()) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+
+                            singleBeans.remove(singleBean);
+                        } else {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
+
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            List<AnswerItem> answerItems = new ArrayList<>();
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(5).getId());
+                            answerItem.setContent(selectBeans.get(5).getOptions());
+                            answerItems.add(answerItem);
+                            localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                            singleBean.setId(questionInfoList.get(i).getId());
+                            singleBean.setPosition(5);
+                            singleBeans.add(singleBean);
+                        }
+
+                        if (selectBeans.size() == 6) {
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        }
+                    }
+                });
+
+                //去掉复用的问题  todo  目前没有复用以后优化
+                for (int j = 0; j <singleBeans.size() ; j++) {
+                    String id = questionInfoList.get(i).getId();
+                    if (singleBeans.get(j).getId().equals(questionInfoList.get(i).getId())){
+                        int position = singleBeans.get(j).getPosition();
+                        if (position == 0){
+                            if (singleBeans.size() == 1){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                            }else if (selectBeans.size() == 2){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            }else if (selectBeans.size() == 3){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            }else if (selectBeans.size() == 4){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            }else if (selectBeans.size() == 5){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            }else if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            }
+
+                        }else if (position == 1){
+                             if (selectBeans.size() == 2){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                            }else if (selectBeans.size() == 3){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            }else if (selectBeans.size() == 4){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            }else if (selectBeans.size() == 5){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            }else if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            }
+
+
+
+
+                        }else if (position == 2){
+                             if (selectBeans.size() == 3){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+                            }else if (selectBeans.size() == 4){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            }else if (selectBeans.size() == 5){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            }else if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                 ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            }
+
+
+                        }else if (position == 3){
+                            if (selectBeans.size() == 4){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+                            }else if (selectBeans.size() == 5){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            }else if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            }
+
+
+                        }else if (position == 4){
+                            if (selectBeans.size() == 5){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
+                            }else if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                            }
+
+
+                        }else if (position == 5){
+                            if (selectBeans.size() == 6){
+                                ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
+                                ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
+                            }
+
+                        }
+                        break;
+                    }else {
+                        //说明这个题没有被点击，要去掉复用
+                        if (selectBeans.size() == 1){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        }else if (selectBeans.size() == 2){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        }else if (selectBeans.size() == 3){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        }else if (selectBeans.size() == 4){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        }else if (selectBeans.size() == 5){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        }else if (selectBeans.size() == 6){
+                            ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                            ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                        }
+                    }
+                }
+
+
+            }else {
+                //作业单选已经批改了的状态  显示学生做的答案和正确答案
+                ((SingleChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(View.VISIBLE);
+                //学生回答的答案
+                if (taskStatus.equals("2")){
+                    String answerContent = questionInfoList.get(i).getOwnList().get(0).getAnswerContent();
+                    if (answerContent.equals("A")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
+                    }else if (answerContent.equals("B")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
+
+                    }else if (answerContent.equals("C")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
+
+                    }else if (answerContent.equals("D")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
+
+                    }else if (answerContent.equals("E")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
+
+                    }else if (answerContent.equals("F")){
+                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
+
+                    }
+
+                    ((SingleChooseHolder) viewHolder).practice_select_judge_answer.setText("正确答案："+questionInfoList.get(i).getAnswer());
+                }
+
+
+
+
+            }
+
+
+
         } else if (viewHolder instanceof MultiChooseHolder) {
             //多选题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
@@ -1033,6 +1417,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final TextView tv_single_image_fore;
         private final TextView tv_single_image_five;
         private final TextView tv_single_image_sex;
+        private final TextView practice_select_judge_answer;
+        private final TextView practice_head_index;
 
         public SingleChooseHolder(@NonNull View itemView) {
 
@@ -1052,6 +1438,10 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             tv_single_image_fore = itemView.findViewById(R.id.tv_single_image_fore);
             tv_single_image_five = itemView.findViewById(R.id.tv_single_image_five);
             tv_single_image_sex = itemView.findViewById(R.id.tv_single_image_sex);
+            practice_head_index = itemView.findViewById(R.id.practice_head_index);
+
+            //正确答案
+            practice_select_judge_answer = itemView.findViewById(R.id.practice_select_judge_answer);
 
 
         }
