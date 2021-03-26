@@ -551,7 +551,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 });
 
-                //去掉复用的问题  todo  目前没有复用以后优化
+                //去掉复用的问题  todo  目前singleBeans  在退出再打开清空了，要想解决就存到数据库中
                 for (int j = 0; j <singleBeans.size() ; j++) {
                     String id = questionInfoList.get(i).getId();
                     if (singleBeans.get(j).getId().equals(questionInfoList.get(i).getId())){
