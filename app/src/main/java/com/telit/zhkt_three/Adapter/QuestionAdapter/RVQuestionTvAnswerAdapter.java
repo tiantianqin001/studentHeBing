@@ -194,8 +194,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //设置作业头信息
             ((SingleChooseHolder) viewHolder).practice_head_index.setText("第"+(i+1)+"题 共"+questionInfoList.size()+"题");
 
-
-
             if (taskStatus.equals(Constant.Todo_Status)) {
                 //答案的回显
                 //查询保存的答案,这是多选，所以存在多个答案
@@ -221,6 +219,35 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
 
                     }
+                }else {
+                    if (selectBeans.size() == 1) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                    } else  if (selectBeans.size() == 2) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                    } else if (selectBeans.size() == 3) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                    } else if (selectBeans.size() == 4) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                    } else if (selectBeans.size() == 5) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                    } else if (selectBeans.size() == 6) {
+                        ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
+                        ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
+                    }
                 }
 
 
@@ -244,8 +271,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
                             List<AnswerItem> answerItems = new ArrayList<>();
                             AnswerItem answerItem = new AnswerItem();
-                            answerItem.setItemId(selectBeans.get(i).getId());
-                            answerItem.setContent(selectBeans.get(i).getOptions());
+                            answerItem.setItemId(selectBeans.get(0).getId());
+                            answerItem.setContent(selectBeans.get(0).getOptions());
                             answerItems.add(answerItem);
                             localTextAnswersBean.setList(answerItems);
 //                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
