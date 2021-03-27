@@ -3,12 +3,15 @@ package com.telit.zhkt_three;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.telit.zhkt_three.JavaBean.SingleBean;
 import com.telit.zhkt_three.greendao.AppInfoDao;
 import com.telit.zhkt_three.greendao.DaoMaster;
 import com.telit.zhkt_three.greendao.DiscussBeanDao;
 import com.telit.zhkt_three.greendao.LineMatchBeanDao;
 import com.telit.zhkt_three.greendao.LocalResourceRecordDao;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
+import com.telit.zhkt_three.greendao.MulitBeanDao;
+import com.telit.zhkt_three.greendao.SingleBeanDao;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
 
 import org.greenrobot.greendao.database.Database;
@@ -33,7 +36,8 @@ public class DbOpenHelper extends DaoMaster.DevOpenHelper {
         if (oldVersion < newVersion) {
             MigrationHelper.migrate(db, AppInfoDao.class, DiscussBeanDao.class,
                     StudentInfoDao.class, LocalResourceRecordDao.class,
-                    LocalTextAnswersBeanDao.class, LineMatchBeanDao.class);
+                    LocalTextAnswersBeanDao.class, LineMatchBeanDao.class,
+                    SingleBeanDao.class, MulitBeanDao.class);
         }
     }
 }

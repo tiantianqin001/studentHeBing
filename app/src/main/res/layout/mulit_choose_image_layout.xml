@@ -187,5 +187,21 @@
 
     </LinearLayout>
 
+    <!--随堂练习 选择、判断答案-->
+    <TextView
+        android:id="@+id/practice_select_judge_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/y33"
+        android:background="@drawable/shape_tv_answer"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/y27"
+        android:text="正确答案：B"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x36"
+        android:visibility="gone"
+        />
+
 
 </LinearLayout>

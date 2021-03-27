@@ -1,8 +1,24 @@
 package com.telit.zhkt_three.JavaBean;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
 public class SingleBean {
+    @Id
     private String id;
     private int position;
+
+    @Generated(hash = 1731585085)
+    public SingleBean(String id, int position) {
+        this.id = id;
+        this.position = position;
+    }
+
+    @Generated(hash = 1322880855)
+    public SingleBean() {
+    }
 
     public int getPosition() {
         return position;
