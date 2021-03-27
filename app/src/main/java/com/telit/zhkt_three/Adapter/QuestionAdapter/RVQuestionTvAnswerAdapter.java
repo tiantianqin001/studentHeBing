@@ -6,12 +6,15 @@ import android.graphics.Path;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +25,7 @@ import com.bumptech.glide.Glide;
 
 
 import com.telit.zhkt_three.Constant.Constant;
+import com.telit.zhkt_three.CustomView.QuestionView.FillBlankToDoView;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
@@ -37,12 +41,15 @@ import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
+import com.telit.zhkt_three.listener.EdtextListener;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ListDocument;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author: qzx
@@ -817,7 +824,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                                 LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
                                 LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
-                if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId()) && linkLocal.getList()!=null) {
+                if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId()) && linkLocal.getList() != null) {
                     Log.i(TAG, "onBindViewHolder: " + linkLocal);
                     List<String> wordsType = new ArrayList<>();
                     for (int j = 0; j < linkLocal.getList().size(); j++) {
@@ -908,14 +915,14 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     String id = questionInfoList.get(i).getId();
                     if (mulitBeans.get(j).getId().equals(questionInfoList.get(i).getId())) {
                         String checkViewsCount = mulitBeans.get(j).getCheckViews();
-                        if (checkViewsCount.contains("|")){
-                            checkViewsCount=checkViewsCount.substring(0,checkViewsCount.length()-1);
+                        if (checkViewsCount.contains("|")) {
+                            checkViewsCount = checkViewsCount.substring(0, checkViewsCount.length() - 1);
                             String[] strings = checkViewsCount.split("|");
                             for (int k = 0; k < strings.length; k++) {
                                 contents.add(strings[k]);
                             }
-                        }else {
-                            contents.add(checkViewsCount) ;
+                        } else {
+                            contents.add(checkViewsCount);
                         }
 
                         if (contents.contains("A")) {
@@ -1491,7 +1498,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                 //作业单选已经批改了的状态  显示学生做的答案和正确答案
                 ((MultiChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(View.VISIBLE);
-                List<String> wordLists=new ArrayList<>();
+                List<String> wordLists = new ArrayList<>();
                 //学生回答的答案
                 if (taskStatus.equals("2")) {
                     List<WorkOwnResult> ownList = questionInfoList.get(i).getOwnList();
@@ -1562,6 +1569,441 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.VISIBLE);
                 ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.VISIBLE);
                 ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.VISIBLE);
+            }
+
+            //0未提交  1 已提交  2 已批阅
+            //设置作业头信息
+            ((FillBlankHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" +
+                    questionInfoList.size() + "题");
+            if (taskStatus.equals(Constant.Todo_Status)) {
+
+                //答案的回显
+                LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                        .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId()) && linkLocal.getList() != null) {
+                    Log.i(TAG, "onBindViewHolder: " + linkLocal);
+
+                        if (linkLocal.getList().size() == 6) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_sex.setText(linkLocal.getList().get(5).content);
+
+                        } else if (linkLocal.getList().size() == 5) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
+
+                        } else if (linkLocal.getList().size() == 4) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+
+                        } else if (linkLocal.getList().size() == 3) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+
+                        } else if (linkLocal.getList().size() == 2) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+
+
+                        } else if (linkLocal.getList().size() == 1) {
+                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                        }
+
+                }
+
+
+                List<Integer> indexs = new ArrayList<>();
+                HashMap<Integer, String> contentMaps = new HashMap<>();
+
+                ((FillBlankHolder) viewHolder).et_fill_balank_one.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(0);
+                        contentMaps.put(0, ((FillBlankHolder) viewHolder).et_fill_balank_one.getText().toString().trim());
+
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+
+
+                        List<String> answers = new ArrayList<>();
+
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+
+
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                        //Log.i(TAG, "afterTextChanged: "+connects);
+                    }
+                });
+                ((FillBlankHolder) viewHolder).et_fill_balank_two.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(1);
+                        contentMaps.put(1, ((FillBlankHolder) viewHolder).et_fill_balank_two.getText().toString().trim());
+                        // connects.add(((FillBlankHolder) viewHolder).et_fill_balank_two.getText().toString().trim());
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+                        List<String> answers = new ArrayList<>();
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+
+
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                    }
+                });
+                ((FillBlankHolder) viewHolder).et_fill_balank_three.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(2);
+                        contentMaps.put(2, ((FillBlankHolder) viewHolder).et_fill_balank_three.getText().toString().trim());
+                        //connects.add(((FillBlankHolder) viewHolder).et_fill_balank_three.getText().toString().trim());
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+                        List<String> answers = new ArrayList<>();
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                    }
+                });
+                ((FillBlankHolder) viewHolder).et_fill_balank_fore.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(3);
+                        contentMaps.put(3, ((FillBlankHolder) viewHolder).et_fill_balank_fore.getText().toString().trim());
+                        // connects.add(((FillBlankHolder) viewHolder).et_fill_balank_fore.getText().toString().trim());
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+                        List<String> answers = new ArrayList<>();
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                    }
+                });
+                ((FillBlankHolder) viewHolder).et_fill_balank_five.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(4);
+                        contentMaps.put(4, ((FillBlankHolder) viewHolder).et_fill_balank_five.getText().toString().trim());
+                        //  connects.add(((FillBlankHolder) viewHolder).et_fill_balank_five.getText().toString().trim());
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+                        List<String> answers = new ArrayList<>();
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                    }
+                });
+                ((FillBlankHolder) viewHolder).et_fill_balank_sex.addTextChangedListener(new EdtextListener() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        indexs.add(5);
+                        contentMaps.put(5, ((FillBlankHolder) viewHolder).et_fill_balank_sex.getText().toString().trim());
+                        //  connects.add(((FillBlankHolder) viewHolder).et_fill_balank_sex.getText().toString().trim());
+
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        List<AnswerItem> answerItems = new ArrayList<>();
+                        List<String> answers = new ArrayList<>();
+                        for (int j = 0; j < selectBeans.size(); j++) {
+                            AnswerItem answerItem = new AnswerItem();
+                            answerItem.setItemId(selectBeans.get(j).getId());
+                            // blanknum从1开始，因为从零开始服务端拼写有问题
+                            answerItem.setBlanknum((j + 1) + "");
+                            //设置输入的内容
+
+                            if (indexs.contains(j)) {
+
+                                answerItem.setContent(contentMaps.get(j));
+                                answerItems.add(answerItem);
+                            } else {
+
+                                //如果之前已经编写了内容要添加上
+                                if (linkLocal.getList() != null) {
+                                    if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
+                                        answerItem.setItemId(linkLocal.getList().get(j).getItemId());
+                                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                                        answerItem.setBlanknum(linkLocal.getList().get(j).getBlanknum());
+                                        //设置输入的内容
+                                        answerItem.setContent(linkLocal.getList().get(j).getContent());
+                                        answerItems.add(answerItem);
+                                    }else {
+                                        answerItem.setContent("");
+
+                                        answerItems.add(answerItem);
+                                    }
+                                }else {
+                                    answerItem.setContent("");
+                                    answerItems.add(answerItem);
+                                }
+
+                            }
+
+
+                            answers.add(s.toString());
+                        }
+
+                        localTextAnswersBean.setList(answerItems);
+                        //只有填空提保留问题的回显
+                        localTextAnswersBean.setAnswers(answers);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                    }
+                });
+
+
+            } else {
+                //作业已经提交
+
             }
 
         } else if (viewHolder instanceof JudgeItemHolder) {
@@ -1928,8 +2370,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 ((LinkedLineHolder) viewHolder).matching_reset.setBackground(mContext.getResources().getDrawable(R.drawable.shape_line_reset_disable));
                 ((LinkedLineHolder) viewHolder).matching_reset.setTextColor(0xFFD5D5D5);
                 ((LinkedLineHolder) viewHolder).matching_reset.setOnClickListener(null);
-
-
                 //先更具id 判断是左边第一个和右边第几个连接
                 //View加载完成时回调
                 ((LinkedLineHolder) viewHolder).rv_matching_show.getViewTreeObserver()
@@ -2058,8 +2498,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                             }
                         });
-
-
             }
 
 
@@ -2188,6 +2626,13 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final LinearLayout ll_fill_balank_fore;
         private final LinearLayout ll_fill_balank_five;
         private final LinearLayout ll_fill_balank_sex;
+        private final TextView practice_head_index;
+        private final EditText et_fill_balank_one;
+        private final EditText et_fill_balank_two;
+        private final EditText et_fill_balank_three;
+        private final EditText et_fill_balank_fore;
+        private final EditText et_fill_balank_five;
+        private final EditText et_fill_balank_sex;
 
         public FillBlankHolder(@NonNull View itemView) {
             super(itemView);
@@ -2197,6 +2642,15 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             ll_fill_balank_fore = itemView.findViewById(R.id.ll_fill_balank_fore);
             ll_fill_balank_five = itemView.findViewById(R.id.ll_fill_balank_five);
             ll_fill_balank_sex = itemView.findViewById(R.id.ll_fill_balank_sex);
+            //头信息和题目
+            practice_head_index = itemView.findViewById(R.id.practice_head_index);
+            //输入的文字
+            et_fill_balank_one = itemView.findViewById(R.id.et_fill_balank_one);
+            et_fill_balank_two = itemView.findViewById(R.id.et_fill_balank_two);
+            et_fill_balank_three = itemView.findViewById(R.id.et_fill_balank_three);
+            et_fill_balank_fore = itemView.findViewById(R.id.et_fill_balank_fore);
+            et_fill_balank_five = itemView.findViewById(R.id.et_fill_balank_five);
+            et_fill_balank_sex = itemView.findViewById(R.id.et_fill_balank_sex);
         }
     }
 

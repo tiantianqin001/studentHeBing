@@ -62,10 +62,10 @@
             android:gravity="center"
             android:text="1"
             android:textColor="#0A89FF"
-            android:textSize="@dimen/x36" />
+            android:textSize="@dimen/x36" />et
 
         <EditText
-
+            android:id="@+id/et_fill_balank_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
@@ -95,6 +95,7 @@
             android:textSize="@dimen/x36" />
 
         <EditText
+            android:id="@+id/et_fill_balank_two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
@@ -124,6 +125,7 @@
             android:textSize="@dimen/x36" />
 
         <EditText
+            android:id="@+id/et_fill_balank_three"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
@@ -154,6 +156,7 @@
             android:textSize="@dimen/x36" />
 
         <EditText
+            android:id="@+id/et_fill_balank_fore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
@@ -184,7 +187,7 @@
             android:textSize="@dimen/x36" />
 
         <EditText
-            android:id="@+id/fill_blank_content"
+            android:id="@+id/et_fill_balank_five"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
@@ -215,7 +218,7 @@
             android:textSize="@dimen/x36" />
 
         <EditText
-
+            android:id="@+id/et_fill_balank_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入答案,最大不超过40字"
