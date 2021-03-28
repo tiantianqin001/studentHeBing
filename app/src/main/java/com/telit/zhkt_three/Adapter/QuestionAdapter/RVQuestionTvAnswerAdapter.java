@@ -29,6 +29,7 @@ import com.telit.zhkt_three.CustomView.QuestionView.FillBlankToDoView;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
+import com.telit.zhkt_three.JavaBean.FillBlankBean;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
 import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.AnswerItem;
 import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
@@ -269,9 +270,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_one.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
-                            // singleBeans.remove(singleBean);
-                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().delete(singleBean);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
+                            //singleBeans.remove(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_one.setSelected(true);
 
@@ -329,9 +330,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_two.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
                             //singleBeans.remove(singleBean);
-                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().delete(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_two.setSelected(true);
 
@@ -385,9 +386,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_three.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
                             //singleBeans.remove(singleBean);
-                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().delete(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_three.setSelected(true);
 
@@ -439,9 +440,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_fore.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
-                            // singleBeans.remove(singleBean);
-                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().delete(singleBean);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
+                            //singleBeans.remove(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_fore.setSelected(true);
 
@@ -490,9 +491,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_five.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
-                            //   singleBeans.remove(singleBean);
-                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().delete(singleBean);
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
+                            //singleBeans.remove(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_five.setSelected(true);
 
@@ -536,9 +537,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         SingleBean singleBean = new SingleBean();
                         if (((SingleChooseHolder) viewHolder).tv_single_image_sex.isSelected()) {
                             ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(false);
-                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().delete(localTextAnswersBean);
-
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
                             //singleBeans.remove(singleBean);
+                            MyApplication.getInstance().getDaoSession().getSingleBeanDao().deleteByKey(questionInfoList.get(i).getId());
                         } else {
                             ((SingleChooseHolder) viewHolder).tv_single_image_sex.setSelected(true);
 
@@ -1537,6 +1538,8 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
 
         } else if (viewHolder instanceof FillBlankHolder) {
+            //todo  填空题的复用延期处理
+            viewHolder.setIsRecyclable(false);
             //填空题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
             if (selectBeans.size() == 1) {
@@ -1575,53 +1578,163 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //设置作业头信息
             ((FillBlankHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" +
                     questionInfoList.size() + "题");
+
+            //答案的回显
+            LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                    .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                            LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                            LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+
+
+            if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId()) && linkLocal.getList() != null) {
+                Log.i(TAG, "onBindViewHolder: " + linkLocal);
+
+                if (linkLocal.getList().size() == 6) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_sex.setText(linkLocal.getList().get(5).content);
+
+                } else if (linkLocal.getList().size() == 5) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
+
+                } else if (linkLocal.getList().size() == 4) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
+
+                } else if (linkLocal.getList().size() == 3) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
+
+                } else if (linkLocal.getList().size() == 2) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                    ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+
+
+                } else if (linkLocal.getList().size() == 1) {
+                    ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+                }
+
+            }
+
             if (taskStatus.equals(Constant.Todo_Status)) {
 
-                //答案的回显
-                LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
-                        .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
-                                LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
-                                LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                //去复用
+           /*     List<FillBlankBean> fillBlankBeans = MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().loadAll();
+                if (fillBlankBeans!=null){
+                    for (int j = 0; j < fillBlankBeans.size(); j++) {
+                        if (fillBlankBeans.get(j).getId().equals(questionInfoList.get(i).getId())){
+                            List<AnswerItem> list = fillBlankBeans.get(j).getList();
+                            if (selectBeans.size() == 6) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(list.get(1).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(list.get(2).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(list.get(3).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(list.get(4).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_sex.setText(list.get(5).getContent());
+                                break;
+                            }
+                            if (selectBeans.size() == 5) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(list.get(1).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(list.get(2).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(list.get(3).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(list.get(4).getContent());
 
-                if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId()) && linkLocal.getList() != null) {
-                    Log.i(TAG, "onBindViewHolder: " + linkLocal);
+                                break;
+                            }
+                            if (selectBeans.size() == 4) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(list.get(1).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(list.get(2).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(list.get(3).getContent());
 
-                        if (linkLocal.getList().size() == 6) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_sex.setText(linkLocal.getList().get(5).content);
-
-                        } else if (linkLocal.getList().size() == 5) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_five.setText(linkLocal.getList().get(4).content);
-
-                        } else if (linkLocal.getList().size() == 4) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText(linkLocal.getList().get(3).content);
-
-                        } else if (linkLocal.getList().size() == 3) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(linkLocal.getList().get(2).content);
-
-                        } else if (linkLocal.getList().size() == 2) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
-                            ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(linkLocal.getList().get(1).content);
+                            }
+                            if (selectBeans.size() == 3) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(list.get(1).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText(list.get(2).getContent());
+                                break;
+                            }
+                            if (selectBeans.size() == 2) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText(list.get(1).getContent());
+                                break;
+                            }
+                            if (selectBeans.size() == 1) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(list.get(0).getContent());
+                                break;
+                            }
 
 
-                        } else if (linkLocal.getList().size() == 1) {
-                            ((FillBlankHolder) viewHolder).et_fill_balank_one.setText(linkLocal.getList().get(0).content);
+
+                        }else {
+                            //没有输入
+                            if (selectBeans.size() == 6) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_five.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_sex.setText("");
+                                break;
+
+                            }
+                            if (selectBeans.size() == 5) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_five.setText("");
+                                break;
+
+                            }
+                            if (selectBeans.size() == 4) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_fore.setText("");
+
+                                break;
+                            }
+                            if (selectBeans.size() == 3) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_three.setText("");
+                                break;
+
+                            }
+                            if (selectBeans.size() == 2) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                ((FillBlankHolder) viewHolder).et_fill_balank_two.setText("");
+
+                                break;
+
+                            }
+                            if (selectBeans.size() == 1) {
+                                ((FillBlankHolder) viewHolder).et_fill_balank_one.setText("");
+                                break;
+                            }
                         }
+                    }
+                }*/
 
-                }
+
+       /*         if (!ids.contains(questionInfoList.get(i).getId())){
+
+                }*/
+
+
 
 
                 List<Integer> indexs = new ArrayList<>();
@@ -1636,6 +1749,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1659,7 +1773,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null && linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1689,6 +1803,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
 
                         //Log.i(TAG, "afterTextChanged: "+connects);
@@ -1703,6 +1820,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1723,7 +1841,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null && linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1753,6 +1871,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                     }
                 });
@@ -1765,6 +1886,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1785,7 +1907,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null &&  linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1814,6 +1936,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                     }
                 });
@@ -1826,6 +1951,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1846,7 +1972,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null && linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1875,6 +2001,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                     }
                 });
@@ -1887,6 +2016,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1907,7 +2037,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null && linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1935,6 +2065,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                     }
                 });
@@ -1947,6 +2080,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        FillBlankBean fillBlankBean=new FillBlankBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
                         localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
@@ -1967,7 +2101,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
 
                                 //如果之前已经编写了内容要添加上
-                                if (linkLocal.getList() != null) {
+                                if (linkLocal!=null && linkLocal.getList() != null) {
                                     if (!TextUtils.isEmpty(linkLocal.getList().get(j).getContent())){
                                         answerItem.setItemId(linkLocal.getList().get(j).getItemId());
                                         // blanknum从1开始，因为从零开始服务端拼写有问题
@@ -1996,6 +2130,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         localTextAnswersBean.setAnswers(answers);
 //                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
+                        fillBlankBean.setId(questionInfoList.get(i).getId());
+                        fillBlankBean.setList(answerItems);
+                        MyApplication.getInstance().getDaoSession().getFillBlankBeanDao().insertOrReplace(fillBlankBean);
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                     }
                 });
@@ -2004,13 +2141,195 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 //作业已经提交
 
+                ((FillBlankHolder) viewHolder). ll_show_quint.setVisibility(View.VISIBLE);
+                List<String> answers=new ArrayList<>();
+                String answer = questionInfoList.get(i).getAnswer();
+                if (answer.contains("|")){
+                 String [] strings=  answer.split("\\|");
+
+                    for (int j = 0; j < strings.length; j++) {
+                        answers.add(strings[j]);
+                    }
+                }else {
+                    answers.add(answer);
+                }
+
+                if (selectBeans.size() == 6){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));;
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_fore.setText(answers.get(3));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_five.setText(answers.get(4));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_six.setText(answers.get(5));
+                }
+                if (selectBeans.size() == 5){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));;
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_fore.setText(answers.get(3));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_five.setText(answers.get(4));
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+
+                }
+                if (selectBeans.size() == 4){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));;
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_fore.setText(answers.get(3));
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+
+                }
+                if (selectBeans.size() == 3){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+
+                }
+                if (selectBeans.size() == 2){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+
+                }
+                if (selectBeans.size() == 1){
+                    ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_two.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+
+
+                }
+
             }
 
         } else if (viewHolder instanceof JudgeItemHolder) {
+            //todo 延期处理复用的问题
+            viewHolder.setIsRecyclable(false);
             //判断题
             // ((JudgeItemHolder) viewHolder)
+            ((JudgeItemHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" + questionInfoList.size() + "题");
+
+            //0未提交  1 已提交  2 已批阅
+            if (taskStatus.equals(Constant.Todo_Status)) {
+                //答案的回显
+                LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                        .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                Log.i(TAG, "onBindViewHolder: "+linkLocal);
+                if (linkLocal!=null){
+                    if (linkLocal.getAnswerContent().equals("0")){
+                        ((JudgeItemHolder) viewHolder).option_do_tv_one.setSelected(true);
+                    }else {
+                        ((JudgeItemHolder) viewHolder).option_do_tv_two.setSelected(true);
+                    }
+                }
+
+                ((JudgeItemHolder) viewHolder).option_do_tv_one.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((JudgeItemHolder) viewHolder).option_do_tv_two.setSelected(false);
+                        if (((JudgeItemHolder) viewHolder).option_do_tv_one.isSelected()) {
+                            ((JudgeItemHolder) viewHolder).option_do_tv_one.setSelected(false);
+                            MyApplication.getInstance().getDaoSession()
+                                    .getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
+                        }else {
+                            ((JudgeItemHolder) viewHolder).option_do_tv_one.setSelected(true);
+
+                            //只有作业的时候保存答案 提问也要保留答案
+                            //-------------------------答案保存，依据作业题目id
+                            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            localTextAnswersBean.setAnswerContent(0 + "");
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession()
+                                    .getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                        }
+                    }
+                });
+
+                ((JudgeItemHolder) viewHolder).option_do_tv_two.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((JudgeItemHolder) viewHolder).option_do_tv_one.setSelected(false);
+                        if (((JudgeItemHolder) viewHolder).option_do_tv_two.isSelected()) {
+                            ((JudgeItemHolder) viewHolder).option_do_tv_two.setSelected(false);
+                            MyApplication.getInstance().getDaoSession()
+                                    .getLocalTextAnswersBeanDao().deleteByKey(questionInfoList.get(i).getId());
+                        }else {
+                            ((JudgeItemHolder) viewHolder).option_do_tv_two.setSelected(true);
+
+                            //-------------------------答案保存，依据作业题目id
+                            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                            localTextAnswersBean.setHomeworkId(homeworkId);
+                            localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                            localTextAnswersBean.setAnswerContent(1 + "");
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession()
+                                    .getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                        }
+                    }
+                });
+
+            }else {
+                ((JudgeItemHolder) viewHolder).ll_current_quint_show.setVisibility(View.VISIBLE);
+                //设置已经提交了答案的显示
+                List<WorkOwnResult> ownList = questionInfoList.get(i).getOwnList();
+                if (ownList!=null && ownList.size()>0){
+                    WorkOwnResult workOwnResult = questionInfoList.get(i).getOwnList().get(0);
+                    String answerContent = workOwnResult.getAnswerContent();
+                    if (answerContent.equals("0")){
+                        ((JudgeItemHolder) viewHolder).option_do_tv_one.setSelected(true);
+                    }else {
+                        ((JudgeItemHolder) viewHolder).option_do_tv_two.setSelected(true);
+                    }
+                }
+                //设置正确答案
+                String answer = questionInfoList.get(i).getAnswer();
+                if (answer.equals("0")){
+
+                    Glide.with(mContext).load(R.mipmap.check_current_two).into(((JudgeItemHolder) viewHolder).iv_current_quint_show);
+                }else {
+                    Glide.with(mContext).load(R.mipmap.check_err_ome).into(((JudgeItemHolder) viewHolder).iv_current_quint_show);
+
+                }
+              //
+
+            }
+
         } else if (viewHolder instanceof SubjectItemHolder) {
             //主观题
+
+            ((SubjectItemHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" + questionInfoList.size() + "题");
+
+            //0未提交  1 已提交  2 已批阅
+            if (taskStatus.equals(Constant.Todo_Status)) {
+                //答案的回显
+                LocalTextAnswersBean linkLocal = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                        .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfoList.get(i).getId()),
+                                LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
+                                LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                Log.i(TAG, "onBindViewHolder: " + linkLocal);
+            }else {
+
+            }
 
         } else if (viewHolder instanceof LinkedLineHolder) {
             //连线题
@@ -2035,6 +2354,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
             ((LinkedLineHolder) viewHolder).rv_matching_show.setLayoutManager(layoutManager);
             ((LinkedLineHolder) viewHolder).rv_matching_show.setAdapter(lineLeftAdapter);
+            ((LinkedLineHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" + questionInfoList.size() + "题");
 
 
             //0未提交  1 已提交  2 已批阅
@@ -2612,8 +2932,11 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class SubjectItemHolder extends RecyclerView.ViewHolder {
 
+        private final TextView practice_head_index;
+
         public SubjectItemHolder(@NonNull View itemView) {
             super(itemView);
+            practice_head_index = itemView.findViewById(R.id.practice_head_index);
         }
     }
 
@@ -2633,6 +2956,19 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final EditText et_fill_balank_fore;
         private final EditText et_fill_balank_five;
         private final EditText et_fill_balank_sex;
+        private final LinearLayout ll_show_quint;
+        private final LinearLayout ll_fill_quint_one;
+        private final LinearLayout ll_fill_quint_two;
+        private final LinearLayout ll_fill_quint_three;
+        private final LinearLayout ll_fill_quint_fore;
+        private final LinearLayout ll_fill_quint_five;
+        private final LinearLayout ll_fill_quint_six;
+        private final TextView tv_fill_quint_one;
+        private final TextView tv_fill_quint_two;
+        private final TextView tv_fill_quint_three;
+        private final TextView tv_fill_quint_fore;
+        private final TextView tv_fill_quint_five;
+        private final TextView tv_fill_quint_six;
 
         public FillBlankHolder(@NonNull View itemView) {
             super(itemView);
@@ -2651,6 +2987,22 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             et_fill_balank_fore = itemView.findViewById(R.id.et_fill_balank_fore);
             et_fill_balank_five = itemView.findViewById(R.id.et_fill_balank_five);
             et_fill_balank_sex = itemView.findViewById(R.id.et_fill_balank_sex);
+            //查看答案吧
+            ll_show_quint = itemView.findViewById(R.id.ll_show_quint);
+            ll_fill_quint_one = itemView.findViewById(R.id.ll_fill_quint_one);
+            ll_fill_quint_two = itemView.findViewById(R.id.ll_fill_quint_two);
+            ll_fill_quint_three = itemView.findViewById(R.id.ll_fill_quint_three);
+            ll_fill_quint_fore = itemView.findViewById(R.id.ll_fill_quint_fore);
+            ll_fill_quint_five = itemView.findViewById(R.id.ll_fill_quint_five);
+            ll_fill_quint_six = itemView.findViewById(R.id.ll_fill_quint_six);
+            tv_fill_quint_one = itemView.findViewById(R.id.tv_fill_quint_one);
+            tv_fill_quint_two = itemView.findViewById(R.id.tv_fill_quint_two);
+            tv_fill_quint_three = itemView.findViewById(R.id.tv_fill_quint_three);
+            tv_fill_quint_fore = itemView.findViewById(R.id.tv_fill_quint_fore);
+            tv_fill_quint_five = itemView.findViewById(R.id.tv_fill_quint_five);
+            tv_fill_quint_six = itemView.findViewById(R.id.tv_fill_quint_six);
+
+
         }
     }
 
@@ -2660,6 +3012,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         private final ToLineView matching_toLine;
         private final RecyclerView rv_matching_show;
         private final LinearLayout ll_match_bind_tag;
+        private final TextView practice_head_index;
 
 
         public LinkedLineHolder(@NonNull View itemView) {
@@ -2670,15 +3023,26 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             matching_toLine = itemView.findViewById(R.id.matching_toLine);
             rv_matching_show = itemView.findViewById(R.id.rv_matching_show);
             ll_match_bind_tag = itemView.findViewById(R.id.ll_match_bind_tag);
+            practice_head_index = itemView.findViewById(R.id.practice_head_index);
 
 
         }
     }
 
     public class JudgeItemHolder extends RecyclerView.ViewHolder {
+        private final TextView practice_head_index;
+        private final RelativeLayout option_do_tv_one;
+        private final RelativeLayout option_do_tv_two;
+        private final LinearLayout ll_current_quint_show;
+        private final ImageView iv_current_quint_show;
 
         public JudgeItemHolder(@NonNull View itemView) {
             super(itemView);
+            practice_head_index = itemView.findViewById(R.id.practice_head_index);
+            option_do_tv_one = itemView.findViewById(R.id.option_do_tv_one);
+            option_do_tv_two = itemView.findViewById(R.id.option_do_tv_two);
+            ll_current_quint_show = itemView.findViewById(R.id.ll_current_quint_show);
+            iv_current_quint_show = itemView.findViewById(R.id.iv_current_quint_show);
         }
     }
 

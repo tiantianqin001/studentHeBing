@@ -7,6 +7,7 @@ import com.telit.zhkt_three.JavaBean.SingleBean;
 import com.telit.zhkt_three.greendao.AppInfoDao;
 import com.telit.zhkt_three.greendao.DaoMaster;
 import com.telit.zhkt_three.greendao.DiscussBeanDao;
+import com.telit.zhkt_three.greendao.FillBlankBeanDao;
 import com.telit.zhkt_three.greendao.LineMatchBeanDao;
 import com.telit.zhkt_three.greendao.LocalResourceRecordDao;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
@@ -37,7 +38,7 @@ public class DbOpenHelper extends DaoMaster.DevOpenHelper {
             MigrationHelper.migrate(db, AppInfoDao.class, DiscussBeanDao.class,
                     StudentInfoDao.class, LocalResourceRecordDao.class,
                     LocalTextAnswersBeanDao.class, LineMatchBeanDao.class,
-                    SingleBeanDao.class, MulitBeanDao.class);
+                    SingleBeanDao.class, MulitBeanDao.class, FillBlankBeanDao.class);
         }
     }
 }

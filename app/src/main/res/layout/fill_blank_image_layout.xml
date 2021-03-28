@@ -62,7 +62,7 @@
             android:gravity="center"
             android:text="1"
             android:textColor="#0A89FF"
-            android:textSize="@dimen/x36" />et
+            android:textSize="@dimen/x36" />
 
         <EditText
             android:id="@+id/et_fill_balank_one"
@@ -227,6 +227,186 @@
             android:maxLength="40"
             android:textColorHint="#BEBEBE"
             android:textSize="@dimen/x36" />
+    </LinearLayout>
+    <!--正确答案-->
+    <LinearLayout
+        android:id="@+id/ll_show_quint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginLeft="@dimen/x10"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/x15"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorHint="#BEBEBE"
+            android:textSize="@dimen/x36"
+            android:text="正确答案:"
+
+            />
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_two"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_three"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_fore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_fore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_five"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_five"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_fill_quint_six"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x10"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_circle_blank"
+                android:gravity="center"
+                android:text="6"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_fill_quint_six"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0A89FF"
+                android:textSize="@dimen/x36"
+                android:layout_marginLeft="@dimen/x15"
+                />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>
