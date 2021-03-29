@@ -45,6 +45,8 @@ import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.telit.zhkt_three.Utils.eventbus.Subscriber;
+import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
 
 import java.io.File;
@@ -114,7 +116,11 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
     private static final int Error404 = 1;
     private static final int Operator_Success = 2;
     private static final int Commit_Result_Show = 3;
+    private VPHomeWorkDetailAdapter vpHomeWorkDetailAdapter;
     private Handler mHandler = new Handler() {
+
+
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -164,7 +170,7 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
                             }
 
                             //塞入Vp的数据  在添加一个类型   0是互动  1是作业 再1是作业的情况下还有作业完成和没有完成 taskStatus 显示答案的状态
-                            VPHomeWorkDetailAdapter vpHomeWorkDetailAdapter = new VPHomeWorkDetailAdapter
+                            vpHomeWorkDetailAdapter = new VPHomeWorkDetailAdapter
                                     (HomeWorkDetailActivity.this, questionInfoByhandList, null, taskStatus,1,comType);
                             homework_vp.setAdapter(vpHomeWorkDetailAdapter);
                             if (!TextUtils.isEmpty(questionInfoByhandList.get(0).getComment())){
@@ -263,6 +269,7 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
 
         //保持屏幕常亮，也可以再布局文件顶层：android:keepScreenOn="true"
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        EventBus.getDefault().register(this);
 
         layout_left.setOnClickListener(this);
         layout_right.setOnClickListener(this);
@@ -354,9 +361,24 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
                 case SubjectiveToDoView.CODE_SYS_CAMERA:
                     //data为null,因为自己设定了拍好照图片的保存位置
                     QZXTools.logE("data=" + data, null);
-                    EventBus.getDefault().post("CAMERA_CALLBACK", Constant.Subjective_Camera_Callback);
+                   // EventBus.getDefault().post("CAMERA_CALLBACK", Constant.Subjective_Camera_Callback);
+                    if (vpHomeWorkDetailAdapter!=null){
+                        vpHomeWorkDetailAdapter.fromCameraCallback("CAMERA_CALLBACK");
+                    }
+
                     break;
             }
+        }
+    }
+
+
+    /**
+     * 添加订阅者   画板保存回调这里存粹保存整个画板位图，没有做其他处理，分辨率是平板分辨率，大小还可以(KB)
+     */
+    @Subscriber(tag = Constant.Subjective_Board_Callback, mode = ThreadMode.MAIN)
+    public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
+        if (vpHomeWorkDetailAdapter!=null){
+            vpHomeWorkDetailAdapter.fromBoardCallback(extraInfoBean);
         }
     }
 
@@ -374,6 +396,7 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
 
         ZBVPermission.getInstance().recyclerAll();
         isShow=false;
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -792,4 +815,6 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
                 return "";
         }
     }
+
+
 }

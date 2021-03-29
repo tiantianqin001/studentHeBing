@@ -28,8 +28,8 @@ public class DaoMaster extends AbstractDaoMaster {
         LocalResourceRecordDao.createTable(db, ifNotExists);
         StudentInfoDao.createTable(db, ifNotExists);
         SingleBeanDao.createTable(db, ifNotExists);
-        MulitBeanDao.createTable(db, ifNotExists);
         FillBlankBeanDao.createTable(db, ifNotExists);
+        MulitBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -41,8 +41,8 @@ public class DaoMaster extends AbstractDaoMaster {
         LocalResourceRecordDao.dropTable(db, ifExists);
         StudentInfoDao.dropTable(db, ifExists);
         SingleBeanDao.dropTable(db, ifExists);
-        MulitBeanDao.dropTable(db, ifExists);
         FillBlankBeanDao.dropTable(db, ifExists);
+        MulitBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -68,8 +68,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(LocalResourceRecordDao.class);
         registerDaoClass(StudentInfoDao.class);
         registerDaoClass(SingleBeanDao.class);
-        registerDaoClass(MulitBeanDao.class);
         registerDaoClass(FillBlankBeanDao.class);
+        registerDaoClass(MulitBeanDao.class);
     }
 
     public DaoSession newSession() {

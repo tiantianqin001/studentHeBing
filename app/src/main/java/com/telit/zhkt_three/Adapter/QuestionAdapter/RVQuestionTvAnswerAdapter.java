@@ -1,12 +1,24 @@
 package com.telit.zhkt_three.Adapter.QuestionAdapter;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,15 +27,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 
 
+import com.google.gson.Gson;
+import com.telit.zhkt_three.Activity.HomeWork.ExtraInfoBean;
+import com.telit.zhkt_three.Activity.HomeWork.WhiteBoardActivity;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.QuestionView.FillBlankToDoView;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
@@ -41,16 +58,28 @@ import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
+import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
 import com.telit.zhkt_three.listener.EdtextListener;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ListDocument;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * author: qzx
@@ -58,7 +87,7 @@ import java.util.Map;
  * <p>
  * 注意：这个和拍照出题公用Adapter，所以这里判断是否是错题集入口分别进入拍照出题/题库出题
  */
-public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ZBVPermission.PermPassResult {
     private static final String TAG = "RVQuestionTvAnswerAdapter";
     private Context mContext;
 
@@ -70,6 +99,17 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     private int types;
     private String comType;
 
+    //输入表情前的光标位置
+    private int cursorPos;
+    //输入表情前EditText中的文本
+    private String inputAfterText;
+    //是否重置了EditText的内容
+    private boolean resetText;
+
+    private static final String[] needPermissions = {Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     /**
      * 是否是图片出题模式即随堂练习模式
      */
@@ -79,12 +119,16 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     private String homeworkId;
 
-    private String showAnswerDate;
+    /**
+     * 主观题题目ID
+     */
+    public static String subjQuestionId;
 
     /**
      * 选中的第一个item
      */
     private View firstChooseView = null;
+    private QuestionInfo subjectQuestionInfo;
 
     /**
      * 如果homeworkid为空字符串表示没有homeworkid，在QuestionInfo中存在homeworkid
@@ -93,7 +137,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         //这个是提真正的数据
         this.questionInfoList = questionInfoList;
         this.homeworkId = homeworkId;
-        this.showAnswerDate = showAnswerDate;
+
     }
 
     private String xd;
@@ -163,6 +207,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     }
 
+
     @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
@@ -171,35 +216,35 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //单选题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
             if (selectBeans.size() == 1) {
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 2) {
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 3) {
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 4) {
-                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 5) {
-                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 6) {
 
-                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_sex.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_five.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((SingleChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
             }
 
             //0未提交  1 已提交  2 已批阅
@@ -750,7 +795,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
             } else {
                 //作业单选已经批改了的状态  显示学生做的答案和正确答案
-                ((SingleChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(View.VISIBLE);
+                ((SingleChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(VISIBLE);
                 //学生回答的答案
                 if (taskStatus.equals("2")) {
                     String answerContent = questionInfoList.get(i).getOwnList().get(0).getAnswerContent();
@@ -784,33 +829,33 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //多选题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
             if (selectBeans.size() == 1) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 2) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 3) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 4) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 5) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 6) {
-                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(View.VISIBLE);
-                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_one.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_two.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_three.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_fore.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_five.setVisibility(VISIBLE);
+                ((MultiChooseHolder) viewHolder).ll_single_image_sex.setVisibility(VISIBLE);
             }
 
             //0未提交  1 已提交  2 已批阅
@@ -1498,7 +1543,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
 
                 //作业单选已经批改了的状态  显示学生做的答案和正确答案
-                ((MultiChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(View.VISIBLE);
+                ((MultiChooseHolder) viewHolder).practice_select_judge_answer.setVisibility(VISIBLE);
                 List<String> wordLists = new ArrayList<>();
                 //学生回答的答案
                 if (taskStatus.equals("2")) {
@@ -1543,35 +1588,35 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             //填空题
             List<QuestionInfo.SelectBean> selectBeans = questionInfoList.get(i).getList();
             if (selectBeans.size() == 1) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 2) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 3) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(VISIBLE);
 
             } else if (selectBeans.size() == 4) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 5) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(VISIBLE);
             } else if (selectBeans.size() == 6) {
-                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(View.VISIBLE);
-                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_one.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_two.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_three.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_fore.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_five.setVisibility(VISIBLE);
+                ((FillBlankHolder) viewHolder).ll_fill_balank_sex.setVisibility(VISIBLE);
             }
 
             //0未提交  1 已提交  2 已批阅
@@ -2141,7 +2186,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 //作业已经提交
 
-                ((FillBlankHolder) viewHolder). ll_show_quint.setVisibility(View.VISIBLE);
+                ((FillBlankHolder) viewHolder). ll_show_quint.setVisibility(VISIBLE);
                 List<String> answers=new ArrayList<>();
                 String answer = questionInfoList.get(i).getAnswer();
                 if (answer.contains("|")){
@@ -2168,7 +2213,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));;
                     ((FillBlankHolder) viewHolder).tv_fill_quint_fore.setText(answers.get(3));
                     ((FillBlankHolder) viewHolder).tv_fill_quint_five.setText(answers.get(4));
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(GONE);
 
                 }
                 if (selectBeans.size() == 4){
@@ -2176,35 +2221,35 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
                     ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));;
                     ((FillBlankHolder) viewHolder).tv_fill_quint_fore.setText(answers.get(3));
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(GONE);
 
                 }
                 if (selectBeans.size() == 3){
                     ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
                     ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
                     ((FillBlankHolder) viewHolder).tv_fill_quint_three.setText(answers.get(2));
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(GONE);
 
                 }
                 if (selectBeans.size() == 2){
                     ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
                     ((FillBlankHolder) viewHolder).tv_fill_quint_two.setText(answers.get(1));
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(GONE);
 
                 }
                 if (selectBeans.size() == 1){
                     ((FillBlankHolder) viewHolder).tv_fill_quint_one.setText(answers.get(0));
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_two.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(View.GONE);
-                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(View.GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_two.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_three.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_fore.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_five.setVisibility(GONE);
+                    ((FillBlankHolder) viewHolder).ll_fill_quint_six.setVisibility(GONE);
 
 
                 }
@@ -2289,7 +2334,7 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 });
 
             }else {
-                ((JudgeItemHolder) viewHolder).ll_current_quint_show.setVisibility(View.VISIBLE);
+                ((JudgeItemHolder) viewHolder).ll_current_quint_show.setVisibility(VISIBLE);
                 //设置已经提交了答案的显示
                 List<WorkOwnResult> ownList = questionInfoList.get(i).getOwnList();
                 if (ownList!=null && ownList.size()>0){
@@ -2316,9 +2361,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
         } else if (viewHolder instanceof SubjectItemHolder) {
             //主观题
-
+            //todo 延期处理复用的问题
+            viewHolder.setIsRecyclable(false);
             ((SubjectItemHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" + questionInfoList.size() + "题");
-
             //0未提交  1 已提交  2 已批阅
             if (taskStatus.equals(Constant.Todo_Status)) {
                 //答案的回显
@@ -2327,11 +2372,182 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                                 LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
                                 LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
                 Log.i(TAG, "onBindViewHolder: " + linkLocal);
+
+              /*  if (linkLocal!=null && linkLocal.questionId.equals(questionInfoList.get(i).getId())){
+                    if (linkLocal.imageList!=null){
+                        subjective_imgs_layout.setVisibility(VISIBLE);
+                        List<String> imageList = linkLocal.getImageList();
+                        imgFilePathList.addAll(imageList);
+                        if (imgFilePathList.size() == 1){
+                            subjective_answer_frame_one.setVisibility(VISIBLE);
+                            subjective_answer_frame_two.setVisibility(GONE);
+                            subjective_answer_frame_three.setVisibility(GONE);
+                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
+                        }else if (imgFilePathList.size() == 2){
+                            subjective_answer_frame_one.setVisibility(VISIBLE);
+                            subjective_answer_frame_two.setVisibility(VISIBLE);
+                            subjective_answer_frame_three.setVisibility(GONE);
+                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
+                            subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
+                        }else if (imgFilePathList.size() == 3){
+                            subjective_answer_frame_one.setVisibility(VISIBLE);
+                            subjective_answer_frame_two.setVisibility(VISIBLE);
+                            subjective_answer_frame_three.setVisibility(VISIBLE);
+                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
+                            subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
+                            subjective_img_three.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(2)));
+                        }
+                    }
+
+
+                    if (!TextUtils.isEmpty(linkLocal.answerContent)){
+                        subjective_input.setText(linkLocal.answerContent);
+                    }
+                }*/
+
+  /*              subjQuestionId=questionInfoList.get(i).getId();
+                subjectQuestionInfo = questionInfoList.get(i);*/
+
+                //拍照
+                ((SubjectItemHolder) viewHolder).subjective_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int layoutPosition = viewHolder.getLayoutPosition();
+                        subjQuestionId=questionInfoList.get(layoutPosition).getId();
+                        subjectQuestionInfo = questionInfoList.get(layoutPosition);
+                        if (imgFilePathList.size() >= 3) {
+                            QZXTools.popCommonToast(MyApplication.getInstance(), "图片答案不得超过三张", false);
+                            return;
+                        }
+                        ZBVPermission.getInstance().setPermPassResult(RVQuestionTvAnswerAdapter.this);
+                        if (!ZBVPermission.getInstance().hadPermissions((Activity) mContext, needPermissions)) {
+                            ZBVPermission.getInstance().requestPermissions((Activity) mContext, needPermissions);
+                        } else {
+                            //直接打开相机
+                            QZXTools.logD("已拥有权限直接打开相机");
+                            openCamera();
+                        }
+                    }
+                });
+                subjective_del_one.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imgFilePathList.remove(0);
+                        //同样删除数据库中的信息
+                        showImgsSaveAnswer();
+                    }
+                });
+
+                subjective_del_two.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imgFilePathList.remove(1);
+                        //同样删除数据库中的信息
+                        showImgsSaveAnswer();
+                    }
+                });
+                subjective_del_three.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imgFilePathList.remove(2);
+                        //同样删除数据库中的信息
+                        showImgsSaveAnswer();
+                    }
+                });
+
+                //白班的点击事件
+                ((SubjectItemHolder) viewHolder).subjective_board.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int layoutPosition = viewHolder.getLayoutPosition();
+                        subjQuestionId=questionInfoList.get(layoutPosition).getId();
+                        subjectQuestionInfo = questionInfoList.get(layoutPosition);
+
+                        if (imgFilePathList.size() >= 3) {
+                            QZXTools.popCommonToast(MyApplication.getInstance(), "图片答案不得超过三张", false);
+                            return;
+                        }
+
+
+                        ZBVPermission.getInstance().setPermPassResult(RVQuestionTvAnswerAdapter.this);
+                        if (!ZBVPermission.getInstance().hadPermissions((Activity) mContext, needPermissions)) {
+                            ZBVPermission.getInstance().requestPermissions((Activity) mContext, needPermissions);
+                        } else {
+                            Intent intent = new Intent(mContext, WhiteBoardActivity.class);
+                            intent.putExtra("extra_info", questionInfoList.get(i).getId());
+                            mContext.startActivity(intent);
+                        }
+                    }
+                });
+
+                //添加文本输入改变监听
+
+                subjective_input.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        if (!resetText) {
+                            cursorPos = subjective_input.getSelectionEnd();
+                            // 这里用s.toString()而不直接用s是因为如果用s，
+                            // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
+                            // inputAfterText也就改变了，那么表情过滤就失败了
+                            inputAfterText = s.toString();
+                        }
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (!resetText) {
+                            if (count >= 2) {//表情符号的字符长度最小为2
+                                if ((cursorPos + count) <= s.toString().trim().length()) {
+                                    CharSequence input = s.subSequence(cursorPos, cursorPos + count);
+                                    if (ViewUtils.containsEmoji(input.toString())) {
+                                        resetText = true;
+                                        Toast.makeText(mContext, "不支持输入Emoji表情符号", Toast.LENGTH_SHORT).show();
+                                        //是表情符号就将文本还原为输入表情符号之前的内容
+                                        subjective_input.setText(inputAfterText);
+                                        QZXTools.logE("inputAfterText:"+inputAfterText,null);
+                                        CharSequence text = subjective_input.getText();
+                                        if (text.length() > 0) {
+                                            if (text instanceof Spannable) {
+                                                Spannable spanText = (Spannable) text;
+                                                Selection.setSelection(spanText, text.length());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            resetText = false;
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        //-------------------------答案保存，依据作业题目id
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(homeworkId);
+                        localTextAnswersBean.setQuestionId(subjectQuestionInfo.getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(subjectQuestionInfo.getQuestionType());
+                        localTextAnswersBean.setAnswerContent(subjective_input.getText().toString());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setAnswer(subjectQuestionInfo.getAnswer());
+                        localTextAnswersBean.setImageList(imgFilePathList);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                        //-------------------------答案保存，依据作业题目id
+
+                        QZXTools.logE("保存主观题答案:"+new Gson().toJson(localTextAnswersBean),null);
+                    }
+                });
+
             }else {
 
             }
 
-        } else if (viewHolder instanceof LinkedLineHolder) {
+        }
+        else if (viewHolder instanceof LinkedLineHolder) {
             //连线题
             // viewHolder.setIsRecyclable(false);
             QZXTools.logE("ToLine viewHolder instanceof LinkedLineHolder......" + questionInfoList.get(i), null);
@@ -2831,20 +3047,148 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         return questionInfoList != null ? questionInfoList.size() : 0;
     }
 
-    public class RVQuestionTvAnswerViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void grantPermission() {
 
-        private TotalQuestionView totalQuestionView;
-        //        private PhotoView attach_photo;
-//        private ScrollView scrollView;
-        private LinearLayout linearLayout;
+    }
 
-        public RVQuestionTvAnswerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            totalQuestionView = itemView.findViewById(R.id.item_total_question);
-            NewKnowledgeQuestionView newKnowledgeQuestionView = itemView.findViewById(R.id.item_total_banks);
+    @Override
+    public void denyPermission() {
 
-//            scrollView = itemView.findViewById(R.id.item_scroll);
-            linearLayout = itemView.findViewById(R.id.item_scroll_linear);
+    }
+
+    /**
+     * 主观题拍照后获取数据
+     * @param flag
+     */
+    //图片文件
+    private ArrayList<String> imgFilePathList=new ArrayList<>();
+    public void fromCameraCallback(String flag) {
+        if (flag.equals("CAMERA_CALLBACK")) {
+            QZXTools.logE("fromCameraCallback filePath=" + cameraFile.getAbsolutePath(), null);
+            //之所以判断是因为所有的其他SubjectiveToDoView也可以接受到这个反馈
+            Log.i("", "fromCameraCallback: "+subjectQuestionInfo);
+            if (subjQuestionId.equals(subjectQuestionInfo.getId() + "")) {
+                //质量压缩处理
+//                File compressFile = compressImage(BitmapFactory.decodeFile(cameraFile.getAbsolutePath()));
+
+                //比例尺寸压缩 notes:这个比质量压缩的要快，效果也很不错
+                File compressFile = compressBitmapToFile(cameraFile.getAbsolutePath(),
+                        mContext.getResources().getDimensionPixelSize(R.dimen.x800));
+
+                imgFilePathList.add(compressFile.getAbsolutePath());
+                showImgsSaveAnswer();
+            }
+        }
+    }
+    /**
+     * 显示图片
+     */
+    private void showImgsSaveAnswer() {
+
+        if (imgFilePathList != null && imgFilePathList.size() <= 0) {
+            subjective_answer_frame_one.setVisibility(GONE);
+            subjective_answer_frame_two.setVisibility(GONE);
+            subjective_answer_frame_three.setVisibility(GONE);
+            return;
+        }
+        subjective_imgs_layout.setVisibility(VISIBLE);
+
+        for (int i = 0; i < imgFilePathList.size(); i++) {
+            switch (i) {
+                case 0:
+                    subjective_answer_frame_one.setVisibility(VISIBLE);
+                    subjective_answer_frame_two.setVisibility(GONE);
+                    subjective_answer_frame_three.setVisibility(GONE);
+                    subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
+                    break;
+                case 1:
+                    subjective_answer_frame_two.setVisibility(VISIBLE);
+                    subjective_answer_frame_three.setVisibility(GONE);
+                    subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
+                    break;
+                case 2:
+                    subjective_answer_frame_three.setVisibility(VISIBLE);
+                    subjective_img_three.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
+                    break;
+                default:
+                    QZXTools.popCommonToast(mContext, "imgFileList大小超过3个了", false);
+                    break;
+            }
+        }
+
+        //-------------------------答案保存，依据作业题目id
+        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+        localTextAnswersBean.setHomeworkId(homeworkId);
+        localTextAnswersBean.setQuestionId(subjectQuestionInfo.getId());
+        localTextAnswersBean.setUserId(UserUtils.getUserId());
+        localTextAnswersBean.setQuestionType(subjectQuestionInfo.getQuestionType());
+        localTextAnswersBean.setAnswerContent(subjective_input.getText().toString().trim());
+        localTextAnswersBean.setImageList(imgFilePathList);
+        QZXTools.logE("subjective Save localTextAnswersBean=" + localTextAnswersBean, null);
+        //插入或者更新数据库
+        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+        //-------------------------答案保存，依据作业题目id
+    }
+
+    /**
+     * 指定比例压缩到文件
+     */
+    public File compressBitmapToFile(String srcPath, float desWidth) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;//只读边,不读内容
+        Bitmap bitmap;
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float desHeight = desWidth * h / w;
+        int be = 1;
+        if (w > h && w > desWidth) {
+            be = (int) (newOpts.outWidth / desWidth);
+        } else if (w < h && h > desHeight) {
+            be = (int) (newOpts.outHeight / desHeight);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置采样率
+
+//        newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
+        newOpts.inPurgeable = true;// 同时设置才会有效
+        newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
+
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        String fileDir = QZXTools.getExternalStorageForFiles(mContext, Environment.DIRECTORY_PICTURES);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("IMG_");
+        stringBuilder.append(simpleDateFormat.format(new Date()));
+        stringBuilder.append(".jpg");
+        File file = new File(fileDir, stringBuilder.toString());
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            try {
+                fos.write(baos.toByteArray());
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
+    public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
+        if (extraInfoBean.getQuestionId().equals(subjectQuestionInfo.getId())) {
+            imgFilePathList.add(extraInfoBean.getFilePath());
+            showImgsSaveAnswer();
         }
     }
 
@@ -2930,13 +3274,62 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+
+    private FrameLayout subjective_answer_frame_one;
+    private FrameLayout subjective_answer_frame_two;
+    private FrameLayout subjective_answer_frame_three;
+    //删除图片
+    private RelativeLayout subjective_del_layout_one;
+    private RelativeLayout subjective_del_layout_two;
+    private RelativeLayout subjective_del_layout_three;
+    private ImageView subjective_del_one;
+    private ImageView subjective_del_two;
+    private ImageView subjective_del_three;
+    //图片
+    private ImageView subjective_img_one;
+    private ImageView subjective_img_two;
+    private ImageView subjective_img_three;
+
+
+    private RelativeLayout subjective_imgs_layout;
+
+
+
+    private EditText subjective_input;
     public class SubjectItemHolder extends RecyclerView.ViewHolder {
 
         private final TextView practice_head_index;
+        private final TextView subjective_camera;
+        private final TextView subjective_board;
 
         public SubjectItemHolder(@NonNull View itemView) {
             super(itemView);
             practice_head_index = itemView.findViewById(R.id.practice_head_index);
+            subjective_imgs_layout = itemView.findViewById(R.id.subjective_imgs_layout);
+            //拍照
+            subjective_camera = itemView.findViewById(R.id.subjective_camera);
+           //画板
+            subjective_board = itemView.findViewById(R.id.subjective_board);
+
+            subjective_answer_frame_one = itemView.findViewById(R.id.subjective_answer_frame_one);
+            subjective_answer_frame_two = itemView.findViewById(R.id.subjective_answer_frame_two);
+            subjective_answer_frame_three = itemView.findViewById(R.id.subjective_answer_frame_three);
+
+            //图片的显示
+
+            subjective_img_one = itemView.findViewById(R.id.subjective_img_one);
+            subjective_img_two = itemView.findViewById(R.id.subjective_img_two);
+            subjective_img_three = itemView.findViewById(R.id.subjective_img_three);
+
+            subjective_del_layout_one = itemView.findViewById(R.id.subjective_del_layout_one);
+            subjective_del_layout_two = itemView.findViewById(R.id.subjective_del_layout_two);
+            subjective_del_layout_three = itemView.findViewById(R.id.subjective_del_layout_three);
+            subjective_del_one = itemView.findViewById(R.id.subjective_del_one);
+            subjective_del_two = itemView.findViewById(R.id.subjective_del_two);
+            subjective_del_three = itemView.findViewById(R.id.subjective_del_three);
+            //输入的内容
+            subjective_input = itemView.findViewById(R.id.subjective_input);
+
         }
     }
 
@@ -3100,6 +3493,40 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                 return Constant.Judge_Item;
         }
         return -1;
+    }
+
+    /**
+     * 打开相机
+     */
+    private File cameraFile;
+    public static final int CODE_SYS_CAMERA = 1;//系统相机RequestCode
+    private void openCamera() {
+        String fileDir = QZXTools.getExternalStorageForFiles(mContext, Environment.DIRECTORY_PICTURES);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("IMG_");
+        stringBuilder.append(simpleDateFormat.format(new Date()));
+
+        stringBuilder.append(".jpg");
+        cameraFile = new File(fileDir, stringBuilder.toString());
+
+        Uri cameraUri = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            cameraUri = FileProvider.getUriForFile(mContext, mContext.getPackageName()
+                    + ".fileprovider", cameraFile);
+        } else {
+            cameraUri = Uri.fromFile(cameraFile);
+        }
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+        }
+        //设置拍照保存的路径，需要特别注意的是在onActivityResult中获取的Intent为空
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+        cameraIntent.putExtra("extra_info", subjectQuestionInfo.getId());
+        ((Activity) mContext).startActivityForResult(cameraIntent, CODE_SYS_CAMERA);
     }
 
 

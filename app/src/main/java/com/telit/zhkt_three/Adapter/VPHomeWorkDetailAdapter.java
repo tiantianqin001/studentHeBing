@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.telit.zhkt_three.Activity.HomeWork.ExtraInfoBean;
 import com.telit.zhkt_three.Adapter.QuestionAdapter.RVQuestionImgAdapter;
 import com.telit.zhkt_three.Adapter.QuestionAdapter.RVQuestionTvAnswerAdapter;
 import com.telit.zhkt_three.CustomView.NoScrollRecyclerView;
@@ -36,6 +37,7 @@ public class VPHomeWorkDetailAdapter extends PagerAdapter {
     private String taskStatus;
     private  int type;
     private String comType;
+    private RVQuestionTvAnswerAdapter rvQuestionTvAnswerAdapter;
 
 
     /**
@@ -120,7 +122,7 @@ public class VPHomeWorkDetailAdapter extends PagerAdapter {
         /*RVQuestionTvAnswerAdapter1 rvQuestionTvAnswerAdapter1 = new RVQuestionTvAnswerAdapter1(mContext, taskStatus,
                 isImageTask, false,type,comType);*/
 
-        RVQuestionTvAnswerAdapter rvQuestionTvAnswerAdapter = new RVQuestionTvAnswerAdapter(mContext, taskStatus,
+        rvQuestionTvAnswerAdapter = new RVQuestionTvAnswerAdapter(mContext, taskStatus,
                 isImageTask, false,type,comType);
 
         if (needShowAnswer) {
@@ -138,5 +140,17 @@ public class VPHomeWorkDetailAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
+    }
+
+    public void fromCameraCallback(String flag) {
+        if (rvQuestionTvAnswerAdapter!=null){
+            rvQuestionTvAnswerAdapter.fromCameraCallback(flag);
+        }
+    }
+
+    public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
+        if (rvQuestionTvAnswerAdapter!=null){
+            rvQuestionTvAnswerAdapter.fromBoardCallback(extraInfoBean);
+        }
     }
 }
