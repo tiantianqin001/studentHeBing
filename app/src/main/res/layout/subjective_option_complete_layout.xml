@@ -5,6 +5,7 @@
     android:layout_marginLeft="@dimen/y33"
     android:layout_marginRight="@dimen/y42"
     android:layout_marginTop="@dimen/x30"
+    android:minHeight="@dimen/x320"
     android:orientation="vertical">
 
     <!--图片集-->
@@ -13,23 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/x180"
-
-
+        android:visibility="gone"
         >
 
         <FrameLayout
             android:id="@+id/subjective_answer_frame_one"
             android:layout_width="@dimen/y288"
-            android:layout_height="@dimen/x180"
-          android:layout_alignParentLeft="true"
-           android:visibility="invisible"
-
-            >
+            android:layout_height="@dimen/x180">
 
             <ImageView
                 android:id="@+id/subjective_img_one"
                 android:layout_width="match_parent"
-                android:layout_height="53dp"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher" />
 
@@ -44,7 +40,8 @@
                     android:id="@+id/subjective_del_one"
                     android:layout_width="@dimen/x40"
                     android:layout_height="@dimen/x40"
-                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/x9"
                     android:layout_marginTop="@dimen/x9"
                     android:src="@mipmap/del_litter" />
             </RelativeLayout>
@@ -54,9 +51,7 @@
             android:id="@+id/subjective_answer_frame_two"
             android:layout_width="@dimen/y288"
             android:layout_height="@dimen/x180"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"
-            >
+            android:layout_centerInParent="true">
 
             <ImageView
                 android:id="@+id/subjective_img_two"
@@ -87,9 +82,7 @@
             android:id="@+id/subjective_answer_frame_three"
             android:layout_width="@dimen/y288"
             android:layout_height="@dimen/x180"
-            android:layout_alignParentRight="true"
-            android:visibility="invisible"
-            >
+            android:layout_alignParentRight="true">
 
             <ImageView
                 android:id="@+id/subjective_img_three"
@@ -122,7 +115,9 @@
         android:id="@+id/subjective_answer_tool_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/x90">
+        android:layout_marginTop="@dimen/x90"
+        android:visibility="gone"
+        >
 
         <TextView
             android:id="@+id/subjective_camera"
@@ -154,15 +149,51 @@
         android:layout_marginBottom="@dimen/x15"
         android:layout_marginTop="@dimen/x15"
         android:background="#E5E5E5" />
-
-    <EditText
-        android:id="@+id/subjective_input"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="top"
-        android:hint="此栏输入文字说明"
-        android:lines="3"
-        android:textColorHint="#CCCCCC"
-        android:textSize="@dimen/x36" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/subjective_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="top"
+            android:hint="此栏输入文字说明"
+            android:textColorHint="#CCCCCC"
+            android:textSize="@dimen/x36"
+            />
+
+            <!--我的答案-->
+            <TextView
+                android:id="@+id/tv_my_anstor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我的答案"
+                android:textSize="@dimen/x36"
+                android:layout_marginTop="@dimen/y33"
+                android:visibility="gone"
+                />
+
+        <TextView
+
+
+            android:id="@+id/tv_teacher_anstor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="老师的答案"
+            android:layout_marginTop="@dimen/y33"
+            android:background="@drawable/shape_tv_answer"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"
+            android:visibility="gone"
+
+            />
+
+            <!--正确答案-->
+
+    </LinearLayout>
+
+
 </LinearLayout>

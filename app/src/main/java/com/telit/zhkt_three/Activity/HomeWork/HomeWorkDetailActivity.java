@@ -361,10 +361,10 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
                 case SubjectiveToDoView.CODE_SYS_CAMERA:
                     //data为null,因为自己设定了拍好照图片的保存位置
                     QZXTools.logE("data=" + data, null);
-                   // EventBus.getDefault().post("CAMERA_CALLBACK", Constant.Subjective_Camera_Callback);
-                    if (vpHomeWorkDetailAdapter!=null){
+                    EventBus.getDefault().post("CAMERA_CALLBACK", Constant.Subjective_Camera_Callback);
+                   /* if (vpHomeWorkDetailAdapter!=null){
                         vpHomeWorkDetailAdapter.fromCameraCallback("CAMERA_CALLBACK");
-                    }
+                    }*/
 
                     break;
             }
@@ -377,9 +377,9 @@ public class HomeWorkDetailActivity extends BaseActivity implements View.OnClick
      */
     @Subscriber(tag = Constant.Subjective_Board_Callback, mode = ThreadMode.MAIN)
     public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
-        if (vpHomeWorkDetailAdapter!=null){
+       /* if (vpHomeWorkDetailAdapter!=null){
             vpHomeWorkDetailAdapter.fromBoardCallback(extraInfoBean);
-        }
+        }*/
     }
 
     @Override

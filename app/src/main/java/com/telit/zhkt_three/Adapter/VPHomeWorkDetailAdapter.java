@@ -143,9 +143,9 @@ public class VPHomeWorkDetailAdapter extends PagerAdapter {
     }
 
     public void fromCameraCallback(String flag) {
-        if (rvQuestionTvAnswerAdapter!=null){
+        /*if (rvQuestionTvAnswerAdapter!=null){
             rvQuestionTvAnswerAdapter.fromCameraCallback(flag);
-        }
+        }*/
     }
 
     public void fromBoardCallback(ExtraInfoBean extraInfoBean) {

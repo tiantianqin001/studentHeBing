@@ -44,6 +44,7 @@ import com.telit.zhkt_three.Activity.HomeWork.WhiteBoardActivity;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.QuestionView.FillBlankToDoView;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
+import com.telit.zhkt_three.CustomView.QuestionView.SubjectiveToDoView;
 import com.telit.zhkt_three.CustomView.QuestionView.TotalQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView;
 import com.telit.zhkt_three.JavaBean.FillBlankBean;
@@ -123,16 +124,12 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
     private List<SubjectBean> subjectBeanList=new ArrayList<>();
 
-    /**
-     * 主观题题目ID
-     */
-    public static String subjQuestionId;
 
     /**
      * 选中的第一个item
      */
     private View firstChooseView = null;
-    private QuestionInfo subjectQuestionInfo;
+
 
     /**
      * 如果homeworkid为空字符串表示没有homeworkid，在QuestionInfo中存在homeworkid
@@ -2365,7 +2362,6 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
 
         } else if (viewHolder instanceof SubjectItemHolder) {
             //主观题
-            //todo 延期处理复用的问题
             viewHolder.setIsRecyclable(false);
             ((SubjectItemHolder) viewHolder).practice_head_index.setText("第" + (i + 1) + "题 共" + questionInfoList.size() + "题");
             //0未提交  1 已提交  2 已批阅
@@ -2376,201 +2372,15 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                                 LocalTextAnswersBeanDao.Properties.HomeworkId.eq(homeworkId),
                                 LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
                 Log.i(TAG, "onBindViewHolder: " + linkLocal);
-
-                SubjectBean subjectBean=new SubjectBean();
-                subjectBean.setId(questionInfoList.get(i).getId());
-                subjectBean.setAnswer_frame_one(subjective_answer_frame_one);
-                subjectBean.setAnswer_frame_two(subjective_answer_frame_two);
-                subjectBean.setAnswer_frame_three(subjective_answer_frame_three);
-                subjectBean.setSubjective_img_one(subjective_img_one);
-                subjectBean.setSubjective_img_two(subjective_img_two);
-                subjectBean.setSubjective_img_three(subjective_img_three);
-
-                subjectBeanList.add(subjectBean);
-
-                if (notifyItem) {
-                    if (i == layoutPosition){
-                     /*   if (imgFilePathList != null && imgFilePathList.size() <= 0) {
-                            subjective_answer_frame_one.setVisibility(GONE);
-                            subjective_answer_frame_two.setVisibility(GONE);
-                            subjective_answer_frame_three.setVisibility(GONE);
-                            return;
-                        }
-                        subjective_imgs_layout.setVisibility(VISIBLE);*/
-                        for (int j = 0; j < subjectBeanList.size(); j++) {
-                            SubjectBean subjectBean1 = subjectBeanList.get(i);
-
-                            if (subjectBean1.getId().equals(questionInfoList.get(i).getId())){
-                                if (imgFilePathList.size() == 1){
-
-                                    subjectBean1.getAnswer_frame_one().setVisibility(VISIBLE);
-
-                                    subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                                    break;
-
-
-                                }else if (imgFilePathList.size() == 2){
-                                    subjectBean1.getAnswer_frame_one().setVisibility(VISIBLE);
-                                    subjectBean1.getAnswer_frame_two().setVisibility(VISIBLE);
-
-                                    subjectBean1.getSubjective_img_one().setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                                    subjectBean1.getSubjective_img_two().setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
-                                    break;
-
-                                }else if (imgFilePathList.size() == 3){
-                                    subjectBean1.getAnswer_frame_one().setVisibility(VISIBLE);
-                                    subjectBean1.getAnswer_frame_two().setVisibility(VISIBLE);
-                                    subjectBean1.getAnswer_frame_three().setVisibility(VISIBLE);
-                                    subjectBean1.getSubjective_img_one().setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                                    subjectBean1.getSubjective_img_two().setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
-                                    subjectBean1.getSubjective_img_three().setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(2)));
-                                    break;
-
-                                }
-                            }
-                        }
-
-
-
-
-                        //-------------------------答案保存，依据作业题目id
-                      /*  LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
-                        localTextAnswersBean.setHomeworkId(homeworkId);
-                        localTextAnswersBean.setQuestionId(subjectQuestionInfo.getId());
-                        localTextAnswersBean.setUserId(UserUtils.getUserId());
-                        localTextAnswersBean.setQuestionType(subjectQuestionInfo.getQuestionType());
-                        localTextAnswersBean.setAnswerContent(subjective_input.getText().toString().trim());
-                        localTextAnswersBean.setImageList(imgFilePathList);
-                        QZXTools.logE("subjective Save localTextAnswersBean=" + localTextAnswersBean, null);
-                        //插入或者更新数据库
-                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);*/
-
-                        notifyItem = false;
-
-                    }
-
+                if (linkLocal != null && linkLocal.questionId.equals(questionInfoList.get(i).getId())) {
+                    ((SubjectItemHolder) viewHolder).subjective_input.setText(linkLocal.answerContent);
                 }
 
-
-
-
-              /*  if (linkLocal!=null && linkLocal.questionId.equals(questionInfoList.get(i).getId())){
-                    if (linkLocal.imageList!=null){
-                        subjective_imgs_layout.setVisibility(VISIBLE);
-                        List<String> imageList = linkLocal.getImageList();
-                        imgFilePathList.addAll(imageList);
-                        if (imgFilePathList.size() == 1){
-                            subjective_answer_frame_one.setVisibility(VISIBLE);
-                            subjective_answer_frame_two.setVisibility(GONE);
-                            subjective_answer_frame_three.setVisibility(GONE);
-                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                        }else if (imgFilePathList.size() == 2){
-                            subjective_answer_frame_one.setVisibility(VISIBLE);
-                            subjective_answer_frame_two.setVisibility(VISIBLE);
-                            subjective_answer_frame_three.setVisibility(GONE);
-                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                            subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
-                        }else if (imgFilePathList.size() == 3){
-                            subjective_answer_frame_one.setVisibility(VISIBLE);
-                            subjective_answer_frame_two.setVisibility(VISIBLE);
-                            subjective_answer_frame_three.setVisibility(VISIBLE);
-                            subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(0)));
-                            subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(1)));
-                            subjective_img_three.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(2)));
-                        }
-                    }
-
-
-                    if (!TextUtils.isEmpty(linkLocal.answerContent)){
-                        subjective_input.setText(linkLocal.answerContent);
-                    }
-                }*/
-
-  /*              subjQuestionId=questionInfoList.get(i).getId();
-                subjectQuestionInfo = questionInfoList.get(i);*/
-
-                //拍照
-                ((SubjectItemHolder) viewHolder).subjective_camera.setOnClickListener(new View.OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View v) {
-                        layoutPosition = i;
-                        Log.i(TAG, "onClick:layoutPosition= " + layoutPosition + ".............." + i);
-                        subjQuestionId = questionInfoList.get(layoutPosition).getId();
-                        subjectQuestionInfo = questionInfoList.get(layoutPosition);
-                        if (imgFilePathList.size() >= 3) {
-                            QZXTools.popCommonToast(MyApplication.getInstance(), "图片答案不得超过三张", false);
-                            return;
-                        }
-                        ZBVPermission.getInstance().setPermPassResult(RVQuestionTvAnswerAdapter.this);
-                        if (!ZBVPermission.getInstance().hadPermissions((Activity) mContext, needPermissions)) {
-                            ZBVPermission.getInstance().requestPermissions((Activity) mContext, needPermissions);
-                        } else {
-                            //直接打开相机
-                            QZXTools.logD("已拥有权限直接打开相机");
-                            openCamera();
-                        }
-                    }
-                });
-                subjective_del_one.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imgFilePathList.remove(0);
-                        //同样删除数据库中的信息
-                        showImgsSaveAnswer();
-                    }
-                });
-
-                subjective_del_two.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imgFilePathList.remove(1);
-                        //同样删除数据库中的信息
-                        showImgsSaveAnswer();
-                    }
-                });
-                subjective_del_three.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imgFilePathList.remove(2);
-                        //同样删除数据库中的信息
-                        showImgsSaveAnswer();
-                    }
-                });
-
-                //白班的点击事件
-                ((SubjectItemHolder) viewHolder).subjective_board.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        layoutPosition = viewHolder.getLayoutPosition();
-                        subjQuestionId = questionInfoList.get(layoutPosition).getId();
-                        subjectQuestionInfo = questionInfoList.get(layoutPosition);
-
-                        if (imgFilePathList.size() >= 3) {
-                            QZXTools.popCommonToast(MyApplication.getInstance(), "图片答案不得超过三张", false);
-                            return;
-                        }
-
-
-                        ZBVPermission.getInstance().setPermPassResult(RVQuestionTvAnswerAdapter.this);
-                        if (!ZBVPermission.getInstance().hadPermissions((Activity) mContext, needPermissions)) {
-                            ZBVPermission.getInstance().requestPermissions((Activity) mContext, needPermissions);
-                        } else {
-                            Intent intent = new Intent(mContext, WhiteBoardActivity.class);
-                            intent.putExtra("extra_info", questionInfoList.get(i).getId());
-                            mContext.startActivity(intent);
-                        }
-                    }
-                });
-
-                //添加文本输入改变监听
-
-                subjective_input.addTextChangedListener(new TextWatcher() {
+                ((SubjectItemHolder) viewHolder).subjective_input.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                         if (!resetText) {
-                            cursorPos = subjective_input.getSelectionEnd();
+                            cursorPos = ((SubjectItemHolder) viewHolder).subjective_input.getSelectionEnd();
                             // 这里用s.toString()而不直接用s是因为如果用s，
                             // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
                             // inputAfterText也就改变了，那么表情过滤就失败了
@@ -2588,9 +2398,9 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                                         resetText = true;
                                         Toast.makeText(mContext, "不支持输入Emoji表情符号", Toast.LENGTH_SHORT).show();
                                         //是表情符号就将文本还原为输入表情符号之前的内容
-                                        subjective_input.setText(inputAfterText);
-                                        QZXTools.logE("inputAfterText:" + inputAfterText, null);
-                                        CharSequence text = subjective_input.getText();
+                                        ((SubjectItemHolder) viewHolder).subjective_input.setText(inputAfterText);
+                                        QZXTools.logE("inputAfterText:"+inputAfterText,null);
+                                        CharSequence text = ((SubjectItemHolder) viewHolder).subjective_input.getText();
                                         if (text.length() > 0) {
                                             if (text instanceof Spannable) {
                                                 Spannable spanText = (Spannable) text;
@@ -2610,31 +2420,37 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
                         //-------------------------答案保存，依据作业题目id
                         LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
                         localTextAnswersBean.setHomeworkId(homeworkId);
-                        localTextAnswersBean.setQuestionId(subjectQuestionInfo.getId());
+                        localTextAnswersBean.setQuestionId(questionInfoList.get(i).getId());
+                        localTextAnswersBean.setQuestionType(questionInfoList.get(i).getQuestionType());
+                        localTextAnswersBean.setAnswerContent(((SubjectItemHolder) viewHolder).subjective_input.getText().toString());
                         localTextAnswersBean.setUserId(UserUtils.getUserId());
-                        localTextAnswersBean.setQuestionType(subjectQuestionInfo.getQuestionType());
-                        localTextAnswersBean.setAnswerContent(subjective_input.getText().toString());
-                        localTextAnswersBean.setUserId(UserUtils.getUserId());
-                        localTextAnswersBean.setAnswer(subjectQuestionInfo.getAnswer());
-                        localTextAnswersBean.setImageList(imgFilePathList);
+                        localTextAnswersBean.setAnswer(questionInfoList.get(i).getAnswer());
+                        localTextAnswersBean.setImageList(null);
 //                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
                         //插入或者更新数据库
                         MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
                         //-------------------------答案保存，依据作业题目id
 
-                        QZXTools.logE("保存主观题答案:" + new Gson().toJson(localTextAnswersBean), null);
+                        QZXTools.logE("保存主观题答案:"+new Gson().toJson(localTextAnswersBean),null);
                     }
                 });
 
-            } else {
+            }else {
+                //正确答案
+                ((SubjectItemHolder) viewHolder).subjective_input.setVisibility(GONE);
+                ((SubjectItemHolder) viewHolder).tv_my_anstor.setVisibility(VISIBLE);
+                ((SubjectItemHolder) viewHolder).tv_teacher_anstor.setVisibility(VISIBLE);
+                ((SubjectItemHolder) viewHolder).tv_my_anstor.setText("我的答案: "+questionInfoList.get(i).getOwnList().get(0).getAnswerContent());
+                ((SubjectItemHolder) viewHolder).tv_teacher_anstor.setText("老师答案: "+questionInfoList.get(i).getAnswer());
+
 
             }
+
 
         } else if (viewHolder instanceof LinkedLineHolder) {
             //连线题
             // viewHolder.setIsRecyclable(false);
             QZXTools.logE("ToLine viewHolder instanceof LinkedLineHolder......" + questionInfoList.get(i), null);
-
             Log.i("qin008", "onBindViewHolder: " + questionInfoList.get(i));
             List<Integer> leftPositions = new ArrayList<>();
             List<Integer> rightPositions = new ArrayList<>();
@@ -3196,10 +3012,10 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
-        if (extraInfoBean.getQuestionId().equals(subjectQuestionInfo.getId())) {
+       /* if (extraInfoBean.getQuestionId().equals(subjectQuestionInfo.getId())) {
             imgFilePathList.add(extraInfoBean.getFilePath());
             showImgsSaveAnswer();
-        }
+        }*/
     }
 
     public class SingleChooseHolder extends RecyclerView.ViewHolder {
@@ -3285,60 +3101,24 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    private FrameLayout subjective_answer_frame_one;
-    private FrameLayout subjective_answer_frame_two;
-    private FrameLayout subjective_answer_frame_three;
-    //删除图片
-    private RelativeLayout subjective_del_layout_one;
-    private RelativeLayout subjective_del_layout_two;
-    private RelativeLayout subjective_del_layout_three;
-    private ImageView subjective_del_one;
-    private ImageView subjective_del_two;
-    private ImageView subjective_del_three;
-    //图片
-    private ImageView subjective_img_one;
-    private ImageView subjective_img_two;
-    private ImageView subjective_img_three;
 
-
-    private RelativeLayout subjective_imgs_layout;
-
-
-    private EditText subjective_input;
 
     public class SubjectItemHolder extends RecyclerView.ViewHolder {
 
         private final TextView practice_head_index;
-        private final TextView subjective_camera;
-        private final TextView subjective_board;
+        private final TextView tv_my_anstor;
+        private final TextView tv_teacher_anstor;
+        private final EditText subjective_input;
+
 
         public SubjectItemHolder(@NonNull View itemView) {
             super(itemView);
             practice_head_index = itemView.findViewById(R.id.practice_head_index);
-            subjective_imgs_layout = itemView.findViewById(R.id.subjective_imgs_layout);
-            //拍照
-            subjective_camera = itemView.findViewById(R.id.subjective_camera);
-            //画板
-            subjective_board = itemView.findViewById(R.id.subjective_board);
-
-            subjective_answer_frame_one = itemView.findViewById(R.id.subjective_answer_frame_one);
-            subjective_answer_frame_two = itemView.findViewById(R.id.subjective_answer_frame_two);
-            subjective_answer_frame_three = itemView.findViewById(R.id.subjective_answer_frame_three);
-
-            //图片的显示
-
-            subjective_img_one = itemView.findViewById(R.id.subjective_img_one);
-            subjective_img_two = itemView.findViewById(R.id.subjective_img_two);
-            subjective_img_three = itemView.findViewById(R.id.subjective_img_three);
-
-            subjective_del_layout_one = itemView.findViewById(R.id.subjective_del_layout_one);
-            subjective_del_layout_two = itemView.findViewById(R.id.subjective_del_layout_two);
-            subjective_del_layout_three = itemView.findViewById(R.id.subjective_del_layout_three);
-            subjective_del_one = itemView.findViewById(R.id.subjective_del_one);
-            subjective_del_two = itemView.findViewById(R.id.subjective_del_two);
-            subjective_del_three = itemView.findViewById(R.id.subjective_del_three);
-            //输入的内容
+            tv_my_anstor = itemView.findViewById(R.id.tv_my_anstor);
+            tv_teacher_anstor = itemView.findViewById(R.id.tv_teacher_anstor);
             subjective_input = itemView.findViewById(R.id.subjective_input);
+
+
 
         }
     }
@@ -3505,122 +3285,10 @@ public class RVQuestionTvAnswerAdapter extends RecyclerView.Adapter<RecyclerView
         return -1;
     }
 
-    /**
-     * 打开相机
-     */
-    private File cameraFile;
-    public static final int CODE_SYS_CAMERA = 1;//系统相机RequestCode
-
-    private void openCamera() {
-        String fileDir = QZXTools.getExternalStorageForFiles(mContext, Environment.DIRECTORY_PICTURES);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("IMG_");
-        stringBuilder.append(simpleDateFormat.format(new Date()));
-
-        stringBuilder.append(".jpg");
-        cameraFile = new File(fileDir, stringBuilder.toString());
-
-        Uri cameraUri = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            cameraUri = FileProvider.getUriForFile(mContext, mContext.getPackageName()
-                    + ".fileprovider", cameraFile);
-        } else {
-            cameraUri = Uri.fromFile(cameraFile);
-        }
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-        }
-        //设置拍照保存的路径，需要特别注意的是在onActivityResult中获取的Intent为空
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
-        cameraIntent.putExtra("extra_info", subjectQuestionInfo.getId());
-        ((Activity) mContext).startActivityForResult(cameraIntent, CODE_SYS_CAMERA);
-    }
-
-    /**
-     * 主观题拍照后获取数据
-     *
-     * @param flag
-     */
-    //图片文件
-    private ArrayList<String> imgFilePathList = new ArrayList<>();
-
-    private boolean notifyItem = false;
-
-    public void fromCameraCallback(String flag) {
-        if (flag.equals("CAMERA_CALLBACK")) {
-            notifyItem = true;
-            QZXTools.logE("fromCameraCallback filePath=" + cameraFile.getAbsolutePath(), null);
-            //之所以判断是因为所有的其他SubjectiveToDoView也可以接受到这个反馈
-            Log.i("", "fromCameraCallback: " + subjectQuestionInfo);
-            if (subjQuestionId.equals(subjectQuestionInfo.getId() + "")) {
-                //质量压缩处理
-//                File compressFile = compressImage(BitmapFactory.decodeFile(cameraFile.getAbsolutePath()));
-
-                //比例尺寸压缩 notes:这个比质量压缩的要快，效果也很不错
-                File compressFile = compressBitmapToFile(cameraFile.getAbsolutePath(),
-                        mContext.getResources().getDimensionPixelSize(R.dimen.x800));
-
-                imgFilePathList.add(compressFile.getAbsolutePath());
-
-                notifyItemChanged(layoutPosition);
-            }
-        }
-    }
 
 
-    /**
-     * 显示图片
-     */
-    private void showImgsSaveAnswer() {
 
-    /*    if (imgFilePathList != null && imgFilePathList.size() <= 0) {
-            subjective_answer_frame_one.setVisibility(GONE);
-            subjective_answer_frame_two.setVisibility(GONE);
-            subjective_answer_frame_three.setVisibility(GONE);
-            return;
-        }
-        subjective_imgs_layout.setVisibility(VISIBLE);
 
-        for (int i = 0; i < imgFilePathList.size(); i++) {
-            switch (i) {
-                case 0:
-                    subjective_answer_frame_one.setVisibility(VISIBLE);
-                    subjective_answer_frame_two.setVisibility(GONE);
-                    subjective_answer_frame_three.setVisibility(GONE);
-                    subjective_img_one.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
-                    break;
-                case 1:
-                    subjective_answer_frame_two.setVisibility(VISIBLE);
-                    subjective_answer_frame_three.setVisibility(GONE);
-                    subjective_img_two.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
-                    break;
-                case 2:
-                    subjective_answer_frame_three.setVisibility(VISIBLE);
-                    subjective_img_three.setImageBitmap(BitmapFactory.decodeFile(imgFilePathList.get(i)));
-                    break;
-                default:
-                    QZXTools.popCommonToast(mContext, "imgFileList大小超过3个了", false);
-                    break;
-            }
-        }*/
-
-        //-------------------------答案保存，依据作业题目id
-/*        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
-        localTextAnswersBean.setHomeworkId(homeworkId);
-        localTextAnswersBean.setQuestionId(subjectQuestionInfo.getId());
-        localTextAnswersBean.setUserId(UserUtils.getUserId());
-        localTextAnswersBean.setQuestionType(subjectQuestionInfo.getQuestionType());
-        localTextAnswersBean.setAnswerContent(subjective_input.getText().toString().trim());
-        localTextAnswersBean.setImageList(imgFilePathList);
-        QZXTools.logE("subjective Save localTextAnswersBean=" + localTextAnswersBean, null);
-        //插入或者更新数据库
-        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);*/
-        //-------------------------答案保存，依据作业题目id
-    }
 
 
 }
