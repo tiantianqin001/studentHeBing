@@ -9,10 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,10 +19,9 @@ import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.PreView.PreViewContentVPAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
+import com.telit.zhkt_three.Fragment.PreView.CollectionResourcesFragment;
 import com.telit.zhkt_three.Fragment.PreView.PreCloudFragment;
 import com.telit.zhkt_three.Fragment.PreView.PreEleFragment;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
-import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.QZXTools;
@@ -34,7 +30,6 @@ import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,6 +67,13 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
     ImageView pre_ele_img;
     @BindView(R.id.pre_ele_layout)
     LinearLayout pre_ele_layout;
+    @BindView(R.id.collect_resources_img)
+    ImageView collect_resources_img;
+    @BindView(R.id.collect_resources_layout)
+    LinearLayout collect_resources_layout;
+
+    @BindView(R.id.collection_resources_click_layout)
+    LinearLayout collection_resources_click_layout;
 
     @BindView(R.id.pre_cache_click_layout)
     LinearLayout pre_cache_click_layout;
@@ -105,27 +107,16 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
         EventBus.getDefault().register(this);
 
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            customHeadLayout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
+
+        customHeadLayout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
 
         pre_cloud_click_layout.setOnClickListener(this);
         pre_ele_click_layout.setOnClickListener(this);
+        collection_resources_click_layout.setOnClickListener(this);
         pre_left_pull.setOnClickListener(this);
         pre_cloud_img.setOnClickListener(this);
         pre_ele_img.setOnClickListener(this);
+        collect_resources_img.setOnClickListener(this);
 
         pre_cache_click_layout.setOnClickListener(this);
 
@@ -134,9 +125,11 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
 
         preCloudFragment = new PreCloudFragment();
         PreEleFragment preEleFragment = new PreEleFragment();
+        CollectionResourcesFragment collectionResourcesFragment = new CollectionResourcesFragment();
 
         list.add(preCloudFragment);
         list.add(preEleFragment);
+        list.add(collectionResourcesFragment);
         PreViewContentVPAdapter preViewContentVPAdapter = new PreViewContentVPAdapter(getSupportFragmentManager());
         preViewContentVPAdapter.setFragmentList(list);
         pre_vp_content.setAdapter(preViewContentVPAdapter);
@@ -149,36 +142,50 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
                 if (position == 0) {
                     pre_cloud_click_layout.setSelected(true);
                     pre_ele_click_layout.setSelected(false);
-                    pre_ele_img.setVisibility(View.VISIBLE);
-                    pre_ele_layout.setVisibility(View.GONE);
+                    collection_resources_click_layout.setSelected(false);
+
                     pre_cloud_img.setVisibility(View.GONE);
                     pre_cloud_layout.setVisibility(View.VISIBLE);
-                } else {
+                    pre_ele_img.setVisibility(View.VISIBLE);
+                    pre_ele_layout.setVisibility(View.GONE);
+                    collect_resources_img.setVisibility(View.VISIBLE);
+                    collect_resources_layout.setVisibility(View.GONE);
+                }else if (position == 1) {
                     pre_cloud_click_layout.setSelected(false);
                     pre_ele_click_layout.setSelected(true);
+                    collection_resources_click_layout.setSelected(false);
+
                     pre_cloud_img.setVisibility(View.VISIBLE);
                     pre_cloud_layout.setVisibility(View.GONE);
                     pre_ele_img.setVisibility(View.GONE);
                     pre_ele_layout.setVisibility(View.VISIBLE);
+                    collect_resources_img.setVisibility(View.VISIBLE);
+                    collect_resources_layout.setVisibility(View.GONE);
+                } else {
+                    pre_cloud_click_layout.setSelected(false);
+                    pre_ele_click_layout.setSelected(false);
+                    collection_resources_click_layout.setSelected(true);
+
+                    pre_cloud_img.setVisibility(View.VISIBLE);
+                    pre_cloud_layout.setVisibility(View.GONE);
+                    pre_ele_img.setVisibility(View.VISIBLE);
+                    pre_ele_layout.setVisibility(View.GONE);
+                    collect_resources_img.setVisibility(View.GONE);
+                    collect_resources_layout.setVisibility(View.VISIBLE);
                 }
             }
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
-
         pre_cloud_click_layout.performClick();
         pre_cloud_click_layout.setSelected(true);
-
     }
-
     @Override
     protected void onDestroy() {
         if (unbinder != null) {
             unbinder.unbind();
         }
-
         EventBus.getDefault().unregister(this);
 
         ZBVPermission.getInstance().recyclerAll();
@@ -186,7 +193,6 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
 
         BuriedPointUtils.buriedPoint("2028","","","","");
     }
-
     /**
      * 跟新缓存大小视图
      */
@@ -197,7 +203,6 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
             handlerCacheSizeShow();
         }
     }
-
     /**
      * 显示缓存大小
      */
@@ -225,7 +230,6 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
             pre_cache_size.setText("0");
         }
     }
-
     /**
      * 清空缓存,包括记录的序列化文件 xxx/disk/preRecord.txt
      * notes：
@@ -267,16 +271,16 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pre_cloud_click_layout:
-                pre_vp_content.setCurrentItem(0, true);
-                break;
-            case R.id.pre_ele_click_layout:
-                pre_vp_content.setCurrentItem(1, true);
-                break;
             case R.id.pre_cloud_img:
                 pre_vp_content.setCurrentItem(0, true);
                 break;
+            case R.id.pre_ele_click_layout:
             case R.id.pre_ele_img:
                 pre_vp_content.setCurrentItem(1, true);
+                break;
+            case R.id.collection_resources_click_layout:
+            case R.id.collect_resources_img:
+                pre_vp_content.setCurrentItem(2, true);
                 break;
             case R.id.pre_left_pull:
                 //隐藏/显示左侧栏
@@ -309,17 +313,13 @@ public class PreViewActivity extends BaseActivity implements View.OnClickListene
                 super.onBackPressed();
             }
         }
-
     }
-
     private boolean isSDEnable = false;
-
     @Override
     public void grantPermission() {
         isSDEnable = true;
         handlerCacheSizeShow();
     }
-
     @Override
     public void denyPermission() {
         isSDEnable = false;

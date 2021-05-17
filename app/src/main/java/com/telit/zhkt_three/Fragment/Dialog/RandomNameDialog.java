@@ -4,10 +4,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +15,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.JsonObject;
-import com.telit.zhkt_three.CustomView.CircleImageView;
 import com.telit.zhkt_three.R;
+import com.telit.zhkt_three.Utils.QZXTools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -55,11 +48,11 @@ public class RandomNameDialog extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_random_name_layout, container, false);
         TextView textView = view.findViewById(R.id.tv_random);
-       ImageView board_avatar=view.findViewById(R.id.board_avatar);
+        ImageView board_avatar=view.findViewById(R.id.board_avatar);
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "PingFang-SimpleBold.ttf");
         textView.setTypeface(typeface);
-        Log.i(TAG, "onCreateView: "+name);
+        QZXTools.logE("onCreateView: "+name,null);
         if (!TextUtils.isEmpty(name)){
             try {
                 JSONObject jsonData = new JSONObject(name);

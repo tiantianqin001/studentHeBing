@@ -11,7 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
+import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.JavaBean.AfterHomework.AfterHomeworkBean;
+import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
+import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
@@ -37,6 +40,8 @@ public class ItemAfterHomeworkView extends RelativeLayout {
     private String comType;
     private int types;
 
+    private TextView after_homework_tv_export;
+
 
     public void setAfterHomeworkBean(AfterHomeworkBean afterHomeworkBean) {
         this.afterHomeworkBean = afterHomeworkBean;
@@ -44,7 +49,12 @@ public class ItemAfterHomeworkView extends RelativeLayout {
     }
 
     public ItemAfterHomeworkView(Context context) {
-        this(context, null);
+        this(context, null,0);
+    }
+
+    public ItemAfterHomeworkView(Context context,OnExportClickListener onExportClickListener) {
+        this(context, null,0);
+        this.onExportClickListener = onExportClickListener;
     }
 
     public ItemAfterHomeworkView(Context context, AttributeSet attrs) {
@@ -62,12 +72,15 @@ public class ItemAfterHomeworkView extends RelativeLayout {
         after_homework_tv_enter = view.findViewById(R.id.after_homework_tv_enter);
         after_homework_img_enter = view.findViewById(R.id.after_homework_img_enter);
 
+        after_homework_tv_export = view.findViewById(R.id.after_homework_tv_export);
     }
 
     private void initData() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (afterHomeworkBean.getStatus() == null || afterHomeworkBean.getStatus().equals("0")) {
+        if (afterHomeworkBean.getStatus() == null || afterHomeworkBean.getStatus().equals(Constant.Todo_Status)
+                || afterHomeworkBean.getStatus().equals(Constant.Retry_Status) ||
+                afterHomeworkBean.getStatus().equals(Constant.Save_Status)) {
             if (afterHomeworkBean.getStatus() == null) {
                 afterHomeworkBean.setStatus("0");
             }
@@ -77,10 +90,17 @@ public class ItemAfterHomeworkView extends RelativeLayout {
             endDate = endDate.replace('-', '/');
             long endTime = Date.parse(endDate);
             long time = new Date().getTime();
-            if (time>endTime){
-                after_homework_tv_enter.setText("去补交");
-            }else {
-                after_homework_tv_enter.setText("去完成");
+            String status = afterHomeworkBean.getStatus();
+            if (status.equals(Constant.Todo_Status)){
+                if (time>endTime){
+                    after_homework_tv_enter.setText("去补交");
+                }else {
+                    after_homework_tv_enter.setText("去完成");
+                }
+            }else if (status.equals(Constant.Retry_Status)){
+                after_homework_tv_enter.setText("打回重做");
+            }else if (status.equals(Constant.Save_Status)){
+                after_homework_tv_enter.setText("作业已保存");
             }
 
 
@@ -88,6 +108,8 @@ public class ItemAfterHomeworkView extends RelativeLayout {
             after_homework_img_enter.setImageResource(R.mipmap.todo_arrow);
 
             stringBuilder.append("提交截止日期：");
+
+            after_homework_tv_export.setVisibility(GONE);
         } else {
             after_homework_tv_commit_date.setTextColor(0xFF93A5B9);
             after_homework_tv_enter.setText("查看报告");
@@ -95,6 +117,8 @@ public class ItemAfterHomeworkView extends RelativeLayout {
             after_homework_img_enter.setImageResource(R.mipmap.complete_arrow);
 
             stringBuilder.append("作业完成日期：");
+
+            after_homework_tv_export.setVisibility(VISIBLE);
         }
 
         String subject = afterHomeworkBean.getSubjectId();
@@ -110,10 +134,12 @@ public class ItemAfterHomeworkView extends RelativeLayout {
         stringBuilder.append(endDate);
         after_homework_tv_commit_date.setText(stringBuilder.toString());
 
-        after_homework_item_layout.setOnClickListener(new View.OnClickListener() {
+        after_homework_item_layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (QZXTools.canClick()) {
+
+
                     /**
                      * 进入作业详情做作业
                      *   作业的点击事件
@@ -129,6 +155,15 @@ public class ItemAfterHomeworkView extends RelativeLayout {
                 }
             }
         });
+
+        after_homework_tv_export.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onExportClickListener!=null){
+                    onExportClickListener.onExportClick(v,afterHomeworkBean.getId(),afterHomeworkBean.getByHand(),afterHomeworkBean.getName(),afterHomeworkBean.getStatus());
+                }
+            }
+        });
     }
 
     public void setType(String comType) {
@@ -139,5 +174,11 @@ public class ItemAfterHomeworkView extends RelativeLayout {
     public void setTypes(int types) {
 
         this.types = types;
+    }
+
+    private OnExportClickListener onExportClickListener;
+
+    public interface OnExportClickListener {
+        void onExportClick(View view, String homeworkId,String byHand,String homeworkName,String status);
     }
 }

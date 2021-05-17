@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x10"
+    android:layout_marginTop="@dimen/x10"
+    android:orientation="vertical"
+    android:background="#E5E5E5">
+
+    <RelativeLayout
+        android:id="@+id/item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/x18"
+        android:paddingLeft="@dimen/y33"
+        android:paddingTop="@dimen/x18"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/img_tag"
+            android:layout_width="@dimen/x108"
+            android:layout_height="@dimen/x108"
+            android:layout_marginRight="@dimen/y27"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x5"
+            android:layout_toRightOf="@+id/img_tag"
+            android:text="语文课堂作业"
+            android:textColor="@color/word_gray_deep"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_tag"
+            android:layout_marginBottom="@dimen/x5"
+            android:layout_toRightOf="@+id/img_tag"
+            android:text="2019/03/28  15:30"
+            android:textColor="#B3B9C7"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_tag"
+            android:layout_marginBottom="@dimen/x5"
+            android:layout_toRightOf="@+id/tv_date"
+            android:text="0k"
+            android:textColor="#B3B9C7"
+            android:textSize="@dimen/x30"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/after_homework_tv_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/after_homework_img_enter"
+            android:text="去查看"
+            android:textColor="#B3B9C7"
+            android:textSize="@dimen/x36" />
+
+        <ImageView
+            android:id="@+id/after_homework_img_enter"
+            android:layout_width="@dimen/y18"
+            android:layout_height="@dimen/x36"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/y27"
+            android:layout_marginRight="@dimen/y30"
+            android:src="@mipmap/todo_arrow" />
+    </RelativeLayout>
+</LinearLayout>

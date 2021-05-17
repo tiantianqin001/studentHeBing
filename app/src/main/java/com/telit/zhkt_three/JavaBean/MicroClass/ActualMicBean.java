@@ -10,6 +10,13 @@ public class ActualMicBean {
     private String createDate;
     private String thumbnail;
     private String previewUrl;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    private String fileName;
+
     //微课文件大小
     private long size;
 
@@ -59,5 +66,9 @@ public class ActualMicBean {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

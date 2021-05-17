@@ -28,7 +28,7 @@ public class AppLingchuangListsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         List<String> hide_show_apps = intent.getStringArrayListExtra("hide_show_apps");
-        Log.i("qin0119", "onReceive: "+hide_show_apps);
+
         appsLists.clear();
         //这个必须点击10次   也就是调10次home键才能收到广播  这个是获取第三方app 的应用
         if (hide_show_apps!=null){

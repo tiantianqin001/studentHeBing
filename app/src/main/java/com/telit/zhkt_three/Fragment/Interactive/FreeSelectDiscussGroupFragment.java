@@ -15,11 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.telit.zhkt_three.Adapter.interactive.RVSelectGroupAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.SelectGroupBean;
 import com.telit.zhkt_three.JavaBean.InterActive.SelectGroup;
 import com.telit.zhkt_three.R;
@@ -27,15 +26,11 @@ import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
-import com.telit.zhkt_three.customNetty.MsgUtils;
-import com.telit.zhkt_three.customNetty.SimpleClientNetty;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -107,7 +102,7 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), "当前网络不佳....", false);
                         if (progress_linear != null) {
                             progress_linear.setVisibility(View.GONE);
                         }
@@ -159,11 +154,11 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
                                                     //还没有提交选组，则随机选一个提交
                                                     int size = selectGroup.getDiscussionGroup().size();
                                                     int random = (int) Math.round(Math.random() * (size - 1));
-                                                    //提交random下标的小组
+                                                    //提交random下标的小组  // 0 是用户点击   1是随机分配
                                                     String toSendMsg = passMsg(
                                                             selectGroup.getDiscussionGroup().get(random).getGroupDiscussId() + "",
                                                             selectGroup.getDiscussionGroup()
-                                                                    .get(random).getGroupIndex());
+                                                                    .get(random).getGroupIndex(), 1);
                                                     EventBus.getDefault().post(toSendMsg, Constant.Free_Theme_Over);
 
                                                 }
@@ -210,15 +205,24 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                select_group_btn_commit.setEnabled(false);
+               // select_group_btn_commit.setEnabled(false);
+
+                QZXTools.logD("selectGroupAdapter="+selectGroupAdapter.getSelectedGroupId());
+
+
+                if (selectGroupAdapter.getSelectedGroupId() == 0){
+                    ToastUtils.show("还未选择分组");
+                    return;
+                }
 
                 if (timeCount > 0 && timer != null) {
                     timer.cancel();
                     timer = null;
                 }
                 //提交选组信息给教师端
+                // 0 是用户点击   1是随机分配
                 String toSendMsg = passMsg(selectGroupAdapter.getSelectedGroupId() + "",
-                        selectGroupAdapter.getSelectedGroupIndex());
+                        selectGroupAdapter.getSelectedGroupIndex(),0);
                 EventBus.getDefault().post(toSendMsg, Constant.Free_Theme_Over);
             }
         });
@@ -228,6 +232,21 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
         //展示数据
         selectGroupAdapter = new RVSelectGroupAdapter(getContext());
         recyclerView.setAdapter(selectGroupAdapter);
+        //点击了一组
+        selectGroupAdapter.setCommitOnItemClickListener(new RVSelectGroupAdapter.CommitOnItemClickListener() {
+            @Override
+            public void onClick() {
+                if (timeCount > 0 && timer != null) {
+                    timer.cancel();
+                    timer = null;
+                }
+
+            /*    String toSendMsg = passMsg(
+                        selectGroupAdapter.getSelectedGroupId() + "",
+                        selectGroupAdapter.getSelectedGroupIndex());
+                EventBus.getDefault().post(toSendMsg, Constant.Free_Theme_Over);*/
+            }
+        });
 
         requestGroupInfo();
 
@@ -305,7 +324,7 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
      * "stuInfo":{}
      * }
      */
-    private String passMsg(String discussGroupId, String groupIndex) {
+    private String passMsg(String discussGroupId, String groupIndex, int code) {
         JSONObject childJsonObject = new JSONObject();
         try {
             String className = UserUtils.getClassName();
@@ -324,6 +343,7 @@ public class FreeSelectDiscussGroupFragment extends Fragment {
             childJsonObject.put("photo", UserUtils.getAvatarUrl());
             childJsonObject.put("userId", UserUtils.getUserId());
             childJsonObject.put("groupIndex", groupIndex);
+            childJsonObject.put("freeSelectCodeFlag",code);
         } catch (JSONException e) {
             e.printStackTrace();
             QZXTools.logE("Json Exception", null);

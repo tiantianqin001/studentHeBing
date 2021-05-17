@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_match_bind_tag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/matching_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/shape_line_reset_normal"
+        android:gravity="center"
+        android:text="重置"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/x24" />
+
+    <FrameLayout
+        android:id="@+id/fl_toline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/y240"
+        android:layout_marginRight="@dimen/y240"
+        android:layout_marginTop="@dimen/x30"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_matching_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <!--ToLineView必须放在FrameLayout的最后-->
+        <com.telit.zhkt_three.CustomView.QuestionView.matching.ToLineView
+            android:id="@+id/matching_toLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>

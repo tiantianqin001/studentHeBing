@@ -23,6 +23,7 @@
             android:src="@mipmap/button_back" />
 
         <TextView
+            android:id="@+id/tv_popsition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -53,10 +54,32 @@
                 zbv:civ_border_width="@dimen/x4" />
 
             <TextView
-                android:id="@+id/person_version"
+                android:id="@+id/person_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/person_avatar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x30"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_appName"
+                android:layout_width="@dimen/x240"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/person_name"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x40"
+                android:background="@drawable/shape_version_bg"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x18" />
+
+            <TextView
+                android:id="@+id/person_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_appName"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/x21"
                 android:background="@drawable/shape_version_bg"
@@ -65,22 +88,11 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/x18" />
 
-            <TextView
-                android:id="@+id/person_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/person_version"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/x30"
-                android:text="小燕子"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/x48" />
-
             <!--辅助自动更新模式开关-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/person_name"
+                android:layout_below="@+id/person_version"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/x30"
                 android:background="@drawable/shape_version_bg"

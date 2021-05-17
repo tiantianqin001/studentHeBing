@@ -68,10 +68,10 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mode_width = View.MeasureSpec.getMode(widthMeasureSpec);
-        int size_width = View.MeasureSpec.getSize(widthMeasureSpec);//具体值或者Match_Parent
-        int mode_height = View.MeasureSpec.getMode(heightMeasureSpec);
-        int size_height = View.MeasureSpec.getSize(heightMeasureSpec);
+        int mode_width = MeasureSpec.getMode(widthMeasureSpec);
+        int size_width = MeasureSpec.getSize(widthMeasureSpec);//具体值或者Match_Parent
+        int mode_height = MeasureSpec.getMode(heightMeasureSpec);
+        int size_height = MeasureSpec.getSize(heightMeasureSpec);
 
         int width = 0;
         int height = 0;
@@ -119,8 +119,8 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
             }
         }
 
-        setMeasuredDimension((mode_width == View.MeasureSpec.EXACTLY) ? size_width : width,
-                (mode_height == View.MeasureSpec.EXACTLY) ? size_height : height);
+        setMeasuredDimension((mode_width == MeasureSpec.EXACTLY) ? size_width : width,
+                (mode_height == MeasureSpec.EXACTLY) ? size_height : height);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
 
             View childView = getChildAt(i);
 
-            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) childView.getLayoutParams();
+            MarginLayoutParams layoutParams = (MarginLayoutParams) childView.getLayoutParams();
 
 //            QZXTools.logE("left=" + childView.getLeft() + ";top=" + childView.getTop()
 //                    + ";right=" + childView.getRight() + ";bottom=" + childView.getBottom()
@@ -149,13 +149,13 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        return new ViewGroup.MarginLayoutParams(lp);
+    protected LayoutParams generateLayoutParams(LayoutParams lp) {
+        return new MarginLayoutParams(lp);
     }
 
     @Override
-    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new ViewGroup.MarginLayoutParams(getContext(), attrs);
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(), attrs);
     }
 
 
@@ -216,8 +216,8 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
 //        int left = screenWidth / total * (index + 1) - itemWidth;
         int top = (int) (screenHeight / 2 + (screenHeight / 3 - itemWidth) * Math.random());
 
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams
-                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams layoutParams = new MarginLayoutParams
+                (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
         layoutParams.leftMargin = (int) left;
         layoutParams.topMargin = (int) top;
@@ -262,11 +262,11 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
         ImageView imgOne = null;
         ImageView imgTwo = null;
 
-        ViewGroup.MarginLayoutParams lp_one = new ViewGroup.MarginLayoutParams
-                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams lp_one = new MarginLayoutParams
+                (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-        ViewGroup.MarginLayoutParams lp_two = new ViewGroup.MarginLayoutParams
-                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams lp_two = new MarginLayoutParams
+                (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
         switch (bgIndex) {
             case 0:
@@ -457,7 +457,7 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
                     int offsetX = (int) (moveX - firstX);
                     int offsetY = (int) (moveY - firstY);
 
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                    MarginLayoutParams layoutParams = (MarginLayoutParams) v.getLayoutParams();
 //                    QZXTools.logE("getLeft=" + v.getLeft() + ";getTop=" + v.getTop(), null);
 
                     int leftMargin = v.getLeft() + offsetX;
@@ -536,7 +536,7 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
 
 //                        translateToOrigin(v);
 
-                        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                        MarginLayoutParams lp = (MarginLayoutParams) v.getLayoutParams();
                         lp.leftMargin = originalLeft;
                         lp.topMargin = originalTop;
                         v.setLayoutParams(lp);
@@ -594,7 +594,7 @@ public class InterestingClassificationLayout extends ViewGroup implements View.O
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                MarginLayoutParams layoutParams = (MarginLayoutParams) view.getLayoutParams();
                 layoutParams.leftMargin = originalLeft;
                 layoutParams.topMargin = originalTop;
                 view.setLayoutParams(layoutParams);

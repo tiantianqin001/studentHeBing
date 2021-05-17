@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="@dimen/x1920"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/y66"
     android:layout_marginTop="@dimen/x42"
     android:orientation="horizontal">
@@ -16,7 +16,7 @@
         android:textColor="#0A89FF"
         android:textSize="@dimen/x36" />
 
-    <EditText
+    <com.telit.zhkt_three.CustomView.EmojiEditText
         android:id="@+id/fill_blank_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

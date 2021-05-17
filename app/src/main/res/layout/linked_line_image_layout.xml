@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/y9"
-            android:text="[填空]"
+            android:text="[连线]"
             android:textColor="#FFDA0D"
             android:textSize="@dimen/x24" />
 
@@ -46,6 +46,6 @@
             android:textSize="@dimen/x24" />
     </LinearLayout>
 
-    <include layout="@layout/matching_layout"/>
+    <include layout="@layout/matching_layout_two"/>
 
 </LinearLayout>

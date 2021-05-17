@@ -1,5 +1,6 @@
 package com.telit.zhkt_three.Activity.HomeScreen;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
 import com.iflytek.oauth.EduOauth;
 import com.iflytek.oauth.IRequestListener;
 import com.telit.zhkt_three.Activity.BaseActivity;
@@ -39,16 +41,21 @@ import com.telit.zhkt_three.Fragment.Dialog.TipsDialog;
 import com.telit.zhkt_three.JavaBean.StudentInfo;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
+import com.telit.zhkt_three.Utils.AppInfoUtils;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.CheckVersionUtil;
 import com.telit.zhkt_three.Utils.Jpush.JpushApply;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.telit.zhkt_three.Utils.manager.AppManager;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
+import com.xiaomi.mipush.sdk.MiPushClient;
 import com.zbv.basemodel.AutoUpdateAccessService;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,6 +81,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     ImageView person_back;
     @BindView(R.id.person_avatar)
     CircleImageView person_avadar;
+    @BindView(R.id.tv_appName)
+    TextView tv_appName;
     @BindView(R.id.person_version)
     TextView person_version;
     @BindView(R.id.person_name)
@@ -100,6 +109,9 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.person_check_version)
     TextView person_check_version;
 
+    @BindView(R.id.tv_popsition)
+    TextView tv_popsition;
+
     //    private CameraAlbumPopupFragment cameraAlbumPopupFragment;
     private Uri outputUri;
 
@@ -116,7 +128,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(PersonInfoActivity.this, "服务端错误！", false);
+                    QZXTools.popToast(PersonInfoActivity.this, "当前网络不佳....", false);
                     if (circleProgressDialogFragment != null) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
                         circleProgressDialogFragment = null;
@@ -151,7 +163,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
                     //获取到student信息
                     StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                            .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                            .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).list().get(0);
 
 //                    QZXTools.logE("query studentInfo=" + studentInfo, null);
 
@@ -163,6 +175,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
                     QZXTools.popToast(PersonInfoActivity.this, msgInfo, false);
                     break;
+                case OffLine_Failed:
                 case OffLine_Success:
                     if (circleProgressDialogFragment != null) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
@@ -171,45 +184,45 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
                     //设置未登录标志
                     SharedPreferences sharedPreferences = getSharedPreferences("student_info", MODE_PRIVATE);
-                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
+//                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
                     UserUtils.setOauthId(sharedPreferences, "oauth_id", "");
                     UserUtils.removeTgt();
+
+                    SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("getTgt","");
+
+                    //领创管控唤起管理员
+                    lingChang();
+
                     /**
                      * 登出解除极光推送
                      * */
                     JpushApply.getIntance().unRegistJpush(MyApplication.getInstance());
 
-                    Intent intent=new Intent(PersonInfoActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    //撤销别名
+                    MiPushClient.unsetAlias(PersonInfoActivity.this, UserUtils.getUserId(), null);
 
                     //退出登录的埋点
                     BuriedPointUtils.buriedPoint("2002","","","","");
 
-                    //领创管控唤起管理员
-                    lingChang();
 
-                    break;
-                case OffLine_Failed:
-                    if (circleProgressDialogFragment != null) {
-                        circleProgressDialogFragment.dismissAllowingStateLoss();
-                        circleProgressDialogFragment = null;
-                    }
+                    startActivity(new Intent(PersonInfoActivity.this, ProviceActivity.class));
 
-                    QZXTools.popToast(PersonInfoActivity.this, "退出登录失败！", false);
+                    AppManager.getAppManager().finishAllActivity();
                     break;
             }
         }
     };
 
-
     private void lingChang() {
         Intent intent = new Intent("com.android.launcher3.mdm.OPEM_ADMIN");
         intent.setPackage("com.android.launcher3");
-         sendBroadcast(intent);
+
+        sendBroadcast(intent);
+
         // Toast.makeText(mContext,"领创发com.linspirer.edu.homeaction广播",Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,7 +247,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         tv_sex.setText(studentInfo.getSex());
         tv_remark.setText(studentInfo.getRemark());
 
-        person_version.setText("版本号：".concat(QZXTools.getVerionName(this)));
+        tv_appName.setText("名称："+AppInfoUtils.getAppName(this));
+        person_version.setText("版本号：V"+QZXTools.getVerionName(this));
 
         //设置头像
         if (studentInfo.getPhoto() != null) {
@@ -248,6 +262,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         person_back.setOnClickListener(this);
         person_loginOut.setOnClickListener(this);
         person_check_version.setOnClickListener(this);
+        tv_popsition.setOnClickListener(this);
 
         //switch 开发辅助更新模式监听
         switch_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -286,7 +301,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         } else {
             switch_on_off.setChecked(false);
         }
-
     }
 
     @Override
@@ -455,23 +469,19 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         super.onDestroy();
     }
 
-
-
-    /**
-     * 是否检测版本更新中bool
-     */
-    private boolean isChecking = false;
-    private long preTime = -1;
-
     private static boolean isUpData=true;
-
+    private int count=0;
+    private long touchFirstTime;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.person_avatar:
-                CameraAlbumPopupFragment cameraAlbumPopupFragment = new CameraAlbumPopupFragment();
-                cameraAlbumPopupFragment.show(getSupportFragmentManager(), CameraAlbumPopupFragment.class.getSimpleName());
+                if (ViewUtils.isFastClick(1000)) {
+                    // 进行点击事件后的逻辑操作
+                    CameraAlbumPopupFragment cameraAlbumPopupFragment = CameraAlbumPopupFragment.newInstance();
+                    cameraAlbumPopupFragment.show(getSupportFragmentManager(), CameraAlbumPopupFragment.class.getSimpleName());
+                }
                 break;
             case R.id.person_back:
                 finish();
@@ -499,9 +509,11 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
                         boolean IsOauthMode = UserUtils.getOauthMode();
 
+
                         if (IsOauthMode) {
 //                            OauthLoginOut();
                             loginOut();
+                            QZXTools.logE("IsOauthMode ="+IsOauthMode ,null);
                         } else {
                             if (circleProgressDialogFragment != null && circleProgressDialogFragment.isVisible()) {
                                 circleProgressDialogFragment.dismissAllowingStateLoss();
@@ -539,28 +551,30 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 tipsDialog.show(getSupportFragmentManager(), TipsDialog.class.getSimpleName());
                 break;
             case R.id.person_check_version:
-                //间隔时间小于3秒则不执行检测版本操作
-                if (preTime == -1) {
-                    preTime = System.currentTimeMillis();
-                } else {
-                    long curTime = System.currentTimeMillis();
-                    if (curTime - preTime >= 3000) {
-                        isChecking = false;
-                        preTime = -1;
-                    }
-                }
-
-                if (isChecking) {
-                    return;
-                }
-
-                isChecking = true;
-                if (isUpData){
-
+                if (ViewUtils.isFastClick(3000)) {
                     CheckVersionUtil.getInstance().requestCheckVersion(this);
-                    isUpData=false;
                 }
+            case R.id.tv_popsition:
+                //个人中心的点击事件
+                //个人中心的点击事件  点击15次切换成内网
+                count++;
+                long curTime = System.currentTimeMillis();
+                if (count == 1) {
+                    touchFirstTime = curTime;
+                }
+                if (count == 15 && curTime - touchFirstTime <= 50000) {
+                    count = 0;
 
+                    //更新成本地下载的url
+                    if (UrlUtils.BaseUrl.equals("http://wisdomclass.ahtelit.com")){
+                        ToastUtils.show("家里服务器地址");
+                    }else {
+                        ToastUtils.show("正式服务器地址");
+                    }
+                }else if (count > 15) {
+                    //重置
+                    count = 0;
+                }
                 break;
         }
     }
@@ -575,7 +589,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
         try {
             accessibilityEnabled = Settings.Secure.getInt(mContext.getApplicationContext().getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+                    Settings.Secure.ACCESSIBILITY_ENABLED);
+
             QZXTools.logE("accessibilityEnabled = " + accessibilityEnabled, null);
         } catch (Settings.SettingNotFoundException e) {
             QZXTools.logE("Error finding setting, default accessibility to not found: " + e.getMessage(), null);
@@ -604,12 +619,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             QZXTools.logE("***ACCESSIBILITY IS DISABLED***", null);
         }
         return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        //overridePendingTransition(R.anim.in_fade, R.anim.activity_exit_from_right_to_left);
     }
 
     //-------------------------------------------------------------------------------------------------
@@ -672,7 +681,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         String url = "http://open.ahjygl.gov.cn/sso-oauth/client/logout";
 
         Map<String, String> paramMap = new LinkedHashMap<>();
-        paramMap.put("tgt", UserUtils.getTgt());
+     //   paramMap.put("tgt", UserUtils.getTgt());
+        paramMap.put("tgt", SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("getTgt"));
 
 
         OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, paramMap, new Callback() {
@@ -680,6 +690,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void onFailure(Call call, IOException e) {
                 QZXTools.logE("失败", null);
                 mHandler.sendEmptyMessage(OffLine_Failed);
+
+                QZXTools.logD("tiantianqinLogin...........省平台退出..."+e.getMessage());
             }
 
             @Override
@@ -687,6 +699,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 if (response.isSuccessful()) {
                     String resultJson = response.body().string();//只能使用一次response.body().string()
                     QZXTools.logE("response=" + resultJson, null);
+
+                    QZXTools.logD("tiantianqinLogin...........省平台退出..."+resultJson);
 
                     Gson gson = new Gson();
                     Map<String, Object> results = gson.fromJson(resultJson, new TypeToken<Map<String, Object>>() {

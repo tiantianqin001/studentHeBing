@@ -1,6 +1,5 @@
 package com.telit.zhkt_three.Fragment.Interactive;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,18 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
+import com.hjq.toast.ToastUtils;
+import com.telit.zhkt_three.Activity.HomeWork.ExtraInfoBean;
 import com.telit.zhkt_three.Adapter.VPHomeWorkDetailAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
-import com.telit.zhkt_three.CusomPater;
+import com.telit.zhkt_three.CustomView.LazyViewPager;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.CollectionInfoBean;
 import com.telit.zhkt_three.JavaBean.Gson.HomeWorkByHandBean;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfoByhand;
@@ -46,10 +42,7 @@ import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
-import com.telit.zhkt_three.customNetty.MsgUtils;
-import com.telit.zhkt_three.customNetty.SimpleClientNetty;
 import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +78,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
     @BindView(R.id.practice_time)
     TextView practice_time;
     @BindView(R.id.practice_viewpager)
-    CusomPater practice_viewpager;
+    LazyViewPager practice_viewpager;
     @BindView(R.id.practice_commit)
     TextView practice_commit;
     @BindView(R.id.practice_left)
@@ -117,6 +110,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
     private List<QuestionInfoByhand> questionInfoByhandList;
     private String homeworkId;
     private TextView homework_commit;
+    private VPHomeWorkDetailAdapter vpHomeWorkDetailAdapter;
 
     public void setPracticeId(String practiceId) {
         this.practiceId = practiceId;
@@ -140,7 +134,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
             switch (msg.what) {
                 case Server_Error:
                     if (isShow) {
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), getContext().getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialog != null) {
                             circleProgressDialog.dismissAllowingStateLoss();
                             circleProgressDialog = null;
@@ -180,10 +174,10 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
                             practice_right.setVisibility(View.INVISIBLE);
                         }
                         //塞入Vp的数据
-                        VPHomeWorkDetailAdapter vpHomeWorkDetailAdapter = new VPHomeWorkDetailAdapter
+                        vpHomeWorkDetailAdapter = new VPHomeWorkDetailAdapter
                                 (getActivity(), questionInfoByhandList, null, taskStatus, 0, "");
                         //添加提问的答案显示 在提交答案的时候正确答案不显示
-                        // vpHomeWorkDetailAdapter.needShowAnswer();
+                         vpHomeWorkDetailAdapter.needShowAnswer();
                         practice_viewpager.setAdapter(vpHomeWorkDetailAdapter);
                     }
 
@@ -211,8 +205,8 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
                     break;
                 case Cancel_Collect_Failed:
                     if (isShow) {
-
-                        QZXTools.popCommonToast(getContext(), (String) msg.obj, false);
+                       // QZXTools.popCommonToast(getContext(), (String) msg.obj, false);
+                        ToastUtils.show((String) msg.obj);
                     }
                     break;
 
@@ -266,19 +260,19 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
                 });
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
-        practice_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        practice_viewpager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int i) {
-                curPageIndex = i;
-                if (i >= (totalPageCount - 1)) {
+            public void onPageSelected(int position) {
+                curPageIndex = position;
+                if (position >= (totalPageCount - 1)) {
                     practice_right.setVisibility(View.INVISIBLE);
                     practice_left.setVisibility(View.VISIBLE);
-                } else if (i <= 0) {
+                } else if (position <= 0) {
                     practice_left.setVisibility(View.INVISIBLE);
                     practice_right.setVisibility(View.VISIBLE);
                 } else {
@@ -288,7 +282,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
@@ -513,7 +507,6 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
             case R.id.practice_commit:
 //                todo  作业的提交
                 commitHomeWork();
-
                 break;
             case R.id.practice_left:
                 curPageIndex--;
@@ -585,7 +578,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
 
         //todo 检测题目答题的完整性，例如多选、填空以及问答题
 
-        homework_commit.setEnabled(false);
+      //  homework_commit.setEnabled(false);
 
         for (LocalTextAnswersBean localTextAnswersBean : localTextAnswersBeanList) {
 
@@ -608,6 +601,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
                         //拍照出题   更正：拍照出题(byhand==1)/题库出题(byhand!=1)两种方式
                         if ("1".equals(byHand)) {
                             homeworkCommitBean.setAnswerContent(answerItem.getContent());
+                            homeworkCommitBean.setBlanknum(answerItem.getBlanknum());
                         } else {
                             if (localTextAnswersBean.getQuestionType() == Constant.Fill_Blank) {
 
@@ -628,6 +622,7 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
 //                                        homeworkCommitBean.setAnswerContent(jsonObject.toString());
                             } else {
                                 homeworkCommitBean.setAnswerContent(answerItem.getContent());
+
                             }
                         }
                         homeworkCommitBeanList.add(homeworkCommitBean);
@@ -730,6 +725,8 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
         //简答题的辅助
         mapParams.put("question_ids", question_ids);
 
+        QZXTools.logE("提问提交mapParams："+new Gson().toJson(mapParams),null);
+
         /*  *
          * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
          **/
@@ -759,6 +756,11 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
                         message.what = Commit_Result_Show;
                         message.obj = data.get("msg");
                         mHandler.sendMessage(message);
+                    }else {
+                        Message message = mHandler.obtainMessage();
+                        message.what = Cancel_Collect_Failed;
+                        message.obj = data.get("msg");
+                        mHandler.sendMessage(message);
                     }
 
                 } else {
@@ -783,5 +785,21 @@ public class QuestionOnlyPicFragment extends Fragment implements View.OnClickLis
      //   commitHomeWork();
         //进入白班
         EventBus.getDefault().post("teacher_end", Constant.Homework_Commit_Success_Tijiao);
+    }
+
+    public void fromCameraCallback(String flag) {
+        if (vpHomeWorkDetailAdapter!=null){
+            vpHomeWorkDetailAdapter.fromCameraCallback(flag);
+        }
+    }
+
+    /**
+     * 添加订阅者   画板保存回调这里存粹保存整个画板位图，没有做其他处理，分辨率是平板分辨率，大小还可以(KB)
+     */
+    @Subscriber(tag = Constant.Subjective_Board_Callback, mode = ThreadMode.MAIN)
+    public void fromBoardCallback(ExtraInfoBean extraInfoBean) {
+        if (vpHomeWorkDetailAdapter!=null){
+            vpHomeWorkDetailAdapter.fromBoardCallback(extraInfoBean);
+        }
     }
 }

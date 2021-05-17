@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:zbv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:id="@+id/rl_interactive"
     tools:context=".Activity.InteractiveScreen.InteractiveActivity">
 
     <!--显示主界面头部栏-->
@@ -164,5 +163,46 @@
         android:id="@+id/board_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/board_rl_head"></FrameLayout>
+        android:layout_below="@+id/board_rl_head"
+        android:layout_above="@+id/rl_navigationBar"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_navigationBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/x70"
+            android:src="@mipmap/sys_back"
+            android:padding="@dimen/x23"
+            android:layout_toLeftOf="@+id/iv_home"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="118dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_home"
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/x70"
+            android:src="@mipmap/sys_home"
+            android:padding="@dimen/x22"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:id="@+id/iv_swift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/sys_swift"
+            android:layout_toRightOf="@+id/iv_home"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="130dp"/>
+
+    </RelativeLayout>
+
 </RelativeLayout>

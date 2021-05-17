@@ -7,5 +7,5 @@
     <com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView
         android:id="@+id/item_practice_question"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView>
+        android:layout_height="match_parent"/>
 </RelativeLayout>

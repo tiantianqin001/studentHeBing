@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -80,6 +79,9 @@ public class JudgeSelectToDoView extends RelativeLayout {
             optionString = "";
         }
         option_do_htv.setHtml(optionString, new HtmlHttpImageGetter(option_do_htv));
+
+
+
     }
 
     /**

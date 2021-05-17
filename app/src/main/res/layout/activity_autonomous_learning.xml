@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AutonomousLearning.AutoLearningActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x99"
+        android:background="#4562CF"
+        android:orientation="horizontal">
+
+        <com.telit.zhkt_three.CustomView.CustomHeadLayout
+            android:id="@+id/learning_headLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/learning_micro"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_video" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="视频"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_audio"
+                android:layout_width="@dimen/y291"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_music" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="音频"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_picture"
+                android:layout_width="@dimen/y291"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_picture" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="图片"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_resource"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_resource" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="资源"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_read"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_read" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="阅读"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_book"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_book" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="教材"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/learning_item_bank"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/x99"
+                android:background="@drawable/selector_learning_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:onClick="onTabClicked">
+
+                <ImageView
+                    android:layout_width="@dimen/y87"
+                    android:layout_height="@dimen/x72"
+                    android:layout_marginLeft="@dimen/y48"
+                    android:src="@mipmap/icon_item_bank" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/y9"
+                    android:text="题库"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/x36" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

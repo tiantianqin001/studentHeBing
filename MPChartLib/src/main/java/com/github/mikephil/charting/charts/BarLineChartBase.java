@@ -329,11 +329,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         if (mData == null) {
             if (mLogEnabled)
-                Log.i(LOG_TAG, "Preparing... DATA NOT SET.");
+
             return;
         } else {
-            if (mLogEnabled)
-                Log.i(LOG_TAG, "Preparing...");
+
         }
 
         if (mRenderer != null)

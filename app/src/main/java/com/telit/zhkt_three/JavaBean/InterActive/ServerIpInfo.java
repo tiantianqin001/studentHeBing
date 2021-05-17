@@ -5,10 +5,21 @@ package com.telit.zhkt_three.JavaBean.InterActive;
  * Date: 2019/7/1 18:05
  */
 public class ServerIpInfo {
-
     private String className;
     private String deviceIp;
     private String devicePort;
+    private String classId;
+
+    private String address;
+    private String Port;
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
 
     public String getTeacherId() {
         return teacherId;
@@ -46,6 +57,22 @@ public class ServerIpInfo {
 
     public void setDevicePort(String devicePort) {
         this.devicePort = devicePort;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPort() {
+        return Port;
+    }
+
+    public void setPort(String port) {
+        this.Port = port;
     }
 
     @Override

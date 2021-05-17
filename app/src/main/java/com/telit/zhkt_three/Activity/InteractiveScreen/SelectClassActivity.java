@@ -1,15 +1,13 @@
 package com.telit.zhkt_three.Activity.InteractiveScreen;
 
-import android.content.BroadcastReceiver;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,48 +16,71 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.xtoast.OnClickListener;
+import com.hjq.xtoast.XToast;
 import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.interactive.RVSelectClazzAdapter;
+import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.CircleImageView;
+import com.telit.zhkt_three.CustomView.EmojiEditText;
 import com.telit.zhkt_three.CustomView.RippleBackground;
+import com.telit.zhkt_three.JavaBean.Gson.IpPortBean;
 import com.telit.zhkt_three.JavaBean.InterActive.ServerIpInfo;
 import com.telit.zhkt_three.JavaBean.StudentInfo;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Service.SockUserServer;
-import com.telit.zhkt_three.Utils.ApkListInfoUtils;
+import com.telit.zhkt_three.Utils.BuriedPointUtils;
+import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
+import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.telit.zhkt_three.Utils.eventbus.Subscriber;
+import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
+import com.tencent.mars.comm.NetStatusUtil;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import org.json.JSONObject;
 
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 /**
@@ -71,6 +92,9 @@ public class SelectClassActivity extends BaseActivity {
 
     @BindView(R.id.board_wifi)
     ImageView board_wifi;
+
+    @BindView(R.id.tv_classCode)
+    TextView tv_classCode;
 
     @BindView(R.id.clazz_recycler)
     RecyclerView recyclerView;
@@ -104,40 +128,12 @@ public class SelectClassActivity extends BaseActivity {
     private RVSelectClazzAdapter selectClazzAdapter;
     public static final String TAG = "SelectClassActivity";
     private static boolean isShow = false;
+    private static final int Server_Error = 0;
     private static final int Operator_Success_Two = 5;
     private static final int Operator_Err = 4;
     private static boolean is_join_Multicast = true;
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String message = intent.getExtras().getString("message");
-            Log.i(TAG, "onReceive: "+message);
 
-            if (!TextUtils.isEmpty(message)) {
-                try {
-                    JSONObject jsonObject = new JSONObject(message);
-                    String className = jsonObject.optString("className");
-                    String ip = jsonObject.optString("address");
-                    String port = jsonObject.optString("port");
-                    String teacherId = jsonObject.optString("teacherId");
-                    // String serviceName = jsonObject.optString("serviceName");
-                    ServerIpInfo serverIpInfo = new ServerIpInfo();
-                    serverIpInfo.setClassName(className);
-                    serverIpInfo.setDevicePort(port);
-                    serverIpInfo.setDeviceIp(ip);
-                    serverIpInfo.setClassName(className);
-                    serverIpInfo.setTeacherId(teacherId);
-                    //多线程操作这个集合  添加一个等待
-                    synchronized (SelectClassActivity.this) {
-                        ServerIpInfos1.put(ip, serverIpInfo);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
     //存当前数据的集合
     ConcurrentHashMap<String, ServerIpInfo> currentServerInfos = new ConcurrentHashMap<>();
     private Handler mHandler = new Handler() {
@@ -189,6 +185,9 @@ public class SelectClassActivity extends BaseActivity {
                         leak_resource_layout.setVisibility(View.VISIBLE);
                     }
                     break;
+                case Server_Error:
+                    QZXTools.popToast(SelectClassActivity.this, "加入班级失败", false);
+                    break;
             }
         }
     };
@@ -198,16 +197,14 @@ public class SelectClassActivity extends BaseActivity {
     private CopyOnWriteArrayList<ServerIpInfo> valueServerIpInfos = new CopyOnWriteArrayList<>();
 
     //private static final String Multicast_IP = "224.5.6.7";
-    private static final String Multicast_IP = "239.5.6.7";
-    private static final int Multicast_Port = 37656;
-    private ExecutorService executorService;
-    private MulticastSocket multicastSocket;
-    private MulticastLock multicastLock;
+
     private Timer timerTask;
     private RippleBackground rippleBackground;
     private CountDownLatch endLatch;
     private static final int REQUEST_OVERLAY = 4444;
-    private DatagramPacket packet;
+    private MyServerConn myServerConn;
+
+    private String wifiName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,14 +228,22 @@ public class SelectClassActivity extends BaseActivity {
 
         //设置导航栏的颜色
         ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
+
+        EventBus.getDefault().register(this);
+
+        //绑定服务
+        Intent service = new Intent(this, SockUserServer.class);
+        // startService(service);
+        myServerConn = new MyServerConn();
+        bindService(service, myServerConn, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: 222222222222222");
+
         unbinder = ButterKnife.bind(this);
-        String wifiName = getWIFIName(this);
+        wifiName = getWIFIName(this);
         String ownIP = QZXTools.getIPAddress();
         QZXTools.logE("本机IP = " + ownIP, null);
         //获取设备名称
@@ -292,40 +297,8 @@ public class SelectClassActivity extends BaseActivity {
         isShow = true;
         //上一次集合的数据
         ServerIpInfos2.clear();
-        //注册广播
-        IntentFilter filter = new IntentFilter("com.gdp2852.demo.service.broadcast");
-        registerReceiver(receiver, filter);
-        //绑定服务
-        Intent service = new Intent(this, SockUserServer.class);
-        startService(service);
 
-     /*   try {
-            //添加组播锁
-            multicastSocket = createMulticastGroupAndJoin(Multicast_IP, Multicast_Port);
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            multicastLock = wifiManager.createMulticastLock(SelectClassActivity.class.getSimpleName());
-            multicastLock.acquire();
-            multicastSocket.setNetworkInterface(NetworkInterface.getByName("wlan0"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
 
-        //再开启一个线程  每隔6秒把收到的班级清除
-     /*   executorService = ApkListInfoUtils.getInstance().onStart();
-        executorService.execute(new Runnable() {
-            @Override
-            public synchronized void run() {
-                while (is_join_Multicast) {
-                    try {
-                        getDatashows();
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });*/
         //5s后把数据给清除了 获取新的数据    主要就是5s 比对一下两个集合是不是一样
         timerTask = new Timer();
         timerTask.schedule(new TimerTask() {
@@ -334,11 +307,10 @@ public class SelectClassActivity extends BaseActivity {
                 //当前的集合
                 recycleInfoView();
             }
-        }, 2000, 15000);
+        }, 3000, 6000);
 
         if (!TextUtils.isEmpty(wifiName)) {
             if (tv_wifi_name != null && tv_wifi_name1 != null) {
-
                 tv_wifi_name.setText(wifiName);
                 tv_wifi_name1.setText(wifiName);
             }
@@ -353,16 +325,20 @@ public class SelectClassActivity extends BaseActivity {
 
     private synchronized void recycleInfoView() {
 
-
         currentServerInfos.clear();
         currentServerInfos.putAll(ServerIpInfos1);
-    /*    Iterator<Map.Entry<String, ServerIpInfo>> entryIterator = ServerIpInfos1.entrySet().iterator();
-        while (entryIterator.hasNext()){
-            entryIterator.remove();
-        }*/
-        synchronized (SelectClassActivity.class) {
-            ServerIpInfos1.clear();
-        }
+
+
+            Iterator<Map.Entry<String, ServerIpInfo>> iterator = ServerIpInfos1.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String classId = (String) entry.getKey();
+                if (!ServerIpInfos2.containsKey(classId)) {
+                     ServerIpInfos1.clear();
+
+                    QZXTools.logD(TAG+ "recycleInfoView: ServerIpInfos2"+ServerIpInfos2.size() +".....ServerIpInfos1"+ServerIpInfos1.size());
+                }
+            }
 
         if (!isMapEaquse(currentServerInfos, ServerIpInfos2) && currentServerInfos.size() >= 1) {
             if (mHandler != null) {
@@ -381,8 +357,10 @@ public class SelectClassActivity extends BaseActivity {
             }
         }
         //上一次的集合
-        ServerIpInfos2.clear();
-        ServerIpInfos2.putAll(currentServerInfos);
+            ServerIpInfos2.clear();
+            ServerIpInfos2.putAll(currentServerInfos);
+
+
     }
 
     //失去焦点
@@ -404,81 +382,7 @@ public class SelectClassActivity extends BaseActivity {
         if (unbinder != null) {
             unbinder.unbind();
         }
-        //初始化状态
-    }
 
-    private synchronized void getDatashows() {
-        //这里是解决点击返回显示延迟的问题
-
-        String message = recieveData(multicastSocket, Multicast_IP);//接收组播组传来的消息
-        if (!TextUtils.isEmpty(message)) {
-            try {
-                JSONObject jsonObject = new JSONObject(message);
-                String className = jsonObject.optString("className");
-                String ip = jsonObject.optString("address");
-                String port = jsonObject.optString("port");
-                String teacherId = jsonObject.optString("teacherId");
-                // String serviceName = jsonObject.optString("serviceName");
-                ServerIpInfo serverIpInfo = new ServerIpInfo();
-                serverIpInfo.setClassName(className);
-                serverIpInfo.setDevicePort(port);
-                serverIpInfo.setDeviceIp(ip);
-                serverIpInfo.setClassName(className);
-                serverIpInfo.setTeacherId(teacherId);
-                //多线程操作这个集合  添加一个等待
-                synchronized (SelectClassActivity.this) {
-                    ServerIpInfos1.put(ip, serverIpInfo);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public MulticastSocket createMulticastGroupAndJoin(String groupurl, int port) // 创建一个组播组并加入此组的函数
-    {
-        try {
-            InetAddress group = InetAddress.getByName(groupurl); // 设置组播组的地址为239.0.0.0
-            MulticastSocket socket = new MulticastSocket(port); // 初始化MulticastSocket类并将端口号与之关联
-
-            //  socket.setTimeToLive(1); // 设置组播数据报的发送范围为本地网络
-            socket.setSoTimeout(10000); // 设置套接字的接收数据报的最长时间
-            socket.joinGroup(group); // 加入此组播组
-            //socket.setLoopbackMode(false);
-            return socket;
-        } catch (Exception e1) {
-            System.out.println("Error: " + e1); // 捕捉异常情况
-            return null;
-        }
-    }
-
-    public synchronized String recieveData(MulticastSocket socket, String groupurl) {
-        String message = null;
-        try {
-            InetAddress group = InetAddress.getByName(groupurl);
-            byte[] data = new byte[1024];
-            packet = new DatagramPacket(data, data.length, group, Multicast_Port);
-            socket.receive(packet); // 通过MulticastSocket实例端口从组播组接收数据
-            // 将接受的数据转换成字符串形式
-            message = new String(packet.getData(), 0, packet.getLength());
-        } catch (Exception e1) {
-            Log.i(TAG, "recieveData: " + e1);
-            message = "Error: " + e1;
-            if (is_join_Multicast) {
-                synchronized (SelectClassActivity.class) {
-                    ServerIpInfos1.clear();
-                }
-                ServerIpInfos2.clear();
-                if (mHandler != null) {
-                    Message message1 = Message.obtain();
-                    message1.what = Operator_Success_Two;
-                    message1.obj = null;
-                    mHandler.sendMessage(message1);
-                }
-            }
-        }
-        return message;
     }
 
     @Override
@@ -503,10 +407,38 @@ public class SelectClassActivity extends BaseActivity {
             rippleBackground.stopRippleAnimation();
             rippleBackground = null;
         }
+        EventBus.getDefault().unregister(this);
+
+        if (isServiceRunning("com.telit.zhkt_three.Service.SockUserServer",this)){
+            unbindService(myServerConn);
+        }
+
+//初始化状态
+       // unbindService(myServerConn);
+
         super.onDestroy();
 
     }
+    /**
+     * 判断服务是否正在运行
+     *
+     * @param serviceName 服务类的全路径名称 例如： com.jaychan.demo.service.PushService
+     * @param context 上下文对象
+     * @return
+     */
+    public  boolean isServiceRunning(String serviceName, Context context) {
+        //活动管理器
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServices = am.getRunningServices(100); //获取运行的服务,参数表示最多返回的数量
 
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
+            String className = runningServiceInfo.service.getClassName();
+            if (className.equals(serviceName)) {
+                return true; //判断服务是否运行
+            }
+        }
+        return false;
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -546,4 +478,236 @@ public class SelectClassActivity extends BaseActivity {
         return false;
     }
 
+    class MyServerConn implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            SockUserServer.MyBinder myBinder = (SockUserServer.MyBinder) service;
+            myBinder.getService().setDataCallback(new SockUserServer.DataCallback() {
+                @Override
+                public void dataChanged(String message) {
+                    if (!TextUtils.isEmpty(message)) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(message);
+                            String className = jsonObject.optString("className");
+                            String ip = jsonObject.optString("address");
+                            String port = jsonObject.optString("port");
+                            String teacherId = jsonObject.optString("teacherId");
+                            String classId = jsonObject.optString("classId");
+                            // String serviceName = jsonObject.optString("serviceName");
+                            ServerIpInfo serverIpInfo = new ServerIpInfo();
+                            serverIpInfo.setClassName(className);
+                            serverIpInfo.setDevicePort(port);
+                            serverIpInfo.setDeviceIp(ip);
+                            serverIpInfo.setClassName(className);
+                            serverIpInfo.setTeacherId(teacherId);
+                            serverIpInfo.setClassId(classId);
+                            //多线程操作这个集合  添加一个等待
+                            synchronized (SelectClassActivity.this) {
+                                if (!ServerIpInfos1.containsKey(classId)){
+                                    ServerIpInfos1.put(classId, serverIpInfo);
+                                }
+
+                            }
+                            Iterator<String> iterator = ServerIpInfos1.keySet().iterator();
+
+                            if (iterator.hasNext()) {
+                                String next = iterator.next();
+                                QZXTools.logD(ServerIpInfos1.size()+"isMapEaquse111: ServerIpInfos1=" + next+"....."+ServerIpInfos1.get(next).toString());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
+
+    @Subscriber(tag = "closeSelverStop", mode = ThreadMode.MAIN)
+    public void closeSelverStop(String closeSelverStop) {
+        Log.i("qin", "closeSelverStop: " + closeSelverStop);
+
+        if (myServerConn!=null){
+            unbindService(myServerConn);
+        }
+    }
+
+    /**
+     * 班级码输入输入框
+     *
+     * @param view
+     */
+    public void showInputClassCodeDialog(View view){
+        //判断是否连网
+        if (!NetStatusUtil.isNetworkConnected(this)){
+            QZXTools.popCommonToast(this,"请连接网络",false);
+            return;
+        }
+
+        if (ViewUtils.isFastClick(1000)){
+            XToast toast = new XToast(getApplication())
+                    .setView(R.layout.toast_input_class_code)
+                    .setOutsideTouchable(false)
+                    .setBackgroundDimAmount(0.5f)
+                    .setText(R.id.tv_wifi,wifiName)
+                    .setAnimStyle(android.R.style.Animation_Translucent)
+                    .setGravity(Gravity.CENTER)
+                    .setOnClickListener(R.id.iv_dismiss, new OnClickListener<ImageView>() {
+                        @Override
+                        public void onClick(final XToast toast, ImageView view) {
+                            toast.cancel();
+                        }
+                    })
+                    .setOnClickListener(R.id.tv_sure, new OnClickListener<TextView>() {
+                        @Override
+                        public void onClick(final XToast toast, TextView view) {
+                            toast.cancel();
+
+                            EmojiEditText et_code = toast.getView().findViewById(R.id.et_code);
+
+                            getIpAndPort(et_code.getText().toString());
+                        }
+                    })
+                    .show();
+
+            EmojiEditText et_code = toast.getView().findViewById(R.id.et_code);
+            TextView tv_sure = toast.getView().findViewById(R.id.tv_sure);
+
+            et_code.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (!TextUtils.isEmpty(s)&&s.toString().length()==6){
+                        tv_sure.setEnabled(true);
+                        tv_sure.setAlpha(1f);
+                    }else {
+                        tv_sure.setEnabled(false);
+                        tv_sure.setAlpha(0.5f);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            showKeyboard(et_code);
+        }
+    }
+
+    /**
+     * 获取ip和端口
+     *
+     * @param key
+     */
+    private void getIpAndPort(String key){
+        String url = UrlUtils.BaseUrl + UrlUtils.GetIpAndPort;
+
+        Map<String, String> mapParams = new LinkedHashMap<>();
+        mapParams.put("key", key);
+
+        OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, mapParams, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(Server_Error);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String resultJson = response.body().string();
+                        QZXTools.logE("todo homework resultJson=" + resultJson, null);
+                        IpPortBean ipPortBean = new Gson().fromJson(resultJson, IpPortBean.class);
+
+                        if (ipPortBean!=null&&ipPortBean.getResult()!=null){
+                            QZXTools.logE("ip:"+ipPortBean.getResult().getAddress(),null);
+                            QZXTools.logE("port:"+ipPortBean.getResult().getPort(),null);
+                            QZXTools.logE("teacherId:"+ipPortBean.getResult().getTeacherId(),null);
+
+                            forwardInteractiveActivity(ipPortBean.getResult().getAddress(),Integer.parseInt(ipPortBean.getResult().getPort()),ipPortBean.getResult().getTeacherId());
+                        }else {
+                            mHandler.sendEmptyMessage(Server_Error);
+                        }
+
+                    }catch (Exception e){
+                        mHandler.sendEmptyMessage(Server_Error);
+
+                        QZXTools.logE("=======",e);
+                    }
+                } else {
+                    mHandler.sendEmptyMessage(Server_Error);
+                }
+            }
+        });
+    }
+
+    /**
+     * 跳转互动界面
+     *
+     * @param ip
+     * @param port
+     * @param teacherId
+     */
+    private void forwardInteractiveActivity(String ip,int port,String teacherId){
+        try {
+            //开启连接服务
+            UrlUtils.SocketIp = ip;
+            UrlUtils.SocketPort = port;
+
+            String path = QZXTools.getExternalStorageForFiles(this, null) + "/config.txt";
+            Properties properties = QZXTools.getConfigProperties(path);
+            properties.setProperty("rootIp", UrlUtils.BaseUrl);
+            properties.setProperty("socketIp", UrlUtils.SocketIp);
+            properties.setProperty("socketPort", UrlUtils.SocketPort + "");
+            properties.setProperty("imgIp", UrlUtils.ImgBaseUrl);
+            properties.setProperty("pointIp", UrlUtils.MaiDianUrl);
+            FileOutputStream fos = new FileOutputStream(path);
+            properties.store(new OutputStreamWriter(fos, "UTF-8"),
+                    "Config");
+
+            //关闭服务
+            EventBus.getDefault().post("closeSelverStop","closeSelverStop");
+            Intent intent1 = new Intent(this, InteractiveActivity.class);
+            startActivity(intent1);
+            finish();
+
+            //加入课堂埋点
+            SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("teacherId",teacherId);
+            String uuid = UUID.randomUUID().toString();
+            SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("joinClassStudent",uuid);
+            BuriedPointUtils.buriedPoint("2003","","","",uuid);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //弹出软键盘
+    private void showKeyboard(EditText editText) {
+        //其中editText为dialog中的输入框的 EditText
+        if(editText!=null){
+            //设置可获得焦点
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            //请求获得焦点
+            editText.requestFocus();
+            //调用系统输入法
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.showSoftInput(editText, 0);
+        }
+    }
 }

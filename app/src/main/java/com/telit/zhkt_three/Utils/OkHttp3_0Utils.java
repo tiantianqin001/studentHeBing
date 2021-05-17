@@ -1,16 +1,11 @@
 package com.telit.zhkt_three.Utils;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.telit.zhkt_three.MyApplication;
 
@@ -21,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.FileNameMap;
-import java.net.ResponseCache;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.ConnectionPool;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -90,9 +85,11 @@ public class OkHttp3_0Utils {
         }
     }
 
-    private static final int CONNECT_TIMEOUT = 5;
-    private static final int READ_TIMEOUT = 5;
-    private static final int WRITE_TIMEOUT = 5;
+
+    private static final int CONNECT_TIMEOUT = 100;
+    private static final int READ_TIMEOUT =60;
+    private static final int WRITE_TIMEOUT = 60;
+
 
     private OkHttp3_0Utils() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -103,6 +100,9 @@ public class OkHttp3_0Utils {
         builder.writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS); //写超时
         //设置4次重连
         builder.addInterceptor(new RetryIntercepter(3));//重试
+
+        //自定义连接池最大空闲连接数和等待时间大小，否则默认最大5个空闲连接
+        builder.connectionPool(new ConnectionPool(32,5,TimeUnit.MINUTES));
 
         if (OPEN_CACHE) {
             int cacheSize = 10 * 1024 * 1024;//10M
@@ -118,7 +118,7 @@ public class OkHttp3_0Utils {
         //应用拦截器
         builder.addInterceptor(new LoggingInterceptor());
         //网络拦截器
-       builder.addNetworkInterceptor(new CacheControlInterceptor());
+        builder.addNetworkInterceptor(new CacheControlInterceptor());
 
         okHttpClient = builder.build();
     }
@@ -238,6 +238,9 @@ public class OkHttp3_0Utils {
         if (params==null || params.size()==0)return;
         FormBody.Builder builder = new FormBody.Builder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (TextUtils.isEmpty(entry.getValue())){
+                continue;
+            }
             builder.add(entry.getKey(), entry.getValue());
         }
         FormBody formBody = builder.build();

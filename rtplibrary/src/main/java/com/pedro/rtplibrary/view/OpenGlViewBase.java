@@ -11,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import com.pedro.encoder.input.gl.SurfaceManager;
 import com.pedro.encoder.input.video.FpsLimiter;
+import com.pedro.rtplibrary.util.LogUtil;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
@@ -145,7 +147,7 @@ public abstract class OpenGlViewBase extends SurfaceView
   @Override
   public void start() {
     synchronized (sync) {
-      Log.i(TAG, "Thread started.");
+      LogUtil.i(TAG, "Thread started.");
       thread = new Thread(this, "glThread");
       running = true;
       thread.start();

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.telit.zhkt_three.Activity.MistakesCollection.MistakesCollectionActivity">
 
     <!--错题集的条件选择-->
@@ -56,6 +57,19 @@
 
                 <com.telit.zhkt_three.CustomView.ToUsePullView
                     android:id="@+id/mistakes_pull_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    app:pop_choosed_text_color="@color/word_gray_deep"></com.telit.zhkt_three.CustomView.ToUsePullView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.telit.zhkt_three.CustomView.ToUsePullView
+                    android:id="@+id/mistakes_pull_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
@@ -152,27 +166,38 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/x36" />
 
-        <Button
+        <TextView
+            android:id="@+id/tv_export"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:onClick="generateDocx"
-            android:text="导出" />
+            android:text="导出"
+            android:textColor="@android:color/white"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/y21"
+            android:textSize="@dimen/x30"
+            android:onClick="exportDocx"/>
     </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/mistakes_pull_all">
-
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+        </android.support.v4.widget.SwipeRefreshLayout>
         <com.jcodecraeer.xrecyclerview.XRecyclerView
             android:id="@+id/mistakes_xrecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:layout_marginLeft="@dimen/y81"
-            android:layout_marginRight="@dimen/y81"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+            android:layout_marginRight="@dimen/y81"
+            />
+
 
         <!--无资源-->
         <ImageView

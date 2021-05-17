@@ -15,6 +15,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -37,10 +40,12 @@ import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,6 +100,9 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
     private Context mContext;
 
     private QuestionBank questionInfo;
+    private TextView tv_teacher_answer_content;
+    private String status;
+
 
     /**
      * 传题型信息，用于保存答案
@@ -167,6 +175,11 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
         subjective_camera.setTypeface(typeface);
         subjective_board.setTypeface(typeface);
         subjective_input.setTypeface(typeface);
+
+
+
+        tv_teacher_answer_content = findViewById(R.id.tv_teacher_answer_content);
+
     }
 
     private boolean isClickCamera = false;
@@ -303,6 +316,11 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
         if (extraInfoBean.getQuestionId().equals(questionInfo.getId() + "")) {
             imgFilePathList.add(extraInfoBean.getFilePath());
             showImgsSaveAnswer();
+
+            if (status.equals(Constant.Retry_Status)){
+                SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setBoolean("isClearComData",false);
+
+            }
         }
     }
 
@@ -328,6 +346,11 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
 
                 imgFilePathList.add(compressFile.getAbsolutePath());
                 showImgsSaveAnswer();
+
+                if (status.equals(Constant.Retry_Status)){
+                    SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setBoolean("isClearComData",false);
+
+                }
             }
         }
     }
@@ -482,30 +505,46 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
      * <p>
      * 正常的逻辑：未答题前的OwnList和ImgFile应该为null;学生作答之后就应该有值了;
      */
-    public void showImgsAndContent(LocalTextAnswersBean localTextAnswersBean) {
+    public void showImgsAndContent(LocalTextAnswersBean localTextAnswersBean,
+                                   String status) {
+        this.status = status;
 
         //塞入文本
         if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
             String textAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
-            subjective_input.setText(textAnswer);
+            if (status == Constant.Save_Status){
+
+                subjective_input.setText(textAnswer);
+            }else {
+
+                subjective_input.setText("我的答案: "+textAnswer);
+            }
             subjective_input.setSelection(textAnswer.length());
         } else {
             //回显文本答案
-            if (localTextAnswersBean != null) {
+            if (localTextAnswersBean != null&& !TextUtils.isEmpty(localTextAnswersBean.getAnswerContent())) {
                 String textAnswer = localTextAnswersBean.getAnswerContent();
                 subjective_input.setText(textAnswer);
                 subjective_input.setSelection(textAnswer.length());
             }
         }
+        //当前已经批阅
 
-        //塞入图片
-        if (questionInfo.getImgFile() != null && questionInfo.getImgFile().size() > 0) {
-            imgFilePathList = (ArrayList<String>) questionInfo.getImgFile();
-        } else {
-            if (localTextAnswersBean != null) {
-                imgFilePathList = (ArrayList<String>) localTextAnswersBean.getImageList();
+        if (status.equals(Constant.Review_Status)){
+            imgFilePathList = (ArrayList<String>) localTextAnswersBean.getImageList();
+
+        }else {
+            //塞入图片
+            if (questionInfo.getImgFile() != null && questionInfo.getImgFile().size() > 0) {
+                imgFilePathList = (ArrayList<String>) questionInfo.getImgFile();
+            } else {
+                if (localTextAnswersBean != null) {
+                    imgFilePathList = (ArrayList<String>) localTextAnswersBean.getImageList();
+                }
             }
         }
+
+
 
         //防止数据库中的imgs为空
         if (imgFilePathList == null) {
@@ -538,6 +577,33 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
                         break;
                 }
             }
+        }
+
+
+        //显示批注的答案和老师的答
+        if (status.equals(Constant.Commit_Status)){
+            //   Glide.with(getContext()).load(UrlUtils.ImgBaseUrl+questionInfo.getAnswer()).into(iv_teacher_answer_content);
+            if (questionInfo.getOwnList().size()>0){
+                if (!TextUtils.isEmpty(questionInfo.getOwnList().get(0).getComment())){
+
+                    tv_teacher_answer_content.setText("老师评语: "+questionInfo.getOwnList().get(0).getComment());
+                }
+            }
+        }
+        ///已经批注
+        if (status.equals(Constant.Review_Status)){
+            if (questionInfo.getOwnList().size()>0){
+
+                if (!TextUtils.isEmpty(questionInfo.getOwnList().get(0).getComment())){
+
+                    tv_teacher_answer_content.setText("老师评语: "+questionInfo.getOwnList().get(0).getComment());
+                }
+            }
+        }
+        //打回重做
+        if (status.equals(Constant.Retry_Status)&& questionInfo.getOwnList().size()==0){
+            subjective_answer_tool_layout.setVisibility(VISIBLE);
+            subjective_input.setFocusableInTouchMode(true);
         }
     }
 
@@ -605,14 +671,49 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
         } else {
             //添加文本输入改变监听
             subjective_input.addTextChangedListener(new TextWatcher() {
+                //输入表情前的光标位置
+                private int cursorPos;
+                //输入表情前EditText中的文本
+                private String inputAfterText;
+                //是否重置了EditText的内容
+                private boolean resetText;
+
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                    if (!resetText) {
+                        cursorPos = subjective_input.getSelectionEnd();
+                        // 这里用s.toString()而不直接用s是因为如果用s，
+                        // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
+                        // inputAfterText也就改变了，那么表情过滤就失败了
+                        inputAfterText = s.toString();
+                    }
                 }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                    if (!resetText) {
+                        if (count >= 2) {//表情符号的字符长度最小为2
+                            if ((cursorPos + count) <= s.toString().trim().length()) {
+                                CharSequence input = s.subSequence(cursorPos, cursorPos + count);
+                                if (ViewUtils.containsEmoji(input.toString())) {
+                                    resetText = true;
+                                    Toast.makeText(mContext, "不支持输入Emoji表情符号", Toast.LENGTH_SHORT).show();
+                                    //是表情符号就将文本还原为输入表情符号之前的内容
+                                    subjective_input.setText(inputAfterText);
+                                    QZXTools.logE("inputAfterText:"+inputAfterText,null);
+                                    CharSequence text = subjective_input.getText();
+                                    if (text.length() > 0) {
+                                        if (text instanceof Spannable) {
+                                            Spannable spanText = (Spannable) text;
+                                            Selection.setSelection(spanText, text.length());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        resetText = false;
+                    }
                 }
 
                 @Override
@@ -622,8 +723,9 @@ public class BankSubjectiveToDoView extends RelativeLayout implements View.OnCli
                     localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
                     localTextAnswersBean.setQuestionId(questionInfo.getId() + "");
                     localTextAnswersBean.setUserId(UserUtils.getUserId());
+                    localTextAnswersBean.setAnswer(questionInfo.getAnswer());
                     localTextAnswersBean.setQuestionType(questionInfo.getQuestionChannelType());
-                    localTextAnswersBean.setAnswerContent(s.toString().trim());
+                    localTextAnswersBean.setAnswerContent(subjective_input.getText().toString());
                     localTextAnswersBean.setImageList(imgFilePathList);
 //                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
                     //插入或者更新数据库

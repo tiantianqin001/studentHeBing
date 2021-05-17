@@ -1,6 +1,5 @@
 package com.telit.zhkt_three.Adapter.interactive;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,28 +8,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hjq.toast.ToastUtils;
 import com.telit.zhkt_three.Activity.InteractiveScreen.InteractiveActivity;
 import com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity;
-import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.JavaBean.InterActive.ServerIpInfo;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
-import com.telit.zhkt_three.Service.SimpleSocketLinkServer;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.telit.zhkt_three.customNetty.SimpleClientListener;
+import com.telit.zhkt_three.customNetty.SimpleClientNetty;
 import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+
 
 /**
  * author: qzx
@@ -51,7 +51,6 @@ public class RVSelectClazzAdapter extends RecyclerView.Adapter<RVSelectClazzAdap
     public RVSelectClazzHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return new RVSelectClazzHolder(LayoutInflater.from(mContext).inflate(R.layout.rv_clazz_item_layout, viewGroup, false));
     }
-
     @Override
     public void onBindViewHolder(@NonNull RVSelectClazzHolder rvSelectClazzHolder, int i) {
         rvSelectClazzHolder.tv_clazz.setText(mData.get(i).getClassName());
@@ -64,9 +63,7 @@ public class RVSelectClazzAdapter extends RecyclerView.Adapter<RVSelectClazzAdap
 
     public void setData(CopyOnWriteArrayList<ServerIpInfo> valueServerIpInfos) {
         mData = valueServerIpInfos;
-
     }
-
     public class RVSelectClazzHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tv_clazz;
         private TextView join_clazz;
@@ -104,18 +101,49 @@ public class RVSelectClazzAdapter extends RecyclerView.Adapter<RVSelectClazzAdap
                 properties.store(new OutputStreamWriter(fos, "UTF-8"),
                         "Config");
 
+                //关闭服务
+                EventBus.getDefault().post("closeSelverStop","closeSelverStop");
+              /*  SimpleClientNetty.getInstance().init( UrlUtils.SocketIp ,UrlUtils.SocketPort);
+                //教师端已经关闭
+                SimpleClientNetty.getInstance().setSimpleClientListener(new SimpleClientListener() {
+                    @Override
+                    public void onLine() {
+
+                    }
+
+                    @Override
+                    public void offLine() {
+
+                    }
+
+                    @Override
+                    public void receiveData(String msgInfo) {
+
+                    }
+
+                    @Override
+                    public void isNoUser() {
+                        ToastUtils.show("教师端已关闭");
+                        mData.remove(mData.get(getLayoutPosition()));
+                        notifyDataSetChanged();
+
+                    }
+                });*/
+
 
                 Intent intent1 = new Intent(mContext, InteractiveActivity.class);
                 mContext.startActivity(intent1);
                 mContext.finish();
+
+
+
+
 
                 //加入课堂埋点
                 SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("teacherId",mData.get(getLayoutPosition()).getTeacherId());
                 String uuid = UUID.randomUUID().toString();
                 SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("joinClassStudent",uuid);
                 BuriedPointUtils.buriedPoint("2003","","","",uuid);
-
-
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -127,4 +155,7 @@ public class RVSelectClazzAdapter extends RecyclerView.Adapter<RVSelectClazzAdap
 
         }
     }
+
+
+
 }

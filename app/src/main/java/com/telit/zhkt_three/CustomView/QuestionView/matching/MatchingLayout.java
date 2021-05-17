@@ -1,7 +1,6 @@
 package com.telit.zhkt_three.CustomView.QuestionView.matching;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Typeface;
@@ -22,7 +21,6 @@ import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.greendao.LocalTextAnswersBeanDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +227,6 @@ public class MatchingLayout extends RelativeLayout implements View.OnClickListen
         }
         return stringBuilder.toString().trim();
     }
-
     /**
      * 本地数据库保存
      */
@@ -328,7 +325,7 @@ public class MatchingLayout extends RelativeLayout implements View.OnClickListen
         pathL.moveTo(sx, sy);
         pathL.lineTo(ex, ey);
         //添加点路径和线路径
-        toLineView.addDotPath(pathC, isResult);
+        //  toLineView.addDotPath(pathC, isResult, questionInfoList.get(i).getId());
         toLineView.addLinePath(pathL, isResult);
     }
 
@@ -410,7 +407,7 @@ public class MatchingLayout extends RelativeLayout implements View.OnClickListen
         localTextAnswersBean.setAnswerContent(saveTrack);*/
 //                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
         //插入或者更新数据库
-      //  MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+        //  MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
         //-------------------------答案保存，依据作业题目id
     }
 
@@ -435,7 +432,7 @@ public class MatchingLayout extends RelativeLayout implements View.OnClickListen
                 firstChooseView = null;
             }
 
-            toLineView.resetDrawLine();
+            //  toLineView.resetDrawLine(questionInfoList.get(i).getId());
         } else {
             //如果集合中有视图表示已经连接过了,或者正在动画中也不执行
             if (answerLeftList.indexOf(v) >= 0 || answerRightList.indexOf(v) >= 0 || toLineView.isAnimRunning()) {

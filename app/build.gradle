@@ -13,8 +13,9 @@ android {
       //  applicationId "com.telit.zhkt_three"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 63
-        versionName "3.0.0.0.63"
+
+        versionCode 98
+        versionName "2.0.98"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +48,7 @@ android {
             storePassword 'telit123'
             keyAlias 'telit123'
             keyPassword 'telit123'
+            v2SigningEnabled false
         }
     }
 
@@ -62,7 +64,7 @@ android {
     }
     //配置greendao数据库相关的信息
     greendao {
-        schemaVersion 3                                                                                                                                                                             //数据库版本号
+        schemaVersion 12                                                                                                                                                                            //数据库版本号
         daoPackage 'com.telit.zhkt_three.greendao' //设置生成dao一系列类的包名
         targetGenDir 'src/main/java' //设置生成dao一系列类所在目录
     }
@@ -93,13 +95,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation files('libs/MiPush_SDK_Client_3_8_9.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     //MD
     implementation 'com.android.support:design:28.0.0'
-    implementation project(':ijkplayer-java')
 
     //okHttp3.0 最新版本的okhttp具有TLS安全，低版本的安卓系统不支持Expected Android API level 21+ but was 19，所以修改成3.12.0
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
@@ -173,7 +175,6 @@ dependencies {
     //recyclerview的item载入动画等
     implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
 
-    //测试调用unity
     implementation(name: 'aidlaar-debug', ext: 'aar')
 
     //Chrome CustomTabs的使用  ===》 显示的网页内容不用自己操作等其他情况都可以用 Chrome Custom Tabs 来实现
@@ -186,9 +187,9 @@ dependencies {
     implementation project(':MPChartLib')
 
     //引入bugly,记录异常crash
-    implementation 'com.tencent.bugly:crashreport:latest.release'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-
+/*    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'*/
+    implementation files('libs/bugly_crash_release.jar')
     // implementation 'cn.yc:WebViewLib:1.2.2'
     implementation files('libs/pinyin4j-2.5.0.jar')
     implementation 'com.hjq:toast:8.8'
@@ -201,12 +202,31 @@ dependencies {
 
     //视频播放库
     implementation project(path: ':video_library')
-  //  implementation files('libs/tbs_sdk_thirdapp_v4.3.0.3_43903_sharewithdownloadwithfile_withoutGame_obfs_20200402_121309.jar')
+    //  implementation files('libs/tbs_sdk_thirdapp_v4.3.0.3_43903_sharewithdownloadwithfile_withoutGame_obfs_20200402_121309.jar')
     implementation(name: 'xwalk_core_library', ext: 'aar')
     implementation project(path: ':rtplibrary')
     implementation files('libs/pldroid-player-2.2.0.jar')
+
     //浏览器
     implementation 'com.just.agentweb:agentweb:4.1.4'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
     //recycleview
     implementation 'com.github.jdsjlzx:LRecyclerView:1.5.4.3'
+    implementation 'com.tencent.mars:mars-core:1.2.2'
+    implementation files('libs/netty-all-4.1.59.Final.jar')
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-java:2.5.3'
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-armv7a:2.5.3'
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-ui:2.5.3'
+
+    implementation 'com.hjq:xtoast:6.5'
+
+    implementation'com.download.library:Downloader:4.1.4'
+
+    implementation 'com.lzy.net:okserver:2.0.5'
+
+    implementation "org.java-websocket:Java-WebSocket:1.5.1"
 }

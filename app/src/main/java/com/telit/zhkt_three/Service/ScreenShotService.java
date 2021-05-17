@@ -1,15 +1,24 @@
 package com.telit.zhkt_three.Service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 
 import com.telit.zhkt_three.Activity.InteractiveScreen.ScreenShotOperator;
+import com.telit.zhkt_three.BuildConfig;
 import com.telit.zhkt_three.MyApplication;
+import com.telit.zhkt_three.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +49,7 @@ import java.util.Date;
 public class ScreenShotService extends Service {
 
     private MediaProjection mediaProjection;
+    private ScreenShotOperator screenShotOperator;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,12 +72,15 @@ public class ScreenShotService extends Service {
                 return super.onStartCommand(intent, flags, startId);
             }
 
+            //创建通知
+            createNotification();
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaProjection = mediaProjectionManager.getMediaProjection(code, data);
             }
 
             if (mediaProjection != null) {
-                ScreenShotOperator screenShotOperator = new ScreenShotOperator(this, mediaProjection);
+                screenShotOperator = new ScreenShotOperator(this, mediaProjection);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                 String dateStr = simpleDateFormat.format(new Date());
                 String fileName = "shotImg_" + dateStr + ".png";
@@ -89,5 +102,61 @@ public class ScreenShotService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (screenShotOperator != null) {
+            screenShotOperator.stopScreenShot();
+        }
+
+        super.onDestroy();
+    }
+
+    /**
+     * 创建通知
+     */
+    private void createNotification(){
+        String channelId = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = BuildConfig.APPLICATION_ID + ".server";
+            String channelName = "课堂截屏";
+            NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.createNotificationChannel(chan);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
+
+        String title = getAppName(MyApplication.getInstance());
+
+        builder.setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText("课堂截屏中...")
+                .setContentIntent(null)
+                .setOngoing(true)
+                .build();
+        startForeground(2, builder.build());
+    }
+
+    /**
+     * 获取应用名称
+     *
+     * @param context
+     * @return
+     */
+    public String getAppName(Context context) {
+        if (context == null) {
+            return null;
+        }
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            return String.valueOf(packageManager.getApplicationLabel(context.getApplicationInfo()));
+        } catch (Throwable e) {
+        }
+        return null;
     }
 }

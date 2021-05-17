@@ -3,6 +3,7 @@ package com.telit.zhkt_three.Adapter.interactive;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,11 @@ public class RVSelectGroupAdapter extends RecyclerView.Adapter<RVSelectGroupAdap
 
     private Context mContext;
     private List<SelectGroup.SelectGroupDetail> mData;
+    private CommitOnItemClickListener listener;
+    private String random;
+    private String clickIsUser;
+
+    private   boolean isFistClick=true;
 
     public void setmData(List<SelectGroup.SelectGroupDetail> mData) {
         this.mData = mData;
@@ -44,6 +50,16 @@ public class RVSelectGroupAdapter extends RecyclerView.Adapter<RVSelectGroupAdap
     public void onBindViewHolder(@NonNull RVSelectGroupHolder rvSelectGroupHolder, int i) {
         rvSelectGroupHolder.group_select_name.setText(mData.get(i).getGroupName());
         rvSelectGroupHolder.group_select_title.setText(mData.get(i).getTheme());
+        if (!TextUtils.isEmpty(random)){
+            if (Integer.valueOf(random).equals(i)){
+                //todo 现在没有设置
+                rvSelectGroupHolder. group_select_name.setSelected(true);
+            }else {
+                rvSelectGroupHolder. group_select_name.setSelected(false);
+            }
+
+        }
+
     }
 
     @Override
@@ -66,6 +82,12 @@ public class RVSelectGroupAdapter extends RecyclerView.Adapter<RVSelectGroupAdap
         return selectedGroupIndex;
     }
 
+    public void setSelected(String random, String clickIsUser) {
+
+        this.random = random;
+        this.clickIsUser = clickIsUser;
+    }
+
     public class RVSelectGroupHolder extends RecyclerView.ViewHolder {
 
         private TextView group_select_name;
@@ -81,22 +103,51 @@ public class RVSelectGroupAdapter extends RecyclerView.Adapter<RVSelectGroupAdap
             group_select_linear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (selectedView != null) {
-                        if (selectedView == group_select_name) {
-                            return;
+                    //只能点一次
+                    if (!TextUtils.isEmpty(clickIsUser)){
+                        //在随机的时候已经点了
+                        return;
+                    }
+                    if (isFistClick){
+                        if (selectedView != null) {
+                            if (selectedView == group_select_name) {
+                                return;
+                            }
+                            selectedView.setSelected(false);
+                            selectedView.setClickable(false);
+
+
                         }
-                        selectedView.setSelected(false);
+                        selectedGroupIndex = mData.get(getLayoutPosition()).getGroupIndex();
+                        selectedGroupId = mData.get(getLayoutPosition()).getGroupDiscussId();
+                        QZXTools.logE("selectedGroupIndex=" + selectedGroupIndex + ";selectedGroupId=" + selectedGroupId, null);
+                        if (listener!=null){
+                            listener.onClick();
+                        }
+
+
+                        group_select_name.setSelected(true);
+                        selectedView = group_select_name;
+
+                        isFistClick=false;
+
+
                     }
 
-                    selectedGroupIndex = mData.get(getLayoutPosition()).getGroupIndex();
-                    selectedGroupId = mData.get(getLayoutPosition()).getGroupDiscussId();
-                    QZXTools.logE("selectedGroupIndex=" + selectedGroupIndex + ";selectedGroupId=" + selectedGroupId, null);
 
-                    group_select_name.setSelected(true);
-                    selectedView = group_select_name;
+
                 }
             });
 
         }
+    }
+
+    public interface CommitOnItemClickListener{
+        void onClick();
+    }
+
+    public void setCommitOnItemClickListener(CommitOnItemClickListener listener){
+
+        this.listener = listener;
     }
 }

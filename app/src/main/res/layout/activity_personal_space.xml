@@ -6,19 +6,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.telit.zhkt_three.Activity.PersonalSpace.PersonalSpaceActivity">
+>
 
     <com.telit.zhkt_three.CustomView.tbs.TBSHeadView
         android:id="@+id/tbsHeadView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x72"></com.telit.zhkt_three.CustomView.tbs.TBSHeadView>
 
+
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_Bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x7" />
-
+        android:layout_height="3dp"
+        android:progressDrawable="@drawable/layer_list_progress_bar_webview"
+        android:visibility="gone" />
 
     <org.xwalk.core.XWalkView
         android:id="@+id/personal_space_webview"

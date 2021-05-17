@@ -14,11 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.telit.zhkt_three.Adapter.tree_adpter.NodeUtils;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.QuestionView.external.ReplaceSpan;
@@ -27,7 +25,6 @@ import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.TempSaveItemInfo;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
-import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
@@ -218,7 +215,7 @@ public class KnowledgeQuestionView extends RelativeLayout implements View.OnClic
             // --------------没有子List
             Item_Bank_options_layout.setVisibility(VISIBLE);
             Item_Bank_list_question_layout.setVisibility(GONE);
-            ((RelativeLayout.LayoutParams) Item_Bank_tv_answer_show.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.Item_Bank_options_layout);
+            ((LayoutParams) Item_Bank_tv_answer_show.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.Item_Bank_options_layout);
 
             String optionJson = questionBank.getAnswerOptions();
             //题型信息
@@ -234,11 +231,12 @@ public class KnowledgeQuestionView extends RelativeLayout implements View.OnClic
                     //解析选项
                     if (!TextUtils.isEmpty(optionJson)) {
                         Gson gson = new Gson();
+
+                        QZXTools.logE("optionJson" + optionJson, null);
+
                         Map<String, String> optionMap = gson.fromJson(optionJson, new TypeToken<Map<String, String>>() {
                         }.getType());
                         Iterator<Map.Entry<String, String>> iterator = optionMap.entrySet().iterator();
-
-                        QZXTools.logE("optionJson" + optionJson, null);
 
                         while (iterator.hasNext()) {
                             Map.Entry<String, String> entry = iterator.next();
@@ -344,7 +342,7 @@ public class KnowledgeQuestionView extends RelativeLayout implements View.OnClic
             // --------------处理子list
             Item_Bank_options_layout.setVisibility(GONE);
             Item_Bank_list_question_layout.setVisibility(VISIBLE);
-            ((RelativeLayout.LayoutParams) Item_Bank_tv_answer_show.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.Item_Bank_list_question_layout);
+            ((LayoutParams) Item_Bank_tv_answer_show.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.Item_Bank_list_question_layout);
 
             //题型
             switch (questionBank.getQuestionChannelType()) {

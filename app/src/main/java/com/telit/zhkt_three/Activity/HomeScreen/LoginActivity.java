@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +36,8 @@ import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
-
 import com.telit.zhkt_three.greendao.StudentInfoDao;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,7 +118,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popCommonToast(LoginActivity.this, "服务端错误！", false);
+                        QZXTools.popCommonToast(LoginActivity.this, "网络比较差！", false);
                         if (circleProgressDialog!=null && circleProgressDialog.isAdded()) {
                             circleProgressDialog.dismissAllowingStateLoss();
                         }
@@ -129,7 +128,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     break;
                 case Error404:
                     if (isShow){
-                        QZXTools.popCommonToast(LoginActivity.this, "服务端请求失效，没有相关资源！", false);
+                        QZXTools.popCommonToast(LoginActivity.this, "请求地址失效，没有相关资源！", false);
                         if (circleProgressDialog!=null && circleProgressDialog.isAdded()) {
                             circleProgressDialog.dismissAllowingStateLoss();
                         }
@@ -148,6 +147,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                          * 6006 某一个tag过长，不能超过40字节
                          * */
                         JpushApply.getIntance().registJpush(MyApplication.getInstance());
+
+                        //设置小米推送别名
+                        MiPushClient.setAlias(LoginActivity.this, UserUtils.getUserId(), null);
 
                         QZXTools.popCommonToast(LoginActivity.this, (String) msg.obj, false);
 
@@ -457,7 +459,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.i("qin", "onResponse: "+response.toString());
+                        QZXTools.logE("onResponse: "+response.toString(),null);
                         if (response.isSuccessful()) {
                             String resultJson = response.body().string();
 //                            QZXTools.logE("resultJson=" + resultJson, null);
@@ -513,6 +515,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     intent.putExtra("classname", studentInfo.getGradeName()
                                             + " " + studentInfo.getClassName());
                                     intent.putExtra("txurl", studentInfo.getPhoto());
+
+                                   // intent.putExtra("useOfflineLogin", true);
                                     intent.setPackage("com.android.launcher3");
                                     sendBroadcast(intent);
                                 } else {

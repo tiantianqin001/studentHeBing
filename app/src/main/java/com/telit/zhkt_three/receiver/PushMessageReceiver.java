@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.gson.Gson;
-import com.telit.zhkt_three.Activity.HomeScreen.LoginActivity;
-import com.telit.zhkt_three.Activity.HomeScreen.OffLineWarningActivity;
 import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
 import com.telit.zhkt_three.Activity.MistakesCollection.MistakesCollectionActivity;
+import com.telit.zhkt_three.Activity.OauthMy.ProviceActivity;
 import com.telit.zhkt_three.JavaBean.Gson.JpushExtrasInfo;
-import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.Jpush.TagAliasOperatorHelper;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
@@ -30,7 +28,6 @@ import cn.jpush.android.service.JPushMessageReceiver;
  * 使用新版的tags/alias接收的话，老版的就不再接收到消息
  */
 public class PushMessageReceiver extends JPushMessageReceiver {
-
     public static final String OFFLINE = "1001";//被迫下线
     public static final String HOMEWORK_PUBLISH = "1002";//作业发布
     public static final String HOMEWORK_RUSH = "1003";//作业催缴
@@ -60,7 +57,6 @@ public class PushMessageReceiver extends JPushMessageReceiver {
             QZXTools.logE("customMessage json parse exception", e);
         }
     }
-
     @Override
     public void onNotifyMessageOpened(Context context, NotificationMessage message) {
         QZXTools.logE("[onNotifyMessageOpened] " + message, null);
@@ -75,6 +71,7 @@ public class PushMessageReceiver extends JPushMessageReceiver {
             case HOMEWORK_PUBLISH:
             case HOMEWORK_RUSH:
                 QZXTools.logE("作业id：" + jpushExtrasInfo.getResult(), null);
+                QZXTools.logE("byHand：" + jpushExtrasInfo.getByhand(), null);
                 //进入作业详情界面
                 Intent intent = new Intent(context, HomeWorkDetailActivity.class);
                 intent.putExtra("homeworkId", jpushExtrasInfo.getResult());
@@ -100,13 +97,15 @@ public class PushMessageReceiver extends JPushMessageReceiver {
      * notificationStyle=0, notificationBuilderId=0, notificationBigText='', notificationBigPicPath='', notificationInbox='',
      * notificationPriority=0, notificationCategory='',developerArg0='developerArg0', platform=0, notificationType=0}
      */
+
+    //这个手机极光真正在的入口
     @Override
     public void onNotifyMessageArrived(Context context, NotificationMessage message) {
-        QZXTools.logE("[onNotifyMessageArrived] " + message, null);
+        QZXTools.logE("onNotifyMessageArrived" + message, null);
 
         if (!UserUtils.isLoginIn()) {
             QZXTools.logE("该用户还没有登录...", null);
-            context.startActivity(new Intent(context, LoginActivity.class));
+            context.startActivity(new Intent(context, ProviceActivity.class));
         }
 
         String extrasInfo = message.notificationExtras;
@@ -117,13 +116,13 @@ public class PushMessageReceiver extends JPushMessageReceiver {
             return;
         }
         if (jpushExtrasInfo.getWarn().equals(OFFLINE)) {
-            //如果是被迫下线
+            /*//如果是被迫下线
             QZXTools.popCommonToast(context, context.getResources().getString(R.string.offline_tips), true);
 
             Intent intent = new Intent(context, OffLineWarningActivity.class);
             //必须加上这条属性
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            context.startActivity(intent);*/
 
             //因为Context无法弹出DialogFragment 所以无法使用TipsDialog
 

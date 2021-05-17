@@ -83,6 +83,8 @@ public class ImageLookActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_image_look);
         unbinder = ButterKnife.bind(this);
 
+        QZXTools.logE("图片预览",null);
+
         EventBus.getDefault().register(this);
 
         Intent intent = getIntent();
@@ -101,6 +103,9 @@ public class ImageLookActivity extends BaseActivity implements View.OnClickListe
         shareTitle = intent.getStringExtra("shareTitle");
         resId = intent.getStringExtra("resId");
         resName = intent.getStringExtra("resName");
+
+        String flag = intent.getStringExtra("flag");
+        String type = intent.getStringExtra("type");
 
         //是否存在评论内容
         String resComment = intent.getStringExtra("resComment");
@@ -134,7 +139,7 @@ public class ImageLookActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
-        PhotoViewAdapter photoViewAdapter = new PhotoViewAdapter(resPathList, this);
+        PhotoViewAdapter photoViewAdapter = new PhotoViewAdapter(resPathList, this,flag,type);
         photoViewPager.setAdapter(photoViewAdapter);
 
         photoViewPager.setCurrentItem(currentPosition, false);

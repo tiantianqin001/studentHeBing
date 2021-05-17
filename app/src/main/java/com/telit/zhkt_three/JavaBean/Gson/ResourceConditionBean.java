@@ -80,6 +80,8 @@ public class ResourceConditionBean {
         private List<TermBean> term;
         private List<PressBean> press;
         private List<BookTypeBean> bookType;
+        private List<PressBean> read_press;
+        private List<GradeBean> read_grade;
 
         public List<PeriodBean> getPeriod() {
             return period;
@@ -127,6 +129,22 @@ public class ResourceConditionBean {
 
         public void setBookType(List<BookTypeBean> bookType) {
             this.bookType = bookType;
+        }
+
+        public List<PressBean> getRead_press() {
+            return read_press;
+        }
+
+        public void setRead_press(List<PressBean> read_press) {
+            this.read_press = read_press;
+        }
+
+        public List<GradeBean> getRead_grade() {
+            return read_grade;
+        }
+
+        public void setRead_grade(List<GradeBean> read_grade) {
+            this.read_grade = read_grade;
         }
 
         public static class PeriodBean {

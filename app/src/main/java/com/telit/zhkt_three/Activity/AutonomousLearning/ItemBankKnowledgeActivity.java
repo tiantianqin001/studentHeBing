@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.gyf.immersionbar.ImmersionBar;
 import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.RVQuestionAdapter;
 import com.telit.zhkt_three.Adapter.tree_adpter.Node;
@@ -30,10 +31,7 @@ import com.telit.zhkt_three.Adapter.tree_adpter.TreeViewAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.ToUsePullView;
-import com.telit.zhkt_three.CustomView.WrapContentLinearLayoutManager;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionDifficult;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionKnowledge;
@@ -41,8 +39,10 @@ import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionType;
 import com.telit.zhkt_three.JavaBean.Gson.KnowledgeParamBean;
 import com.telit.zhkt_three.JavaBean.Gson.KnowledgeQuestionsBean;
 import com.telit.zhkt_three.R;
+import com.telit.zhkt_three.Utils.DateUtil;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.ScreenUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
@@ -66,6 +66,7 @@ import okhttp3.Response;
 //TreeViewAdapter.TreeViewwCallback,
 public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePullView.SpinnerClickInterface,
         View.OnClickListener {
+
     private Unbinder unbinder;
 
     @BindView(R.id.knowledge_back)
@@ -103,6 +104,9 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.nsl_view)
     NestedScrollView nsl_view;
+
+    @BindView(R.id.ll_knowledge)
+    LinearLayout ll_knowledge;
 
     //题型Map和难度Map,点击进入知识点后就固定了,汉字为key，下标为值
     private Map<String, String> questTypeMap;
@@ -160,7 +164,7 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
             switch (msg.what) {
                 case Server_Error:
                     if (isShow) {
-                        QZXTools.popToast(ItemBankKnowledgeActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(ItemBankKnowledgeActivity.this, "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -273,6 +277,10 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
         isShow = true;
         EventBus.getDefault().register(this);
 
+        ll_knowledge.setPadding(0,0,0, ScreenUtils.getNavigationBarHeight(this));
+
+        //设置导航栏的颜色
+        ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
         initData();
 
         Intent intent = getIntent();
@@ -352,8 +360,8 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
         });
 
         questionBankList = new ArrayList<>();
-        linearLayoutManager = new WrapContentLinearLayoutManager(this);
-        linearLayoutManager.setOrientation(WrapContentLinearLayoutManager.VERTICAL);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         knowledge_rv_questions.setOverScrollMode(View.OVER_SCROLL_NEVER);
         knowledge_rv_questions.setLayoutManager(linearLayoutManager);
         knowledge_rv_questions.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -540,12 +548,15 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
         QZXTools.logE("xd=" + learning_section + ";chid=" + subject
                 + ";questionChannelType=" + questTypeMap.get(type) + ";difficultIndex=" + difficultyMap.get(difficulty), null);
 
-       mapParams.put("pageSize", 20+"");
+       mapParams.put("pageSize", 15+"");
        // questionBankList.clear();
+        String startTime = DateUtil.getCurrentTimeByFormat("yyyy/MM/dd hh:mm:ss");
 
+        QZXTools.logE("onResponse:startTime = "+startTime,null);
         /**
          * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
          * */
+
         //查询章节数据
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, mapParams, new Callback() {
 
@@ -560,6 +571,9 @@ public class ItemBankKnowledgeActivity extends BaseActivity implements ToUsePull
                 if (response.isSuccessful()) {
                     String resultJson = response.body().string();
                     QZXTools.logE("resultJson=" + resultJson, null);
+                    String endTime = DateUtil.getCurrentTimeByFormat("yyyy/MM/dd hh:mm:ss");
+
+                    QZXTools.logE("onResponse:endTime = "+endTime,null);
                     Gson gson = new Gson();
                     KnowledgeQuestionsBean knowledgeQuestionsBean = gson.fromJson(resultJson, KnowledgeQuestionsBean.class);
 //                    QZXTools.logE("knowledgeQuestionsBean=" + knowledgeQuestionsBean, null);

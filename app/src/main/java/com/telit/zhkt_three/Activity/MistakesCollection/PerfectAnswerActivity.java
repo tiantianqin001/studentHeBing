@@ -18,12 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.telit.zhkt_three.Activity.HomeWork.ExtraInfoBean;
 import com.telit.zhkt_three.Adapter.Mistake.PerfectAnswerLeftAdapter;
 import com.telit.zhkt_three.Adapter.Mistake.PerfectAnswerRightAdapter;
+import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.MistakesBean;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
 import com.telit.zhkt_three.JavaBean.MistakesCollection.PerfectLeftBean;
@@ -32,6 +32,7 @@ import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class PerfectAnswerActivity extends AppCompatActivity implements View.OnC
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(PerfectAnswerActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(PerfectAnswerActivity.this, "当前网络不佳....", false);
 
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
@@ -132,11 +133,17 @@ public class PerfectAnswerActivity extends AppCompatActivity implements View.OnC
                         }
 
                         if (perfectLeftBeans.size() > 0) {
-                            request_retry_layout.setVisibility(View.GONE);
-                            leak_resource_layout.setVisibility(View.GONE);
+                            if (request_retry_layout!=null || leak_resource_layout!=null){
+                                request_retry_layout.setVisibility(View.GONE);
+                                leak_resource_layout.setVisibility(View.GONE);
+                            }
+
                         } else {
-                            request_retry_layout.setVisibility(View.GONE);
-                            leak_resource_layout.setVisibility(View.VISIBLE);
+
+                            if (request_retry_layout!=null || leak_resource_layout!=null){
+                                request_retry_layout.setVisibility(View.GONE);
+                                leak_resource_layout.setVisibility(View.GONE);
+                            }
                         }
 
                         //通知刷新视图
@@ -250,7 +257,7 @@ public class PerfectAnswerActivity extends AppCompatActivity implements View.OnC
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String resultJson = response.body().string();
-//                    QZXTools.logE("resultJson=" + resultJson, null);
+                    QZXTools.logE("resultJson=" + resultJson, null);
                     Gson gson = new Gson();
                     MistakesBean mistakesBean = gson.fromJson(resultJson, MistakesBean.class);
                     List<QuestionInfo> questionInfoList = mistakesBean.getResult();
@@ -283,7 +290,10 @@ public class PerfectAnswerActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.perfect_answer_back:
+                EventBus.getDefault().post(new ExtraInfoBean(), Constant.Subjective_Board_Callback);
                 finish();
+
+
                 break;
             case R.id.request_retry:
                 //重新请求所有的请求

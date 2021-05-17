@@ -20,8 +20,6 @@ import com.google.gson.Gson;
 import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.RVQuestionAdapter;
 import com.telit.zhkt_three.Constant.UrlUtils;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.Gson.KnowledgeQuestionsBean;
 import com.telit.zhkt_three.JavaBean.MistakesCollection.ImproveKnowledgeInfo;
@@ -73,8 +71,10 @@ public class MistakesImproveActivity extends BaseActivity {
     private String learning_section;//学段
     private String subject;//学科
     private String json_knowledge;//知识点Json
-    private String questionType;//题型
+    private String questionChannelType;//题型
     private String difficulty;//难度
+
+    private int questionType;
 
     private static final int Default_Count_Load = 3;
 
@@ -147,8 +147,10 @@ public class MistakesImproveActivity extends BaseActivity {
             learning_section = bundle.getString("xd");
             subject = bundle.getString("subject");
             difficulty = bundle.getString("difficulty");
-            questionType = bundle.getString("type");
+            questionChannelType = bundle.getString("type");
             String knowledgeJson = bundle.getString("knowledge_json");
+
+            questionType = bundle.getInt("questionType",-1);
 
             //                Gson gson = new Gson();
 //                List<ImproveKnowledgeInfo> infos = gson.fromJson(knowledgeInfo, new TypeToken<List<ImproveKnowledgeInfo>>() {
@@ -274,15 +276,18 @@ public class MistakesImproveActivity extends BaseActivity {
         Map<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("xd", learning_section);
         mapParams.put("chid", subject);
-        if (!TextUtils.isEmpty(questionType)) {
-            mapParams.put("questionChannelType", questionType);
+        if (!TextUtils.isEmpty(questionChannelType)) {
+            mapParams.put("questionChannelType", questionChannelType);
+        }
+        if (questionType!=-1){
+            mapParams.put("questionType",String.valueOf(questionType));
         }
         mapParams.put("difficultIndex", difficulty);
         mapParams.put("tKnowledge", json_knowledge);
         mapParams.put("pageNo", curPageNo + "");
 
         QZXTools.logE("xd=" + learning_section + ";chid=" + subject + ";pageNo=" + curPageNo
-                + ";questionChannelType=" + questionType + ";difficultIndex=" + difficulty + ";tKnowledge=" + json_knowledge, null);
+                + ";questionChannelType=" + questionChannelType+ ";questionType=" + questionType + ";difficultIndex=" + difficulty + ";tKnowledge=" + json_knowledge, null);
 
         /**
          * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
@@ -300,7 +305,7 @@ public class MistakesImproveActivity extends BaseActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String resultJson = response.body().string();
-//                    QZXTools.logE("resultJson=" + resultJson, null);
+                   QZXTools.logE("resultJson=" + resultJson, null);
                     Gson gson = new Gson();
                     KnowledgeQuestionsBean knowledgeQuestionsBean = gson.fromJson(resultJson, KnowledgeQuestionsBean.class);
 

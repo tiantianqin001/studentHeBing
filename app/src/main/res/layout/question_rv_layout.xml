@@ -5,12 +5,13 @@
     android:orientation="horizontal">
 
     <!--图片出题模式：多图片展示-->
-    <android.support.v7.widget.RecyclerView
+    <com.telit.zhkt_three.CustomView.NoScrollRecyclerView
         android:id="@+id/rv_img_question"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:visibility="gone"></android.support.v7.widget.RecyclerView>
+        android:visibility="gone"
+        android:layout_gravity="center_vertical" />
 
     <View
         android:id="@+id/rv_divider"
@@ -20,22 +21,24 @@
         android:visibility="gone" />
 
     <!--文本出题和答案解析的展示区域-->
-    <LinearLayout
-        android:layout_marginLeft="10dp"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:fillViewport="true"
-        >
+        android:layout_marginLeft="10dp">
 
-        <com.telit.zhkt_three.CustomView.NoScrollRecyclerView
-            android:id="@+id/rv_text_answer_question"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <com.telit.zhkt_three.CustomView.NoScrollRecyclerView
+                android:id="@+id/rv_text_answer_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
+    </ScrollView>
 
 </LinearLayout>

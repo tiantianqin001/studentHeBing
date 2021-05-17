@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/x15"
+    >
+
+    <ImageView
+        android:id="@+id/iv_mistake_my_quint"
+        android:layout_width="@dimen/x720"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/x30"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/x30"
+        />
+
+    <!--随堂练习 head-->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/practice_head_layout"
+            android:layout_width="@dimen/y300"
+            android:layout_height="@dimen/x51"
+            android:background="@mipmap/practice_head_bg"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/practice_head_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/y9"
+                android:text="[主观]"
+                android:textColor="#FFDA0D"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:id="@+id/practice_head_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/y15"
+                android:text="第1题 共25题"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/x24" />
+
+            <TextView
+                android:id="@+id/practise_head_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="(1分)"
+                android:visibility="gone"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/x24" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y33"
+            android:layout_marginRight="@dimen/y42"
+            android:layout_marginTop="@dimen/x30"
+            android:orientation="vertical">
+
+            <!--图片集-->
+
+            <com.telit.zhkt_three.CustomView.SubjectImagesView
+                android:id="@+id/siv_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/x300"
+                />
+            <FrameLayout
+                android:id="@+id/rl_images_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:visibility="gone"
+                >
+                <com.telit.zhkt_three.MaxRecyclerView
+                    android:id="@+id/rv_subjective_imgs_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:visibility="gone"
+
+                    />
+            </FrameLayout>
+
+
+
+            <!--展示作答方式-->
+            <RelativeLayout
+                android:id="@+id/subjective_answer_tool_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x90">
+
+                <TextView
+                    android:id="@+id/subjective_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/subjective_board"
+                    android:drawableLeft="@mipmap/camera_icon"
+                    android:gravity="center"
+                    android:text="拍照"
+                    android:textColor="@color/word_gray_deep"
+                    android:textSize="@dimen/x24" />
+
+                <TextView
+                    android:id="@+id/subjective_board"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/y42"
+                    android:drawableLeft="@mipmap/draw"
+                    android:gravity="center"
+                    android:text="画板"
+                    android:textColor="@color/word_gray_deep"
+                    android:textSize="@dimen/x24" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/x15"
+                android:layout_marginTop="@dimen/x15"
+                android:background="#E5E5E5" />
+
+            <EditText
+                android:id="@+id/subjective_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="此栏输入文字说明"
+                android:textColorHint="#CCCCCC"
+                android:textSize="@dimen/x36"
+                android:inputType="textMultiLine"
+                />
+
+            <TextView
+                android:id="@+id/subjective_input_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top"
+                android:layout_marginTop="@dimen/x16"
+                android:textSize="@dimen/x36"
+                android:textColor="#1296DB"
+                android:visibility="gone"
+
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/x10">
+
+        <TextView
+            android:id="@+id/tv_learn_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看学习资源"
+            android:textColor="#FF9600"
+            android:textSize="@dimen/x24"
+            android:layout_marginRight="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/tv_typical_answers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看典型答题"
+            android:textColor="#FF9600"
+            android:textSize="@dimen/x24"
+            android:layout_marginRight="@dimen/x24"
+            android:visibility="gone"/>
+
+        <!--优秀答案-->
+        <TextView
+            android:id="@+id/tv_work_good_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看优秀答案"
+            android:textColor="#FF9600"
+            android:textSize="@dimen/x24"
+            android:layout_marginRight="@dimen/x24"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</LinearLayout>

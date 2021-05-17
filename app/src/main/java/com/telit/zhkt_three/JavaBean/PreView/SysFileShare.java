@@ -84,6 +84,10 @@ public class SysFileShare {
     private String state;
     private String shareId;
 
+    private String collectionState;
+    private String collectionTime;
+    private String collectionId;
+
     public int getCommentId() {
         return commentId;
     }
@@ -380,5 +384,29 @@ public class SysFileShare {
 
     public void setShareId(String shareId) {
         this.shareId = shareId;
+    }
+
+    public String getCollectionState() {
+        return collectionState;
+    }
+
+    public void setCollectionState(String collectionState) {
+        this.collectionState = collectionState;
+    }
+
+    public String getCollectionTime() {
+        return collectionTime;
+    }
+
+    public void setCollectionTime(String collectionTime) {
+        this.collectionTime = collectionTime;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 }

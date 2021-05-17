@@ -1,19 +1,14 @@
 package com.telit.zhkt_three.Adapter.AutoLearning;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.aphidmobile.utils.UI;
-import com.bumptech.glide.Glide;
 import com.telit.zhkt_three.R;
-import com.telit.zhkt_three.Utils.QZXTools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -84,14 +79,23 @@ public class FlipViewAdapter extends BaseAdapter {
         //---------------------------------------------------------
         if (imgUrls.size() > 0) {
             if (position * 2 + 1 >= imgUrls.size()) {
-                byte[] pic_left = getPicBytes(imgUrls.get(position * 2));
-                mViewHolder.left_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_left, 0, pic_left.length));
+                if (position * 2<=imgUrls.size()){
+                    byte[] pic_left = getPicBytes(imgUrls.get(position * 2));
+                    mViewHolder.left_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_left, 0, pic_left.length));
+                }else {
+                    mViewHolder.left_img.setImageDrawable(null);
+                }
                 mViewHolder.right_img.setImageDrawable(null);
             } else {
-                byte[] pic_left = getPicBytes(imgUrls.get(position * 2));
-                byte[] pic_right = getPicBytes(imgUrls.get(position * 2 + 1));
-                mViewHolder.left_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_left, 0, pic_left.length));
-                mViewHolder.right_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_right, 0, pic_right.length));
+                if (position * 2<=imgUrls.size()){
+                    byte[] pic_left = getPicBytes(imgUrls.get(position * 2));
+                    byte[] pic_right = getPicBytes(imgUrls.get(position * 2 + 1));
+                    mViewHolder.left_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_left, 0, pic_left.length));
+                    mViewHolder.right_img.setImageBitmap(BitmapFactory.decodeByteArray(pic_right, 0, pic_right.length));
+                }else {
+                    mViewHolder.left_img.setImageDrawable(null);
+                    mViewHolder.right_img.setImageDrawable(null);
+                }
             }
         }
         return convertView;

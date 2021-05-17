@@ -8,7 +8,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,9 @@ import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+
+import com.telit.zhkt_three.Utils.ViewUtils;
+
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.greendao.LocalResourceRecordDao;
 import com.zbv.meeting.util.SharedPreferenceUtil;
@@ -50,7 +52,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -64,15 +65,19 @@ import java.util.UUID;
  * todo 下载封装有些疑问待解决
  */
 public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private Context mContext;
     private List<FillResource> mDatas;
 
     private static final int TeachingMaterial = 1;
+    private static final int Other = 2;
 
-    public RVAutoLearningAdapter(Context context, List<FillResource> list) {
+    private String flag;
+
+    public RVAutoLearningAdapter(Context context, List<FillResource> list,String flag) {
         mContext = context;
         mDatas = list;
+        this.flag = flag;
+        downloading = false;
     }
 
     @NonNull
@@ -146,6 +151,7 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 topicTitle = topicTitle.substring(indexTwo + 1, indexOne - 1);
             }
             rvAutoLearningNormalResourceViewHolder.rv_item_tv_topic.setText(topicTitle);
+            QZXTools.logE("flag: "+flag,null);
             rvAutoLearningNormalResourceViewHolder.rv_item_tv_subType.setText(mDatas.get(i).getSubjectName());
 
             //下载状态
@@ -159,14 +165,14 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 LocalResourceRecordDao.Properties.ResourceType.eq(mDatas.get(i).getType())).unique();
 
                 if (localResourceRecord != null) {
-                    QZXTools.logE("localResourceRecord=" + localResourceRecord + ";i=" + i, null);
+                    QZXTools.logE("localResourceRecord11=" + localResourceRecord + ";i=" + i, null);
                     rvAutoLearningNormalResourceViewHolder.rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_FINISH);
                     mDatas.get(i).setFilePath(localResourceRecord.getResourceFilePath());
                 } else {
                     rvAutoLearningNormalResourceViewHolder.rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_READY);
                 }
             }
-        } else {
+        } else if (viewHolder instanceof RVAutoLearningTeachingMaterialViewHolder){
             RVAutoLearningTeachingMaterialViewHolder rvAutoLearningTeachingMaterialViewHolder =
                     (RVAutoLearningTeachingMaterialViewHolder) viewHolder;
 
@@ -205,7 +211,11 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 topicTitle = topicTitle.substring(indexTwo + 1, indexOne - 1);
             }
             rvAutoLearningTeachingMaterialViewHolder.rv_item_book_topic.setText(topicTitle);
-            rvAutoLearningTeachingMaterialViewHolder.rv_item_book_subType.setText(mDatas.get(i).getSubjectName());
+            if ("1".equals(flag)){
+                rvAutoLearningTeachingMaterialViewHolder.rv_item_book_subType.setText(mDatas.get(i).getSubjectName());
+            }else {
+                rvAutoLearningTeachingMaterialViewHolder.rv_item_book_subType.setText(mDatas.get(i).getPressname());
+            }
         }
     }
 
@@ -214,6 +224,10 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return mDatas != null ? mDatas.size() : 0;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     /**
      * 如果存在多种ViewHolder这个视图类型还是需要的，不然会部分重影
@@ -222,8 +236,9 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         if (mDatas.get(position).isTeachingMaterial()) {
             return TeachingMaterial;
+        }else {
+            return Other;
         }
-        return super.getItemViewType(position);
     }
 
     /**
@@ -268,6 +283,11 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.rv_item_main_content:
+
+                    if (!ViewUtils.isFastClick(1000)){
+                        return;
+                    }
+
                     //之所以减一是因为XRecyclerView有个HeadView
                     int position = getAdapterPosition() - 1;
                     if (mDatas.get(position).isItemBank()) {
@@ -324,7 +344,7 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                                    JZVideoPlayer.setMediaInterface(new IjkMediaEngine());
 //                                    JZVideoPlayerStandard.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 //                                    JZVideoPlayer.startFullscreen(mContext, CustomeJZVideoPlayerStandard.class,
-//                                            mDatas.get(getLayoutPosition() - 1).getFilePath(), "测试...");
+//                                            mDatas.get(getLayoutPosition() - 1).getFilePath(), "...");
                                     break;
                                 case "2":
                                     Intent intent = new Intent(mContext, AudioPlayActivity.class);
@@ -397,6 +417,11 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                            startDownload();
 //                            break;
                         case DownloadProgressBar.STATUS_READY:
+                            if (downloading){
+                                QZXTools.popToast(mContext, "有文件正在下载，请稍后！", false);
+                                return;
+                            }
+
                             startDownload();
                             break;
                         case DownloadProgressBar.STATUS_FINISH:
@@ -424,11 +449,19 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void confirm() {
             tipsDialog.dismissAllowingStateLoss();
             tipsDialog.setClickInterface(null);
+
+            if (downloading){
+                QZXTools.popToast(mContext, "有文件正在下载，请稍后！", false);
+                return;
+            }
+
             startDownload();
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         private void startDownload() {
+            QZXTools.logE("rv_item_download_tags.getStatus()====" + rv_item_download_tags.getStatus(), null);
+
             //等待标志
             rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_WATING);
 
@@ -439,49 +472,67 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             baseUrl = UrlUtils.CommonResourceDownload;
 
+            QZXTools.logE("url====" + baseUrl + getParams, null);
+
             OkHttp3_0Utils.getInstance().downloadSingleFileForOnce(baseUrl + getParams, null, new OkHttp3_0Utils.DownloadCallback() {
+
                 @Override
                 public void downloadProcess(int value) {
-//                    QZXTools.logE("downloadProcess value=" + value, null);
                     rv_item_download_tags.setProgress(value);
+                    rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_DOWNLOADING);
+                    downloading = true;
                 }
 
                 @Override
                 public void downloadComplete(String filePath) {
-                    rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_FINISH);
+                    if (filePath.contains("userid")){
+                        rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_ERROR);
+                    }else {
+                        rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_FINISH);
 
-                    //设置文件名
-                    mDatas.get(getLayoutPosition() - 1).setFilePath(filePath);
+                        QZXTools.logE("filepath====" + filePath, null);
 
-                    //保存数据库
-                    LocalResourceRecord localResourceRecord = new LocalResourceRecord();
-                    //QZXTools.logE("layoutPosition=" + getLayoutPosition(), null);//+1
-                    localResourceRecord.setResourceType(mDatas.get(getLayoutPosition() - 1).getType());
-                    localResourceRecord.setResourceId(mDatas.get(getLayoutPosition() - 1).getId());
+                        //设置文件名
+                        mDatas.get(getLayoutPosition() - 1).setFilePath(filePath);
 
-                    localResourceRecord.setResourceName(mDatas.get(getLayoutPosition() - 1).getTitle());
-                    localResourceRecord.setImageUrl(mDatas.get(getLayoutPosition() - 1).getCover());
-                    localResourceRecord.setIsChoosed(false);
+                        //保存数据库
+                        LocalResourceRecord localResourceRecord = new LocalResourceRecord();
+                        //QZXTools.logE("layoutPosition=" + getLayoutPosition(), null);//+1
+                        localResourceRecord.setResourceType(mDatas.get(getLayoutPosition() - 1).getType());
+                        localResourceRecord.setResourceId(mDatas.get(getLayoutPosition() - 1).getId());
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String updateDate = simpleDateFormat.format(new Date());
-                    localResourceRecord.setResourceUpdateDate(updateDate);
+                        localResourceRecord.setResourceName(mDatas.get(getLayoutPosition() - 1).getTitle());
+                        localResourceRecord.setImageUrl(mDatas.get(getLayoutPosition() - 1).getCover());
+                        localResourceRecord.setIsChoosed(false);
 
-                    localResourceRecord.setCanChecked(false);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String updateDate = simpleDateFormat.format(new Date());
+                        localResourceRecord.setResourceUpdateDate(updateDate);
 
-                    localResourceRecord.setResourceFilePath(filePath);
-                    MyApplication.getInstance().getDaoSession().getLocalResourceRecordDao().insertOrReplace(localResourceRecord);
+                        localResourceRecord.setCanChecked(false);
 
-                    EventBus.getDefault().post(localResourceRecord.getResourceType(), Constant.Auto_Learning_Update);
+                        localResourceRecord.setResourceFilePath(filePath);
+                        MyApplication.getInstance().getDaoSession().getLocalResourceRecordDao().insertOrReplace(localResourceRecord);
+
+                        EventBus.getDefault().post(localResourceRecord.getResourceType(), Constant.Auto_Learning_Update);
+
+                        downloading = false;
+                    }
                 }
 
                 @Override
                 public void downloadFailure() {
                     rv_item_download_tags.setStatus(DownloadProgressBar.STATUS_ERROR);
+
+                    QZXTools.logE("downloadFailure", null);
+
+                    downloading = false;
                 }
             });
         }
     }
+
+    private boolean downloading;
 
     /**
      * 教材
@@ -557,7 +608,13 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 @Override
                                 public void confirm() {
                                     tipsDialog.dismissAllowingStateLoss();
-                                    startDownload();
+
+                                    if (downloading){
+                                        QZXTools.popToast(mContext, "有文件正在下载，请稍后！", false);
+                                        return;
+                                    }
+
+                                    startDownloadTeachingMaterial(rv_item_book_download_tags);
                                 }
                             });
                             tipsDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), TipsDialog.class.getSimpleName());
@@ -599,7 +656,12 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                            startDownload();
 //                            break;
                         case DownloadProgressBar.STATUS_READY:
-                            startDownload();
+                            if (downloading){
+                                QZXTools.popToast(mContext, "有文件正在下载，请稍后！", false);
+                                return;
+                            }
+
+                            startDownloadTeachingMaterial(rv_item_book_download_tags);
                             break;
                         case DownloadProgressBar.STATUS_FINISH:
                             //弹出下载提示
@@ -619,6 +681,10 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             getLocalResourceRecordDao().queryBuilder().where
                                             (LocalResourceRecordDao.Properties.ResourceId.eq(mDatas.get(getLayoutPosition() - 1).getId())).unique();
                                     MyApplication.getInstance().getDaoSession().getLocalResourceRecordDao().delete(localResourceRecord);
+
+                                    QZXTools.popToast(mContext, "删除成功！", false);
+
+                                    rv_item_book_download_tags.setStatus(DownloadProgressBar.STATUS_READY);
                                 }
 
                                 @Override
@@ -639,19 +705,11 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
 
-//        @Override
-//        public void cancle() {
-//            tipsDialog.dismiss();
-//        }
-//
-//        @Override
-//        public void confirm() {
-//            tipsDialog.dismiss();
-//            startDownload();
-//        }
-
+        //下载教材
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        private void startDownload() {
+        private void startDownloadTeachingMaterial(DownloadProgressBar rv_item_book_download_tags) {
+            QZXTools.logE("Status====" + rv_item_book_download_tags.getStatus(), null);
+
             //等待标志
             rv_item_book_download_tags.setStatus(DownloadProgressBar.STATUS_WATING);
 
@@ -662,12 +720,15 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             baseUrl = UrlUtils.BaseUrl + UrlUtils.ElectronicBookDownload;
 
-            String saveFileDir = "AutoLearningResources";
+            QZXTools.logE("url====" + baseUrl + getParams, null);
 
             OkHttp3_0Utils.getInstance().downloadSingleFileForOnce(baseUrl + getParams, null, new OkHttp3_0Utils.DownloadCallback() {
                 @Override
                 public void downloadProcess(int value) {
                     rv_item_book_download_tags.setProgress(value);
+                    rv_item_book_download_tags.setStatus(DownloadProgressBar.STATUS_DOWNLOADING);
+
+                    downloading = true;
                 }
 
                 @Override
@@ -697,11 +758,19 @@ public class RVAutoLearningAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     MyApplication.getInstance().getDaoSession().getLocalResourceRecordDao().insertOrReplace(localResourceRecord);
 
                     EventBus.getDefault().post(localResourceRecord.getResourceType(), Constant.Auto_Learning_Update);
+
+                    QZXTools.logE("downloadComplete", null);
+
+                    downloading = false;
                 }
 
                 @Override
                 public void downloadFailure() {
                     rv_item_book_download_tags.setStatus(DownloadProgressBar.STATUS_ERROR);
+
+                    QZXTools.logE("downloadFailure", null);
+
+                    downloading = false;
                 }
             });
         }

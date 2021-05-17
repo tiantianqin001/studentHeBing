@@ -83,6 +83,21 @@ public class PerfectAnswerLeftAdapter extends RecyclerView.Adapter<PerfectAnswer
 
         perfectAnswerLeftViewHolder.perfect_score.setText("得分：" + perfectLeftBeans.get(i).getScore());
 
+        perfectAnswerLeftViewHolder.perfect_name.setOnClickListener(new View.OnClickListener() {
+            boolean flag=true;
+            @Override
+            public void onClick(View arg0) {
+                if(flag){
+                    flag = false;
+                    perfectAnswerLeftViewHolder.perfect_name.setEllipsize(null); // 展开
+                }else{
+                    flag = true;
+                    perfectAnswerLeftViewHolder.perfect_name.setEllipsize(TextUtils.TruncateAt.valueOf("END")); // 收缩
+                }
+                perfectAnswerLeftViewHolder.perfect_name.setSingleLine(flag);
+            }
+        });
+
     }
 
     @Override

@@ -33,7 +33,7 @@ import java.util.Locale;
 public class MediaController extends FrameLayout implements IMediaController {
 
     private static final String TAG = "PLMediaController";
-    private IMediaController.MediaPlayerControl mPlayer;
+    private MediaPlayerControl mPlayer;
     private Context mContext;
     private PopupWindow mWindow;
     private int mAnimStyle;

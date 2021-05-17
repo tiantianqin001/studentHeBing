@@ -21,15 +21,15 @@ public class RootCmd {
      */
     public static boolean haveRoot() {
         if (!mHaveRoot) {
-            int ret = execRootCmdSilent("echo test"); // 通过执行测试命令来检测
+            int ret = execRootCmdSilent("echo test"); // 通过执行命令来检测
             if (ret != -1) {
-                Log.i(TAG, "have root!");
+
                 mHaveRoot = true;
             } else {
-                Log.i(TAG, "not root!");
+
             }
         } else {
-            Log.i(TAG, "mHaveRoot = true, have root!");
+
         }
         return mHaveRoot;
     }
@@ -47,14 +47,14 @@ public class RootCmd {
             dos = new DataOutputStream(p.getOutputStream());
             dis = new DataInputStream(p.getInputStream());
 
-            Log.i(TAG, cmd);
+
             dos.writeBytes(cmd + "\n");
             dos.flush();
             dos.writeBytes("exit\n");
             dos.flush();
             String line = null;
             while ((line = dis.readLine()) != null) {
-                Log.d("result", line);
+               // Log.d("result", line);
                 result += line;
             }
             p.waitFor();
@@ -90,7 +90,6 @@ public class RootCmd {
             Process p = Runtime.getRuntime().exec("su");
             dos = new DataOutputStream(p.getOutputStream());
 
-            Log.i(TAG, cmd);
             dos.writeBytes(cmd + "\n");
             dos.flush();
             dos.writeBytes("exit\n");
@@ -136,7 +135,7 @@ public class RootCmd {
      * 关机指令，只负责关机，到时需要使用时要手启
      * */
     public static void shutdownCommand() {
-        Log.e("zbv", "shutdown");
+       // Log.e("zbv", "shutdown");
 
         Process process = null;
         try {

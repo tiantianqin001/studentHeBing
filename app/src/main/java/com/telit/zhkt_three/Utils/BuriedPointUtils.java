@@ -33,7 +33,7 @@ public class BuriedPointUtils {
             jsonObject.put("userName", UserUtils.getStudentName() );////用户名称
             jsonObject.put("schoolId", UserUtils.getShoolId());//;学校编号
             jsonObject.put("interactionId", interactionId); //课堂互动id
-            jsonObject.put("classId", "");//班级编号
+            jsonObject.put("classId", UserUtils.getClassId());//班级编号
             jsonObject.put("optContent", optContent);//操作内容
             jsonObject.put("className", UserUtils.getClassName());//;班级名称
             jsonObject.put("groupType", groupType);//分组讨论
@@ -52,18 +52,14 @@ public class BuriedPointUtils {
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(UrlUtils.BaseUrl + UrlUtils.student_operation_Log, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                ToastUtils.show("网络错误");
+                ToastUtils.show("埋点失败");
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-
             }
         });
-
     }
-
-
     private static String getTime() {
         long time = System.currentTimeMillis();//long now = android.os.SystemClock.uptimeMillis();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");

@@ -15,15 +15,13 @@ import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.VPLearningAdapter;
 import com.telit.zhkt_three.CusomPater;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
+import com.telit.zhkt_three.CustomView.LazyViewPager;
 import com.telit.zhkt_three.Fragment.AfterHomeWork.CompletedHomeWorkFragment;
 import com.telit.zhkt_three.Fragment.AfterHomeWork.ToDoHomeWorkFragment;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
-import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,21 +63,9 @@ public class AfterHomeWorkActivity extends BaseActivity implements View.OnClickL
         unbinder = ButterKnife.bind(this);
 
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            customHeadLayout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
+
+        customHeadLayout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
+
         tv_todo.setOnClickListener(this);
         tv_completed.setOnClickListener(this);
         indicator.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -106,7 +92,7 @@ public class AfterHomeWorkActivity extends BaseActivity implements View.OnClickL
         vpAdapter.setFragmentList(fgList);
         viewPager.setAdapter(vpAdapter);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicator.getLayoutParams();

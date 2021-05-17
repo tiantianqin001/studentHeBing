@@ -73,11 +73,11 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         if (mOrientation == VERTICAL) {
-            return new GalleryLayoutManager.LayoutParams(
+            return new LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
-            return new GalleryLayoutManager.LayoutParams(
+            return new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
         }
@@ -106,7 +106,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onLayoutChildren() called with: state = [" + state + "]");
+           ///d(TAG, "onLayoutChildren() called with: state = [" + state + "]");
         }
         if (getItemCount() == 0) {
             reset();
@@ -118,7 +118,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
         }
         if (state.getItemCount() != 0 && !state.didStructureChange()) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "onLayoutChildren: ignore extra layout step");
+               // Log.d(TAG, "onLayoutChildren: ignore extra layout step");
             }
             return;
         }
@@ -133,7 +133,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
 
     private void reset() {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "reset: ");
+           // Log.d(TAG, "reset: ");
         }
         if (mState != null) {
             mState.mItemsFrames.clear();
@@ -161,7 +161,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
         }
 
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "firstFillCover finish:first: " + mFirstVisiblePosition + ",last:" + mLastVisiblePos);
+           // Log.d(TAG, "firstFillCover finish:first: " + mFirstVisiblePosition + ",last:" + mLastVisiblePos);
         }
 
         if (mItemTransformer != null) {
@@ -417,7 +417,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
         int childLength = mOrientation == GalleryLayoutManager.HORIZONTAL ? child.getWidth() : child.getHeight();
 
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "calculateToCenterFraction: distance:" + distance + ",childLength:" + childLength);
+           // Log.d(TAG, "calculateToCenterFraction: distance:" + distance + ",childLength:" + childLength);
         }
         return Math.max(-1.f, Math.min(1.f, distance * 1.f / childLength));
     }
@@ -445,7 +445,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
      */
     private void fillWithVertical(RecyclerView.Recycler recycler, RecyclerView.State state, int dy) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "fillWithVertical: dy:" + dy);
+           // Log.d(TAG, "fillWithVertical: dy:" + dy);
         }
         int topEdge = getOrientationHelper().getStartAfterPadding();
         int bottomEdge = getOrientationHelper().getEndAfterPadding();
@@ -460,14 +460,14 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                     child = getChildAt(i + fixIndex);
                     if (getDecoratedBottom(child) - dy < topEdge) {
                         if (BuildConfig.DEBUG) {
-                            Log.v(TAG, "fillWithVertical: removeAndRecycleView:" + getPosition(child) + ",bottom:" + getDecoratedBottom(child));
+                           // Log.v(TAG, "fillWithVertical: removeAndRecycleView:" + getPosition(child) + ",bottom:" + getDecoratedBottom(child));
                         }
                         removeAndRecycleView(child, recycler);
                         mFirstVisiblePosition++;
                         fixIndex--;
                     } else {
                         if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "fillWithVertical: break:" + getPosition(child) + ",bottom:" + getDecoratedBottom(child));
+                           // Log.d(TAG, "fillWithVertical: break:" + getPosition(child) + ",bottom:" + getDecoratedBottom(child));
                         }
                         break;
                     }
@@ -478,7 +478,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                     child = getChildAt(i);
                     if (getDecoratedTop(child) - dy > bottomEdge) {
                         if (BuildConfig.DEBUG) {
-                            Log.v(TAG, "fillWithVertical: removeAndRecycleView:" + getPosition(child));
+                            //Log.v(TAG, "fillWithVertical: removeAndRecycleView:" + getPosition(child));
                         }
                         removeAndRecycleView(child, recycler);
                         mLastVisiblePos--;
@@ -526,7 +526,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                 startOffset = scrapRect.bottom;
                 mLastVisiblePos = i;
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "fillWithVertical: add view:" + i + ",startOffset:" + startOffset + ",mLastVisiblePos:" + mLastVisiblePos + ",bottomEdge" + bottomEdge);
+                    //Log.d(TAG, "fillWithVertical: add view:" + i + ",startOffset:" + startOffset + ",mLastVisiblePos:" + mLastVisiblePos + ",bottomEdge" + bottomEdge);
                 }
             }
         } else {
@@ -565,7 +565,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
         int leftEdge = getOrientationHelper().getStartAfterPadding();
         int rightEdge = getOrientationHelper().getEndAfterPadding();
         if (BuildConfig.DEBUG) {
-            Log.v(TAG, "fillWithHorizontal() called with: dx = [" + dx + "],leftEdge:" + leftEdge + ",rightEdge:" + rightEdge);
+            //Log.v(TAG, "fillWithHorizontal() called with: dx = [" + dx + "],leftEdge:" + leftEdge + ",rightEdge:" + rightEdge);
         }
         //1.remove and recycle the view that disappear in screen
         View child;
@@ -580,7 +580,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                         mFirstVisiblePosition++;
                         fixIndex--;
                         if (BuildConfig.DEBUG) {
-                            Log.v(TAG, "fillWithHorizontal:removeAndRecycleView:" + getPosition(child) + " mFirstVisiblePosition change to:" + mFirstVisiblePosition);
+                           // Log.v(TAG, "fillWithHorizontal:removeAndRecycleView:" + getPosition(child) + " mFirstVisiblePosition change to:" + mFirstVisiblePosition);
                         }
                     } else {
                         break;
@@ -594,7 +594,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                         removeAndRecycleView(child, recycler);
                         mLastVisiblePos--;
                         if (BuildConfig.DEBUG) {
-                            Log.v(TAG, "fillWithHorizontal:removeAndRecycleView:" + getPosition(child) + "mLastVisiblePos change to:" + mLastVisiblePos);
+                            //Log.v(TAG, "fillWithHorizontal:removeAndRecycleView:" + getPosition(child) + "mLastVisiblePos change to:" + mLastVisiblePos);
                         }
                     }
                 }
@@ -615,7 +615,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                 startPosition = getPosition(lastView) + 1; //start layout from next position item
                 startOffset = getDecoratedRight(lastView);
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "fillWithHorizontal:to right startPosition:" + startPosition + ",startOffset:" + startOffset + ",rightEdge:" + rightEdge);
+                   // Log.d(TAG, "fillWithHorizontal:to right startPosition:" + startPosition + ",startOffset:" + startOffset + ",rightEdge:" + rightEdge);
                 }
             }
             for (int i = startPosition; i < getItemCount() && startOffset < rightEdge + dx; i++) {
@@ -641,7 +641,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                 startOffset = scrapRect.right;
                 mLastVisiblePos = i;
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "fillWithHorizontal,layout:mLastVisiblePos: " + mLastVisiblePos);
+                    //Log.d(TAG, "fillWithHorizontal,layout:mLastVisiblePos: " + mLastVisiblePos);
                 }
             }
         } else {
@@ -651,7 +651,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                 startPosition = getPosition(firstView) - 1; //start layout from previous position item
                 startOffset = getDecoratedLeft(firstView);
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "fillWithHorizontal:to left startPosition:" + startPosition + ",startOffset:" + startOffset + ",leftEdge:" + leftEdge + ",child count:" + getChildCount());
+                   // Log.d(TAG, "fillWithHorizontal:to left startPosition:" + startPosition + ",startOffset:" + startOffset + ",leftEdge:" + leftEdge + ",child count:" + getChildCount());
                 }
             }
             for (int i = startPosition; i >= 0 && startOffset > leftEdge + dx; i--) {
@@ -770,7 +770,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
             }
         }
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "scrollHorizontallyBy: dx:" + dx + ",fixed:" + delta);
+            //Log.d(TAG, "scrollHorizontallyBy: dx:" + dx + ",fixed:" + delta);
         }
         getState().mScrollDelta = -delta;
         fillCover(recycler, state, -delta);
@@ -800,7 +800,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
             }
         }
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "scrollVerticallyBy: dy:" + dy + ",fixed:" + delta);
+           // Log.d(TAG, "scrollVerticallyBy: dy:" + dy + ",fixed:" + delta);
         }
         getState().mScrollDelta = -delta;
         fillCover(recycler, state, -delta);
@@ -945,7 +945,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                     mCurSelectedPosition = selectedPosition;
                     if (!mCallbackInFling && mState != SCROLL_STATE_IDLE) {
                         if (BuildConfig.DEBUG) {
-                            Log.v(TAG, "ignore selection change callback when fling ");
+                           // Log.v(TAG, "ignore selection change callback when fling ");
                         }
                         mCallbackOnIdle = true;
                         return;
@@ -956,7 +956,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                 }
             }
             if (BuildConfig.DEBUG) {
-                Log.v(TAG, "onScrolled: dx:" + dx + ",dy:" + dy);
+               // Log.v(TAG, "onScrolled: dx:" + dx + ",dy:" + dy);
             }
         }
 
@@ -965,7 +965,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
             super.onScrollStateChanged(recyclerView, newState);
             mState = newState;
             if (BuildConfig.DEBUG) {
-                Log.v(TAG, "onScrollStateChanged: " + newState);
+               // Log.v(TAG, "onScrollStateChanged: " + newState);
             }
             if (mState == SCROLL_STATE_IDLE) {
                 View snap = mSnapHelper.findSnapView(recyclerView.getLayoutManager());
@@ -986,7 +986,7 @@ public class GalleryLayoutManager extends RecyclerView.LayoutManager implements 
                         mOnItemSelectedListener.onItemSelected(recyclerView, snap, mCurSelectedPosition);
                     }
                 } else {
-                    Log.e(TAG, "onScrollStateChanged: snap null");
+                   // Log.e(TAG, "onScrollStateChanged: snap null");
                 }
             }
         }

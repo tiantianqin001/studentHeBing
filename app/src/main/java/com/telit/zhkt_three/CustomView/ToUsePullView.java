@@ -295,13 +295,13 @@ public class ToUsePullView extends RelativeLayout implements View.OnClickListene
 
         @NonNull
         @Override
-        public RVPullMenuAdapter.RVPullMenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        public RVPullMenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new RVPullMenuViewHolder(LayoutInflater.from(mContext).inflate(R.layout.pull_rv_item_layout, viewGroup,
                     false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RVPullMenuAdapter.RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
+        public void onBindViewHolder(@NonNull RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
             rvPullMenuViewHolder.textView.setText(dataList.get(i));
             if (dataList.get(i).equals(choosedText)) {
                 rvPullMenuViewHolder.textView.setTextColor(popMenuChoosedTextColor);

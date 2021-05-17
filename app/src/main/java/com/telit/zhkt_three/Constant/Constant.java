@@ -18,8 +18,14 @@ public class Constant {
     public static final String CAN_INSTALL = "CAN_INSTALL";
 
     public static final String Update_Avatar = "CAN_UPDATE_AVATAR";
+    //发送我的组播班级地址
+    public static final String SEND_MULTICAST = "SEND_MULTICAST";
         //领创app 列表
     public static final String LINGCHUANG_APP_LIST = "LINGCHUANG_APP_LIST";
+    //更新状态
+    public static final String upDataState = "upDataState";
+
+
     //------------------------------System App----------------------------------
     /**
      * App新增、更新、删除的EVENTBUS标签
@@ -79,6 +85,7 @@ public class Constant {
     public static final int OnLine = 0;
     public static final int OffLine = 1;
     public static final int ReceiveMessage = 2;
+    public static final int isNotUser = 3;
     //------------------------------------Socket Link---------------------------------------------------
 
     //-----------------------------------QuestionType---------------------------------------------------
@@ -93,6 +100,7 @@ public class Constant {
     public static final String Todo_Status = "0";//未做
     public static final String Commit_Status = "1";//提交
     public static final String Review_Status = "2";//批阅
+    public static final String Save_Status = "-2";//保存
 
     public static final String Level_Easy = "0";//易
     public static final String Level_Normal = "1";//中等
@@ -108,6 +116,9 @@ public class Constant {
     //作业提交
     public static final String Homework_Commit_Success_Tijiao="Homework_Commit_Success_Tijiao";
     public static final String Question_Collect_Success="Question_Collect_Success";
+
+    public static final String Cloud_Share_Collect_Success="Cloud_Share_Collect_Success";
+    public static final String Resource_Share_Collect_Success="Resource_Share_Collect_Success";
 
     //ItemBank
     public static final int ItemBank_Single = 1;//题库单选
@@ -198,6 +209,8 @@ public class Constant {
     public static final String CLICK_CLOUD_ITEM = "click_cloud_item";
     public static final String click_cloud_item_ping_jia = "click_cloud_item_ping_jia";
     public static final String UPDATE_CACHE_VIEW = "update_cache_view";
+    public static final String click_cloud_item_ping_jia_submit = "click_cloud_item_ping_jia_submit";
+    public static final String CLICK_CLOUD_COLLECTION_ITEM = "click_cloud_item";
 
     //----------------------------ClassRecord Type
     public static final int Class_Record_Shot = 1;//来自截屏

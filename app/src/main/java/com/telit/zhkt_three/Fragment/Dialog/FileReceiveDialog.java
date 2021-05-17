@@ -1,11 +1,9 @@
 package com.telit.zhkt_three.Fragment.Dialog;
 
-import android.Manifest;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +16,12 @@ import com.google.gson.Gson;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.FileReceive.FileReceiveProgressView;
 import com.telit.zhkt_three.JavaBean.Communication.FileReceive;
+import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.File;
 
@@ -110,22 +110,14 @@ public class FileReceiveDialog extends DialogFragment implements View.OnClickLis
                 public void downloadComplete(String filePath) {
 
                     localFilePath = filePath;
+                    SharedPreferenceUtil.getInstance(MyApplication.getInstance())
+                            .setString("localFilePathApk",filePath);
 
                     EventBus.getDefault().post(localFilePath, Constant.CAN_INSTALL);
 
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        boolean b = getActivity().getPackageManager().canRequestPackageInstalls();
-                        if (b) {
-                            QZXTools.installApk(getActivity(), filePath);
-                        } else {
-                            //请求安装未知应用来源的权限
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES},
-                                    Constant.INSTALL_PACKAGES_REQUEST_CODE);
-                        }
-                    } else {
-                        QZXTools.installApk(getActivity(), filePath);
-                    }
+
+
+                    QZXTools.installApk(getActivity(), new File(localFilePath));
 
                     dismiss();
                 }

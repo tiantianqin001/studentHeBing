@@ -77,9 +77,22 @@
                 android:id="@+id/url_change_point_server_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="修改埋点服务IP"
+                android:hint="修改成内网升级请输入0"
                 android:lines="1"
-                android:text="http://" />
+                android:text="" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/url_change_point_server_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="修改成外网升级请输入1"
+                android:lines="1"
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
         <View

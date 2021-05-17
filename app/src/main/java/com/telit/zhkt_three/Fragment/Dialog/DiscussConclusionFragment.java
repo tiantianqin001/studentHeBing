@@ -42,6 +42,7 @@ import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
@@ -173,6 +174,7 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
         conclusion_submit.setOnClickListener(this);
 
         conclusion_audio.setOnTouchListener(new View.OnTouchListener() {
+
             boolean isCancelRecord = false;
             long startTime = 0;
             float startY = 0;
@@ -181,12 +183,16 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        QZXTools.logE("按下ACTION_DOWN",null);
+
                         //录音权限申请
                         ZBVPermission.getInstance().setPermPassResult(DiscussConclusionFragment.this);
                         if (!ZBVPermission.getInstance().hadPermissions(getActivity(), needPermissions)) {
                             ZBVPermission.getInstance().requestPermissions(getActivity(), needPermissions);
                             //请求权限阶段取消录音
                             isCancelRecord = true;
+
+                            return false;
                         } else {
                             if (conclusion_audio_relative.getVisibility() == View.VISIBLE) {
                                 QZXTools.popCommonToast(getContext(), "录音结论已存在，若修改请先删除已存在！",
@@ -198,16 +204,24 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
                                         false);
                                 return false;
                             }
-                            //显示录音View,开始录音
-                            startTime = System.currentTimeMillis();
-                            startY = event.getRawY();
-                            boolean needRequest = requestOverlaysPermission();
-                            if (needRequest) {
+
+                            if (ViewUtils.isFastClick(1000)){
+                                //显示录音View,开始录音
+                                startTime = System.currentTimeMillis();
+                                startY = event.getRawY();
+                                boolean needRequest = requestOverlaysPermission();
+                                if (needRequest) {
+                                    isCancelRecord = true;
+                                }
+                            }else {
                                 isCancelRecord = true;
+                                return false;
                             }
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        QZXTools.logE("ACTION_MOVE",null);
+
                         float endY = event.getRawY();
                         QZXTools.logE("startY=" + startY + ";endY=" + endY, null);
                         if (startY - endY > 100) {
@@ -221,6 +235,7 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
                         updateRecordPic(MediaRecordVoice.getInstance().byVolumnToLevel(14));
                         break;
                     case MotionEvent.ACTION_UP:
+                        QZXTools.logE("抬起ACTION_UP",null);
                         //停止录音，显示录音结果/取消录音
                         long endTime = System.currentTimeMillis();
                         if (endTime - startTime < 1000) {
@@ -243,6 +258,8 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
                         MediaRecordVoice.getInstance().stop();
                         break;
                     case MotionEvent.ACTION_CANCEL:
+                        QZXTools.logE("ACTION_CANCEL",null);
+
                         removeRecordView();
                         //停止录音
                         MediaRecordVoice.getInstance().stop();
@@ -291,8 +308,11 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
                     QZXTools.popCommonToast(getContext(), "文字结论已存在，若修改请先删除已存在！", false);
                     return;
                 }
-                DiscussWordsRecordDialog wordsRecordDialog = new DiscussWordsRecordDialog();
-                wordsRecordDialog.show(getChildFragmentManager(), DiscussWordsRecordDialog.class.getSimpleName());
+
+                if (ViewUtils.isFastClick(1000)){
+                    DiscussWordsRecordDialog wordsRecordDialog = new DiscussWordsRecordDialog();
+                    wordsRecordDialog.show(getChildFragmentManager(), DiscussWordsRecordDialog.class.getSimpleName());
+                }
                 break;
 //            case R.id.conclusion_audio:
 //                break;
@@ -308,9 +328,11 @@ public class DiscussConclusionFragment extends DialogFragment implements View.On
                     return;
                 }
 
-                CameraAlbumPopupFragment cameraAlbumPopupFragment = new CameraAlbumPopupFragment();
-                cameraAlbumPopupFragment.showSetting(true, true, false);
-                cameraAlbumPopupFragment.show(getChildFragmentManager(), CameraAlbumPopupFragment.class.getSimpleName());
+                if (ViewUtils.isFastClick(1000)){
+                    CameraAlbumPopupFragment cameraAlbumPopupFragment = new CameraAlbumPopupFragment();
+                    cameraAlbumPopupFragment.showSetting(true, true, false);
+                    cameraAlbumPopupFragment.show(getChildFragmentManager(), CameraAlbumPopupFragment.class.getSimpleName());
+                }
                 break;
             case R.id.conclusion_submit:
 

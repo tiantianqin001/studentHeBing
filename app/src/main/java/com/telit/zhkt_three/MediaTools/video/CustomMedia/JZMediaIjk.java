@@ -43,7 +43,7 @@ public class JZMediaIjk extends JZMediaInterface implements IMediaPlayer.OnPrepa
     @Override
     public void prepare() {
 
-        release();
+       // release();
         mMediaHandlerThread = new HandlerThread("JZVD");
         mMediaHandlerThread.start();
         mMediaHandler = new Handler(mMediaHandlerThread.getLooper());//主线程还是非主线程，就在这里
@@ -51,59 +51,60 @@ public class JZMediaIjk extends JZMediaInterface implements IMediaPlayer.OnPrepa
 
         mMediaHandler.post(() -> {
 
-            ijkMediaPlayer = new IjkMediaPlayer();
-            ijkMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            ////1为硬解 0为软解
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 0);
-            //0为一进入就播放,1为进入时不播放
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0);
-            // 设置播放前的探测时间 1,达到首屏秒开效果
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
-            // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 40);
-            // 如果是rtsp协议，可以优先用tcp(默认是用udp)
-           ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
-            //使用opensles把文件从java层拷贝到native层
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-            //视频格式
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format",
-                    IjkMediaPlayer.SDL_FCC_RV16);
-            //跳帧处理（-1~120）。CPU处理慢时，进行跳帧处理，保证音视频同步
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
-            ////域名检测
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
-            //设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
-            //最大缓冲大小,单位kb  1024 * 1024
-           // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 1024*10);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 1024);
-            //某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-            //是否重连
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 3);
-            //http重定向https
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
-            //设置seekTo能够快速seek到指定位置并播放
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
-            //播放前的探测Size，默认是1M, 改小一点会出画面更快  1024 * 10
-           // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 256);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
-            //设置无packet缓存
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
-            //不限制拉流缓存大小
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
-            ijkMediaPlayer.setOption(1, "flush_packets", 1L);
-            //设置声音禁用
-            ijkMediaPlayer.setVolume(0.0f, 0.0f);
-            //设置开启日志
-            ijkMediaPlayer.setLogEnabled(true);
-
-
-
+            try {
+                ijkMediaPlayer = new IjkMediaPlayer();
+                ijkMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                ////1为硬解 0为软解
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 0);
+                //0为一进入就播放,1为进入时不播放
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0);
+                // 设置播放前的探测时间 1,达到首屏秒开效果
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
+                // 设置播放前的最大探测时间 （100未是否是最佳值）
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 40);
+                // 如果是rtsp协议，可以优先用tcp(默认是用udp)
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+                //使用opensles把文件从java层拷贝到native层
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
+                //视频格式
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format",
+                        IjkMediaPlayer.SDL_FCC_RV16);
+                //跳帧处理（-1~120）。CPU处理慢时，进行跳帧处理，保证音视频同步
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
+                ////域名检测
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
+                //设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
+                //最大缓冲大小,单位kb  1024 * 1024
+                // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 1024*10);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 1024);
+                //某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+                //是否重连
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 3);
+                //http重定向https
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
+                //设置seekTo能够快速seek到指定位置并播放
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
+                //播放前的探测Size，默认是1M, 改小一点会出画面更快  1024 * 10
+                // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 256);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
+                //设置无packet缓存
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
+                //不限制拉流缓存大小
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
+                ijkMediaPlayer.setOption(1, "flush_packets", 1L);
+                //设置声音禁用
+                ijkMediaPlayer.setVolume(0.0f, 0.0f);
+                //设置开启日志
+                ijkMediaPlayer.setLogEnabled(true);
+            }catch (Exception e){
+                e.fillInStackTrace();
+            }
 
 
 
@@ -122,19 +123,21 @@ public class JZMediaIjk extends JZMediaInterface implements IMediaPlayer.OnPrepa
                 bitrate.putInt(MediaCodec.PARAMETER_KEY_VIDEO_BITRATE, 1024);
                 mMediaCodec = MediaCodec.createEncoderByType("audio/mp4a-latm");
                 mMediaCodec.setParameters(bitrate);
+
+                ijkMediaPlayer.setOnPreparedListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnVideoSizeChangedListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnCompletionListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnErrorListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnInfoListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnBufferingUpdateListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnSeekCompleteListener(JZMediaIjk.this);
+                ijkMediaPlayer.setOnTimedTextListener(JZMediaIjk.this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
 
-            ijkMediaPlayer.setOnPreparedListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnVideoSizeChangedListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnCompletionListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnErrorListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnInfoListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnBufferingUpdateListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnSeekCompleteListener(JZMediaIjk.this);
-            ijkMediaPlayer.setOnTimedTextListener(JZMediaIjk.this);
+
 
             try {
                 ijkMediaPlayer.setDataSource(jzvd.jzDataSource.getCurrentUrl().toString());
@@ -144,7 +147,7 @@ public class JZMediaIjk extends JZMediaInterface implements IMediaPlayer.OnPrepa
                  ijkMediaPlayer.start();
 
                 ijkMediaPlayer.setSurface(new Surface(jzvd.textureView.getSurfaceTexture()));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

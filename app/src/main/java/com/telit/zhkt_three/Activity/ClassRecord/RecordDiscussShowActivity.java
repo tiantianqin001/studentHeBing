@@ -130,7 +130,7 @@ public class RecordDiscussShowActivity extends BaseActivity implements View.OnCl
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(RecordDiscussShowActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(RecordDiscussShowActivity.this, getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;

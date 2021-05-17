@@ -26,7 +26,6 @@ public class JudgeSelectToDoView_two extends RelativeLayout {
     public RelativeLayout option_do_tv_one;
     public RelativeLayout option_do_tv_two;
     public LinearLayout ll_current_quint_show;
-    public RelativeLayout rl_current_quint_show;
     public ImageView iv_current_quint_show;
 
 
@@ -46,8 +45,8 @@ public class JudgeSelectToDoView_two extends RelativeLayout {
         option_do_tv_one = view.findViewById(R.id.option_do_tv_one);
         option_do_tv_two = view.findViewById(R.id.option_do_tv_two);
         ll_current_quint_show = view.findViewById(R.id.ll_current_quint_show);
-        rl_current_quint_show = view.findViewById(R.id.rl_current_quint_show);
         iv_current_quint_show = view.findViewById(R.id.iv_current_quint_show);
+
 
     }
 

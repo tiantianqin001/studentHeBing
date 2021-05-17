@@ -6,7 +6,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.telit.zhkt_three.Adapter.interactive.PracticeVPAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
-import com.telit.zhkt_three.CusomPater;
+import com.telit.zhkt_three.CustomView.LazyViewPager;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
 import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
@@ -76,7 +75,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.practice_time)
     TextView practice_time;
     @BindView(R.id.practice_viewpager)
-    CusomPater practice_viewpager;
+    LazyViewPager practice_viewpager;
     @BindView(R.id.practice_commit)
     TextView practice_commit;
     @BindView(R.id.practice_left)
@@ -139,7 +138,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), getContext().getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -275,19 +274,19 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
-        practice_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        practice_viewpager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int i) {
-                curPageIndex = i;
-                if (i >= (totalPageCount - 1)) {
+            public void onPageSelected(int position) {
+                curPageIndex = position;
+                if (position >= (totalPageCount - 1)) {
                     practice_right.setVisibility(View.INVISIBLE);
                     practice_left.setVisibility(View.VISIBLE);
-                } else if (i <= 0) {
+                } else if (position <= 0) {
                     practice_left.setVisibility(View.INVISIBLE);
                     practice_right.setVisibility(View.VISIBLE);
                 } else {
@@ -297,7 +296,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });

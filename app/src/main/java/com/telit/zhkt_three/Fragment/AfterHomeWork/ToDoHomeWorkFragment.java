@@ -97,7 +97,7 @@ public class ToDoHomeWorkFragment extends Fragment {
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -202,7 +202,7 @@ public class ToDoHomeWorkFragment extends Fragment {
                 handlerByDateHomeworkBean = null;
 
                 mData.clear();
-                rvAfterHomeWorkAdapter.notifyDataSetChanged();
+               // rvAfterHomeWorkAdapter.notifyDataSetChanged();
                 curPageNo = 1;
                 requestNetDatas();
             }
@@ -222,9 +222,30 @@ public class ToDoHomeWorkFragment extends Fragment {
         circleProgressDialogFragment = new CircleProgressDialogFragment();
         circleProgressDialogFragment.show(getChildFragmentManager(), CircleProgressDialogFragment.class.getSimpleName());
 
-        requestNetDatas();
-
+        //requestNetDatas();
         return view;
+    }
+    @androidx.annotation.RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onResume() {
+        super.onResume();
+        curDateString = null;
+        afterHomeworkBeans = null;
+        handlerByDateHomeworkBean = null;
+        if (mData!=null && mData.size()>0){
+            mData.clear();
+            rvAfterHomeWorkAdapter.notifyDataSetChanged();
+            curPageNo = 1;
+            requestNetDatas();
+        }else {
+            curDateString = null;
+            afterHomeworkBeans = null;
+            handlerByDateHomeworkBean = null;
+            curPageNo = 1;
+            requestNetDatas();
+        }
+
+      //
     }
 
     /**
@@ -324,7 +345,6 @@ public class ToDoHomeWorkFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-
                     try {
                         String resultJson = response.body().string();
                         QZXTools.logE("todo homework resultJson=" + resultJson, null);

@@ -16,25 +16,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
 import com.telit.zhkt_three.Adapter.VPHomeWorkDetailAdapter;
-import com.telit.zhkt_three.Adapter.interactive.BankPracticeVPAdapter;
-import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CusomPater;
-import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
-import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.Gson.HomeWorkByHandBean;
-import com.telit.zhkt_three.JavaBean.Gson.HomeWorkByHandBeanTwo;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfoByhand;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -87,7 +78,7 @@ public class AskQueestionFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(MyApplication.getInstance(), "服务端错误！", false);
+                    QZXTools.popToast(MyApplication.getInstance(), "当前网络不佳....", false);
 
                 case Error404:
                     QZXTools.popToast(MyApplication.getInstance(), "没有相关资源！", false);
@@ -164,8 +155,6 @@ public class AskQueestionFragment extends Fragment {
         mapParams.put("homeworkid", homeworkId);
         mapParams.put("status", "1");
         mapParams.put("studentid", UserUtils.getUserId());
-
-
 
         /**
          * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可

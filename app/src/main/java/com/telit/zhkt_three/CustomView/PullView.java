@@ -134,14 +134,14 @@ public class PullView extends RelativeLayout implements View.OnClickListener {
 
         @NonNull
         @Override
-        public RVPullMenuAdapter.RVPullMenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        public RVPullMenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new RVPullMenuViewHolder(LayoutInflater.from(mContext).inflate(R.layout.pull_rv_item_layout, viewGroup, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RVPullMenuAdapter.RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
+        public void onBindViewHolder(@NonNull RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
             rvPullMenuViewHolder.textView.setText(dataList.get(i));
-            rvPullMenuViewHolder.textView.setOnClickListener(new View.OnClickListener() {
+            rvPullMenuViewHolder.textView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String text = ((TextView) v).getText().toString().trim();

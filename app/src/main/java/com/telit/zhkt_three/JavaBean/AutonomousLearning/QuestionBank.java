@@ -382,6 +382,16 @@ public class QuestionBank implements Parcelable {
 
     private String collectTitle;
 
+    private boolean checked;
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public List<String> getImgFile() {
         return imgFile;
     }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/x20"
+    >
+
+    <ImageView
+        android:id="@+id/iv_mistake_my_quint"
+        android:layout_width="@dimen/x720"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/x30"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/x30"
+        />
+
+    <com.telit.zhkt_three.CustomView.MulipleChoiseView
+        android:id="@+id/mcv_choise_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_learn_resource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查看学习资源"
+        android:textColor="#FF9600"
+        android:textSize="@dimen/x24"
+        android:layout_marginRight="@dimen/x24"
+        android:layout_marginTop="@dimen/x10"/>
+
+</LinearLayout>

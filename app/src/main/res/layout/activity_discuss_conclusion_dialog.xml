@@ -35,7 +35,7 @@
                     android:gravity="center"
                     android:text="文字结论"
                     android:textColor="#516776"
-                    android:textSize="@dimen/x14" />
+                    android:textSize="@dimen/x16" />
 
                 <ImageView
                     android:id="@+id/conclusion_words_del"
@@ -57,7 +57,7 @@
                     android:minHeight="@dimen/x96"
                     android:padding="@dimen/x10"
                     android:textColor="#646464"
-                    android:textSize="@dimen/x14" />
+                    android:textSize="@dimen/x16" />
             </RelativeLayout>
 
             <!--音频layout 限时3分钟-->
@@ -80,7 +80,7 @@
                         android:gravity="center"
                         android:text="录音结论"
                         android:textColor="#516776"
-                        android:textSize="@dimen/x14" />
+                        android:textSize="@dimen/x16" />
 
                     <ImageView
                         android:id="@+id/conclusion_audio_del"
@@ -121,7 +121,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/x20"
                                 android:layout_toRightOf="@id/conclusion_audio_img"
-                                android:text="1′2″"
+                                android:text="0″"
                                 android:textColor="@color/word_white"
                                 android:textSize="@dimen/x20" />
                         </RelativeLayout>
@@ -149,7 +149,7 @@
                         android:gravity="center"
                         android:text="拍摄结论"
                         android:textColor="#516776"
-                        android:textSize="@dimen/x14" />
+                        android:textSize="@dimen/x16" />
 
                     <ImageView
                         android:id="@+id/conclusion_video_or_img_del"

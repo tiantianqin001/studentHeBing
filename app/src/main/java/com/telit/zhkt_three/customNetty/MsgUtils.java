@@ -68,7 +68,8 @@ public class MsgUtils {
     public static final String HEAD_FREE_DISCUSS = "FreeJoinGroup";//自由分组
     public static final String HEAD_FREE_JOIN_GROUP = "JoinDiscussGroup";//加入小组
     public static final String HEAD_DISCUSS_COMMIT_CONCLUSION = "SubmitDiscussConclusion";//提交结论通知
-    public static final String SubmitQuestion="SubmitQuestion"; // 学生端提交提问后给教师端发送这个消息
+    public static final String SubmitQuestion = "SubmitQuestion"; // 学生端提交提问后给教师端发送这个消息
+    public static final String EndJoinAnswerGroup = "EndJoinAnswerGroup"; // 学生端提交提问后给教师端结束这个消息
 
     /**
      * 接收的示例：PPTCommand SequenceNumber Type Id/r/n
@@ -91,14 +92,13 @@ public class MsgUtils {
 
     public static final String HEAD_START_ANSWERE = "StartAnswer";//提问
     public static final String HEAD_TUI_LIU_TEACHER = "TUI_LIU_TEACHER";//推流到教师端
-    public static final String HEAD_WHILD_BOARDPUSH="WhiteboardPush"; //接收到白班的推送
-    public static final String HEAD_EndQuestion="EndQuestion"; //教师端结束答题，不能提交了学生答题也要结束
-    public static final String HEAD_StudentPadScreenCast="StudentPadScreenCast"; //学生接收到教师端后开始推流
-    public static final String HEAD_ScreenCastAddress="ScreenCastAddress"; //学生发送到教师端后开始推流
-    public static final String HEAD_StopStudentScreenCast="StopStudentScreenCast"; //教师端结束推流
-
-
-
+    public static final String HEAD_WHILD_BOARDPUSH = "WhiteboardPush"; //接收到白班的推送
+    public static final String HEAD_EndQuestion = "EndQuestion"; //教师端结束答题，不能提交了学生答题也要结束
+    public static final String HEAD_StudentPadScreenCast = "StudentPadScreenCast"; //学生接收到教师端后开始推流
+    public static final String HEAD_ScreenCastAddress = "ScreenCastAddress"; //学生发送到教师端后开始推流
+    public static final String HEAD_StopStudentScreenCast = "StopStudentScreenCast"; //教师端结束推流
+    public static final String HEAD_ANSWER_FENZHU_START = "FreeJoinAnswerGroup";//开始分组作答
+    public static final String HEAD_ANSWER_FENZHU_END = "EndJoinAnswerGroup";//开始分组作答
 
 
     /**
@@ -128,14 +128,13 @@ public class MsgUtils {
      */
     public static String outOfClass() {
         return HEAD_OUT_OF_CLASS + SEPARATOR + uuid() +
-                SEPARATOR + UserUtils.getUserId()+ "\r\n";
+                SEPARATOR + UserUtils.getUserId() + "\r\n";
     }
 
     /*
-    * 教师端推送地址
-    *
-    * */
-
+     * 教师端推送地址
+     *
+     * */
 
 
     /**
@@ -164,7 +163,7 @@ public class MsgUtils {
         Gson gson = new Gson();
         String infoJson = gson.toJson(studentJoinClassBean);
 
-        QZXTools.logE("json=" + infoJson+"......."+isReconnected, null);
+        QZXTools.logE("json=" + infoJson + "......." + isReconnected, null);
 
         if (isReconnected) {
             return HEAD_RECONNECT + SEPARATOR + uuid() + SEPARATOR + infoJson + "\r\n";
@@ -260,10 +259,11 @@ public class MsgUtils {
 
     /**
      * 添加发送给教师端的信息
+     *
      * @param headInfo
      * @return
      */
-    public static String teacherAddress(String headInfo,String trspUrl){
+    public static String teacherAddress(String headInfo, String trspUrl) {
         StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().
                 queryBuilder().where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
@@ -286,8 +286,8 @@ public class MsgUtils {
         String infoJson = gson.toJson(studentJoinClassBean);
 
 
-        return headInfo+  SEPARATOR + uuid() +
-                SEPARATOR + infoJson+ "\r\n";
+        return headInfo + SEPARATOR + uuid() +
+                SEPARATOR + infoJson + "\r\n";
     }
 
 
@@ -297,11 +297,18 @@ public class MsgUtils {
     public static String selectedGroup(String json) {
         return HEAD_FREE_JOIN_GROUP + SEPARATOR + uuid() + SEPARATOR + json + "\r\n";
     }
+
     /**
      * 发送提问消息
      */
     public static String SubmitQuestion() {
         return SubmitQuestion + SEPARATOR + uuid() + SEPARATOR + UserUtils.getUserId() + "\r\n";
+    }
+
+
+    /*结束提问的消息*/
+    public static String EndJoinAnswerGroup() {
+        return EndJoinAnswerGroup + SEPARATOR + uuid() + SEPARATOR + UserUtils.getUserId() + "\r\n";
     }
 
     /**

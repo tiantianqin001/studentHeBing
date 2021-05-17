@@ -17,6 +17,7 @@ import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Adapter.interactive.PracticeVPAdapter;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CusomPater;
+import com.telit.zhkt_three.CustomView.LazyViewPager;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
 import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
@@ -95,7 +96,7 @@ public class RecordPracticeDoneActivity extends BaseActivity implements View.OnC
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(RecordPracticeDoneActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(RecordPracticeDoneActivity.this, "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -176,7 +177,7 @@ public class RecordPracticeDoneActivity extends BaseActivity implements View.OnC
 
         practiceId = getIntent().getStringExtra("practice_id");
 
-        practice_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        practice_viewpager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
 

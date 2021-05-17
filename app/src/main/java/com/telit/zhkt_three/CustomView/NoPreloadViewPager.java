@@ -62,7 +62,11 @@ import java.util.Comparator;
 /**
  * Layout manager that allows the user to flip left and right
  * through pages of data.  You supply an implementation of a
- * {@link android.support.v4.view.PagerAdapter} to generate the pages that the view shows.
+<<<<<<< HEAD
+ * {@link PagerAdapter} to generate the pages that the view shows.
+=======
+ * {@link PagerAdapter} to generate the pages that the view shows.
+>>>>>>> f8f3274b8085e3889d9f6f8d297a976a79b2444a
  *
  * <p>Note this class is currently under early design and
  * development.  The API will likely change in later updates of
@@ -210,9 +214,15 @@ public class NoPreloadViewPager extends ViewGroup {
          * or when it is fully stopped/idle.
          *
          * @param state The new scroll state.
-         * @see android.support.v4.view.ViewPager#SCROLL_STATE_IDLE
-         * @see android.support.v4.view.ViewPager#SCROLL_STATE_DRAGGING
-         * @see android.support.v4.view.ViewPager#SCROLL_STATE_SETTLING
+<<<<<<< HEAD
+         * @see ViewPager#SCROLL_STATE_IDLE
+         * @see ViewPager#SCROLL_STATE_DRAGGING
+         * @see ViewPager#SCROLL_STATE_SETTLING
+=======
+         * @see ViewPager#SCROLL_STATE_IDLE
+         * @see ViewPager#SCROLL_STATE_DRAGGING
+         * @see ViewPager#SCROLL_STATE_SETTLING
+>>>>>>> f8f3274b8085e3889d9f6f8d297a976a79b2444a
          */
         public void onPageScrollStateChanged(int state);
     }
@@ -436,7 +446,11 @@ public class NoPreloadViewPager extends ViewGroup {
      *
      * @param marginPixels Distance between adjacent pages in pixels
      * @see #getPageMargin()
-     * @see #setPageMarginDrawable(android.graphics.drawable.Drawable)
+<<<<<<< HEAD
+     * @see #setPageMarginDrawable(Drawable)
+=======
+     * @see #setPageMarginDrawable(Drawable)
+>>>>>>> f8f3274b8085e3889d9f6f8d297a976a79b2444a
      * @see #setPageMarginDrawable(int)
      */
     public void setPageMargin(int marginPixels) {
@@ -504,7 +518,11 @@ public class NoPreloadViewPager extends ViewGroup {
     }
 
     /**
-     * Like {@link android.view.View#scrollBy}, but scroll smoothly instead of immediately.
+<<<<<<< HEAD
+     * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
+=======
+     * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
+>>>>>>> f8f3274b8085e3889d9f6f8d297a976a79b2444a
      *
      * @param x the number of pixels to scroll by on the X axis
      * @param y the number of pixels to scroll by on the Y axis
@@ -514,7 +532,11 @@ public class NoPreloadViewPager extends ViewGroup {
     }
 
     /**
-     * Like {@link android.view.View#scrollBy}, but scroll smoothly instead of immediately.
+<<<<<<< HEAD
+     * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
+=======
+     * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
+>>>>>>> f8f3274b8085e3889d9f6f8d297a976a79b2444a
      *
      * @param x        the number of pixels to scroll by on the X axis
      * @param y        the number of pixels to scroll by on the Y axis

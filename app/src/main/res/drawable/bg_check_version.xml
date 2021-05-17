@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="false" android:state_pressed="false">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#30000000">
+    <!--去掉此item内容就是无界效果-->
+    <item>
         <shape android:shape="rectangle">
-            <size android:width="@dimen/x162" android:height="@dimen/x42" />
-            <solid android:color="#30000000" />
-            <corners android:bottomLeftRadius="@dimen/x21" android:bottomRightRadius="@dimen/x21" android:radius="@dimen/x21" android:topLeftRadius="@dimen/x21" android:topRightRadius="@dimen/x21" />
-        </shape>
-    </item>
-    <item  android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <size android:width="@dimen/x162" android:height="@dimen/x42" />
+            <size
+                android:width="@dimen/x162"
+                android:height="@dimen/x42" />
             <solid android:color="#80000000" />
-            <corners android:bottomLeftRadius="@dimen/x21" android:bottomRightRadius="@dimen/x21" android:radius="@dimen/x21" android:topLeftRadius="@dimen/x21" android:topRightRadius="@dimen/x21" />
+            <corners
+                android:bottomLeftRadius="@dimen/x21"
+                android:bottomRightRadius="@dimen/x21"
+                android:radius="@dimen/x21"
+                android:topLeftRadius="@dimen/x21"
+                android:topRightRadius="@dimen/x21" />
         </shape>
     </item>
-</selector>
+</ripple>

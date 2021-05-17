@@ -77,7 +77,8 @@
             android:background="@drawable/selector_line_bg_color"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/x30">
+            android:padding="@dimen/x30"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -89,6 +90,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x30"
                 android:text="平台资源"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/collection_resources_click_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_line_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x30">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/collect_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="收藏资源"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/x36" />
         </LinearLayout>
@@ -106,7 +130,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_clear_disable" />
+                android:src="@mipmap/ic_clear_disable" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -188,13 +212,16 @@
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/x36" />
                 </LinearLayout>
+
+
             </FrameLayout>
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/x30">
+                android:layout_marginLeft="@dimen/x30"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/pre_ele_img"
@@ -228,6 +255,46 @@
                         android:textSize="@dimen/x36" />
                 </LinearLayout>
             </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30">
+
+                <ImageView
+                    android:id="@+id/collect_resources_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/collect_gray" />
+
+
+                <LinearLayout
+                    android:id="@+id/collect_resources_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_alpha_round_corner_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/x10"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/collect_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:text="收藏资源"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/x36" />
+                </LinearLayout>
+            </FrameLayout>
+
         </LinearLayout>
 
         <!--VP展示内容-->

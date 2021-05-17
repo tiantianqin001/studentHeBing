@@ -35,6 +35,7 @@ public class AfterHomeworkBean {
     private String startDate;
     private String endDate;
     private String byHand;
+    private String showAnswerDate;
 
     public String getId() {
         return id;
@@ -106,6 +107,14 @@ public class AfterHomeworkBean {
 
     public void setByHand(String byHand) {
         this.byHand = byHand;
+    }
+
+    public String getShowAnswerDate() {
+        return showAnswerDate;
+    }
+
+    public void setShowAnswerDate(String showAnswerDate) {
+        this.showAnswerDate = showAnswerDate;
     }
 
     @Override

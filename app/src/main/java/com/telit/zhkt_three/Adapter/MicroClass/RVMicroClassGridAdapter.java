@@ -52,13 +52,13 @@ public class RVMicroClassGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                     .error(R.mipmap.image_video_default)
                     .into(rvClassRecordGridViewHolder.micro_class_item_imgBg);
 
-            rvClassRecordGridViewHolder.micro_class_item_tv_date.setText(mDatas.get(i).getCreateDate());
+            rvClassRecordGridViewHolder.micro_class_item_tv_date.setText(mDatas.get(i).getFileName());
 
             rvClassRecordGridViewHolder.micro_class_item_tv_size.setText(QZXTools.transformBytes(mDatas.get(i).getSize()));
 
             rvClassRecordGridViewHolder.micro_class_item_tv_topic.setText(mDatas.get(i).getResourceName());
 
-            rvClassRecordGridViewHolder.micro_class_item_ratingBar.setRating(mDatas.get(i).getScore());
+            rvClassRecordGridViewHolder.micro_class_item_ratingBar.setRating(mDatas.get(i).getScore()/2f);
 
         }
     }
@@ -92,7 +92,7 @@ public class RVMicroClassGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                 public void onClick(View v) {
                     Intent intent_video = new Intent(mContext, VideoPlayerActivity.class);
                     intent_video.putExtra("VideoFilePath", mDatas.get(getLayoutPosition()).getPreviewUrl());
-                    intent_video.putExtra("VideoTitle", mDatas.get(getLayoutPosition()).getThumbnail());
+                    intent_video.putExtra("VideoTitle", mDatas.get(getLayoutPosition()).getFileName());
                     intent_video.putExtra("VideoThumbnail", mDatas.get(getLayoutPosition()).getThumbnail());
                     intent_video.putExtra("currentVideo",mDatas.get(getLayoutPosition()).getCreateDate());
                     mContext.startActivity(intent_video);

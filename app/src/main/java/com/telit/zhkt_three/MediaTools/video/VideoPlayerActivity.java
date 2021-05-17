@@ -9,15 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gyf.immersionbar.ImmersionBar;
 import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.MediaTools.CommentActivity;
-import com.telit.zhkt_three.MediaTools.video.CustomMedia.JZMediaIjk;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
-
-import cn.jzvd.JzvdStd;
 
 
 /**
@@ -34,7 +30,7 @@ import cn.jzvd.JzvdStd;
  * <p>
  * getContext().startActivity(intent_video);
  */
-public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer.OnVideoCompletionListener {
+public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer.OnVideoCompletionListener, TxVideoPlayerController.OnBackClickListener {
 
     private NiceVideoPlayer nice_video_player;
     private String shareId;
@@ -55,6 +51,7 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
         video_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
                 finish();
             }
         });
@@ -65,7 +62,7 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
         String videoFilePath = intent.getStringExtra("VideoFilePath");
         String videoTitle = intent.getStringExtra("VideoTitle");
         String videoThumbnail = intent.getStringExtra("VideoThumbnail");
-
+        tv_top_video_name.setText(videoTitle);
 
         //评论接口需要
         shareId = intent.getStringExtra("shareId");
@@ -73,9 +70,6 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
         resId = intent.getStringExtra("resId");
         resName = intent.getStringExtra("resName");
         String currentVideo = intent.getStringExtra("currentVideo");
-        if (!TextUtils.isEmpty(currentVideo)){
-            tv_top_video_name.setText(currentVideo+".mp4");
-        }
 
         //是否存在评论内容
         String resComment = intent.getStringExtra("resComment");
@@ -85,9 +79,10 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
             return;
         }
         nice_video_player = findViewById(R.id.nice_video_player);
+
+        nice_video_player.setPlayerType(NiceVideoPlayer.TYPE_NATIVE);
+
         LinearLayout video_note = findViewById(R.id.video_note);
-        //播放完成的监听
-       // nice_video_player.setOnVideoCompletionListener(this);
 
         if (TextUtils.isEmpty(shareId)) {
             //隐藏评论
@@ -100,26 +95,42 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
             }
         }
 
-
-        if (TextUtils.isEmpty(videoTitle)) {
-            videoTitle = "";
-        }
-        nice_video_player.setUp(videoFilePath,null);
-
+        nice_video_player.setPlayerType(NiceVideoPlayer.TYPE_NATIVE);
         controller = new TxVideoPlayerController(this, this);
-
+        controller.setOnBackClickListener(this);
         controller.setTitle(shareTitle);
 
         nice_video_player.setController(controller);
+        nice_video_player.setUp(videoFilePath,null);
 
-        nice_video_player.start();
+       // nice_video_player.setOnVideoCompletionListener(this);
+
         if (!TextUtils.isEmpty(videoThumbnail)) {
-
             Glide.with(this).load(videoFilePath).into(controller.imageView());
         }
 
+        nice_video_player.continueFromLastPosition(false);
+
         //开始播放
         nice_video_player.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (NiceVideoPlayerManager.instance().onBackPressd()) return;
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NiceVideoPlayerManager.instance().resumeNiceVideoPlayer();
     }
 
     @Override
@@ -132,15 +143,21 @@ public class VideoPlayerActivity extends BaseActivity implements NiceVideoPlayer
     public void onVideoCompletionListener() {
         if (TextUtils.isEmpty(shareId) || TextUtils.isEmpty(shareTitle)
                 || TextUtils.isEmpty(resId) || TextUtils.isEmpty(resName)) {
-            QZXTools.popToast(VideoPlayerActivity.this, "缺少评论所需的参数！", false);
+          //  QZXTools.popToast(VideoPlayerActivity.this, "缺少评论所需的参数！", false);
             return;
         }
 
-        Intent intent_comment = new Intent(VideoPlayerActivity.this, CommentActivity.class);
+       /* Intent intent_comment = new Intent(VideoPlayerActivity.this, CommentActivity.class);
         intent_comment.putExtra("shareId", shareId);
         intent_comment.putExtra("shareTitle", shareTitle);
         intent_comment.putExtra("resId", resId);
         intent_comment.putExtra("resName", resName);
-        startActivity(intent_comment);
+        startActivity(intent_comment);*/
+    }
+
+    @Override
+    public void onBackClickListener() {
+        NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
+        finish();
     }
 }

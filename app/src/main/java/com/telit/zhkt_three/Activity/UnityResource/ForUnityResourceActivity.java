@@ -1,7 +1,10 @@
 package com.telit.zhkt_three.Activity.UnityResource;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -126,7 +129,7 @@ public class ForUnityResourceActivity extends BaseActivity implements View.OnCli
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(ForUnityResourceActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(ForUnityResourceActivity.this, "当前网络不佳....", false);
 
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
@@ -305,6 +308,7 @@ public class ForUnityResourceActivity extends BaseActivity implements View.OnCli
         initData();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onDestroy() {
         if (unbinder != null) {
@@ -329,6 +333,14 @@ public class ForUnityResourceActivity extends BaseActivity implements View.OnCli
 
         terminalAIDL();
         isShow=false;
+        //关闭刘冉的apk
+        try {
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            am.killBackgroundProcesses("com.SSI.UnityAndroid");
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+
         super.onDestroy();
     }
 

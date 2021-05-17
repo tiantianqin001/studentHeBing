@@ -94,24 +94,24 @@
             android:id="@+id/head_class_record_one"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/head_class_record_two"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/head_class_record_three"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/head_class_record_four"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
     </LinearLayout>
 </RelativeLayout>

@@ -20,6 +20,7 @@ import com.telit.zhkt_three.Adapter.interactive.BankPracticeVPAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CusomPater;
+import com.telit.zhkt_three.CustomView.LazyViewPager;
 import com.telit.zhkt_three.CustomView.QuestionView.NewKnowledgeQuestionView;
 import com.telit.zhkt_three.CustomView.QuestionView.SubjectiveToDoView;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
@@ -28,6 +29,7 @@ import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
@@ -115,7 +117,7 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
             fetchNetHomeWorkDatas(mData);
         }
 
-        homework_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        homework_vp.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
 
@@ -188,15 +190,20 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
         QZXTools.logE("curPageIndex:" + curPageIndex, null);
         QZXTools.logE("totalQuestionCount:" + totalQuestionCount, null);
 
-        if (curPageIndex >= (totalQuestionCount - 1)) {
+        if (totalQuestionCount==1){
             layout_right.setVisibility(View.INVISIBLE);
-            layout_left.setVisibility(View.VISIBLE);
-        } else if (curPageIndex <= 0) {
             layout_left.setVisibility(View.INVISIBLE);
-            layout_right.setVisibility(View.VISIBLE);
-        } else {
-            layout_left.setVisibility(View.VISIBLE);
-            layout_right.setVisibility(View.VISIBLE);
+        }else {
+            if (curPageIndex >= (totalQuestionCount - 1)) {
+                layout_right.setVisibility(View.INVISIBLE);
+                layout_left.setVisibility(View.VISIBLE);
+            } else if (curPageIndex <= 0) {
+                layout_left.setVisibility(View.INVISIBLE);
+                layout_right.setVisibility(View.VISIBLE);
+            } else {
+                layout_left.setVisibility(View.VISIBLE);
+                layout_right.setVisibility(View.VISIBLE);
+            }
         }
 
         BankPracticeVPAdapter bankPracticeVPAdapter = new BankPracticeVPAdapter(
@@ -208,10 +215,12 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
         bankPracticeVPAdapter.setOnCollectClickListener(new BankPracticeVPAdapter.OnCollectClickListener() {
             @Override
             public void OnCollectClickListener(NewKnowledgeQuestionView newKnowledgeQuestionView,QuestionBank questionBank, int curPosition) {
-                if ("0".equals(questionBank.getIsCollect())){//收藏
-                    collectYeOrNo(questionBank,"1",curPosition,newKnowledgeQuestionView);
-                }else {//取消收藏
-                    collectYeOrNo(questionBank,"0",curPosition,newKnowledgeQuestionView);
+                if (ViewUtils.isFastClick(1000)){
+                    if ("0".equals(questionBank.getIsCollect())){//收藏
+                        collectYeOrNo(questionBank,"1",curPosition,newKnowledgeQuestionView);
+                    }else {//取消收藏
+                        collectYeOrNo(questionBank,"0",curPosition,newKnowledgeQuestionView);
+                    }
                 }
             }
         });
@@ -268,12 +277,15 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
 
         Map<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("collectId", questionBank.getCollectId()+"");
-        mapParams.put("questionId", questionBank.getId()+"");
+        mapParams.put("questionId", questionBank.getQuestionId()+"");
         mapParams.put("homeworkId", questionBank.getHomeworkId());
-        mapParams.put("subjectId", questionBank.getSubjectId());
+        mapParams.put("subjectId", questionBank.getSubjectId()+"");
         mapParams.put("studentId", UserUtils.getUserId());
         mapParams.put("title", questionBank.getHomeworkTitle()+"-"+getQuestionChannelTypeName(questionBank)+"-第"+(curPosition+1)+"题");
         mapParams.put("option", option);
+
+
+        QZXTools.logE("param:"+new Gson().toJson(mapParams),null);
 
         /**
          * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
@@ -282,7 +294,7 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
 
             @Override
             public void onFailure(Call call, IOException e) {
-                QZXTools.popToast(CollectQuestionDetailActivity.this, "服务端错误！", false);
+                QZXTools.popToast(CollectQuestionDetailActivity.this, "当前网络不佳....", false);
             }
 
             @Override
@@ -298,8 +310,6 @@ public class CollectQuestionDetailActivity extends BaseActivity implements View.
                            if ("1".equals(collectQuestionByHandBean.getErrorCode())){
                                if ("1".equals(option)){//收藏
                                    questionBank.setCollectId(collectQuestionByHandBean.getResult().get(0).getCollectId());
-                               }else{//取消收藏
-                                   questionBank.setCollectId(null);
                                }
 
                                questionBank.setIsCollect(option);

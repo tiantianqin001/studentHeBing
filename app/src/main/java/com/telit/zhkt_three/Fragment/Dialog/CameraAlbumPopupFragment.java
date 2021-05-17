@@ -64,6 +64,11 @@ public class CameraAlbumPopupFragment extends DialogFragment implements View.OnC
     @BindView(R.id.tv_dismiss)
     TextView tv_dismiss;
 
+    public static CameraAlbumPopupFragment newInstance(){
+        CameraAlbumPopupFragment fragmentOne = new CameraAlbumPopupFragment();
+        return fragmentOne;
+    }
+
     private static final String IS_ALBUM = "album_img";
     private static final String IS_CAMERA_IMG = "camera_img";
     private static final String IS_CAMERA_VEDIO = "camera_video";

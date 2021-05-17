@@ -89,7 +89,7 @@ public class ClassRecordActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(ClassRecordActivity.this, "服务端错误！", false);
+                    QZXTools.popToast(ClassRecordActivity.this, "当前网络不佳....", false);
                     if (circleProgressDialogFragment != null) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
                         circleProgressDialogFragment = null;
@@ -134,7 +134,7 @@ public class ClassRecordActivity extends BaseActivity {
 
         //设置头像信息等
         StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
+                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).list().get(0);
         if (studentInfo != null) {
             String clazz;
             if (studentInfo.getClassName() != null) {
@@ -233,7 +233,6 @@ public class ClassRecordActivity extends BaseActivity {
      * "title": "",
      * "id": "b860ced30458504cf9098dc06568c38ed1d9",
      * "type": "3",
-     * "typeName": "课堂测试",
      * "interData": null,
      * "date": null,
      * "countInterationList": null

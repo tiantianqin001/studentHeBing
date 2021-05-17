@@ -82,7 +82,7 @@ public class RecordVoteResultActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(RecordVoteResultActivity.this, "服务端错误！", false);
+                    QZXTools.popToast(RecordVoteResultActivity.this, "当前网络不佳....", false);
                     if (circleProgressDialogFragment != null && circleProgressDialogFragment.isAdded()) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
                         circleProgressDialogFragment = null;

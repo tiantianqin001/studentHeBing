@@ -1,7 +1,6 @@
 package com.telit.zhkt_three.JavaBean.HomeWork;
 
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
-import com.telit.zhkt_three.JavaBean.UnityResource.StudentBean;
 import com.telit.zhkt_three.JavaBean.WorkOwnResult;
 
 import java.util.List;
@@ -118,6 +117,26 @@ public class QuestionInfo {
     private List<String> voiceFile;
     private int chid;
 
+    private String  studentSaveAnswer;
+
+    private String studentSaveAttachment;
+
+
+    public void setStudentSaveAnswer(String studentSaveAnswer){
+       this.studentSaveAnswer=studentSaveAnswer;
+    }
+    public String getStudentSaveAnswer(){
+        return studentSaveAnswer;
+    }
+
+
+    public void setStudentSaveAttachment(String studentSaveAttachment){
+        this.studentSaveAttachment=studentSaveAttachment;
+    }
+    public String getStudentSaveAttachment(){
+        return studentSaveAttachment;
+    }
+
     public int getChid() {
         return chid;
     }
@@ -169,6 +188,8 @@ public class QuestionInfo {
 
     //新增学生头像
     private String studentPhoto;
+
+    private boolean checked;
 
     public String getComment() {
         return comment;
@@ -452,6 +473,14 @@ public class QuestionInfo {
         this.resultList = resultList;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public static class SelectBean {
         /**
          * id : 12312
@@ -464,6 +493,8 @@ public class QuestionInfo {
         private String options;
         private String content;
         private int index;
+
+
 
         public String getId() {
             return id;

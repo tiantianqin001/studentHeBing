@@ -76,7 +76,7 @@ public class UploadBoardDialog extends DialogFragment implements View.OnClickLis
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(getContext(), "服务端错误！", false);
+                    QZXTools.popToast(getContext(), getContext().getResources().getString(R.string.current_net_err), false);
                     if (circleProgressDialogFragment != null && circleProgressDialogFragment.isVisible()) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
                         circleProgressDialogFragment = null;

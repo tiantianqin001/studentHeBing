@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.telit.zhkt_three.Activity.AfterHomeWork.AfterHomeWorkActivity;
-import com.telit.zhkt_three.Activity.AutonomousLearning.AutoLearningActivity;
+import com.telit.zhkt_three.Activity.AutonomousLearning.AutonomousLearningActivity;
 import com.telit.zhkt_three.Activity.ClassRecord.NewClassRecordActivity;
 import com.telit.zhkt_three.Activity.MicroClass.MicroClassCenterActivity;
 import com.telit.zhkt_three.Activity.MistakesCollection.MistakesCollectionActivity;
 import com.telit.zhkt_three.Activity.PersonalSpace.PersonalSpaceActivity;
 import com.telit.zhkt_three.Activity.PreView.PreViewActivity;
 import com.telit.zhkt_three.R;
+import com.telit.zhkt_three.Utils.AppInfoUtils;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.QZXTools;
 
@@ -92,7 +93,7 @@ public class RVHomeAdapter extends RecyclerView.Adapter<RVHomeAdapter.RVHomeView
                     case R.mipmap.auto_learning:
                         //领创要发home的广播
                         lingChang();
-                        mContext.startActivity(new Intent(mContext, AutoLearningActivity.class));
+                        mContext.startActivity(new Intent(mContext, AutonomousLearningActivity.class));
                         //自主学习埋点
                         BuriedPointUtils.buriedPoint("2031","","","","");
                         break;
@@ -111,11 +112,23 @@ public class RVHomeAdapter extends RecyclerView.Adapter<RVHomeAdapter.RVHomeView
                         //课堂笔记埋点
                         BuriedPointUtils.buriedPoint("2029","","","","");
                         break;
-                    case R.mipmap.zhizhu:
-                        //领创要发home的广播
-                        lingChang();
-                        mContext.startActivity(new Intent(mContext, com.telit.zhkt_three.Activity.UnityResource
-                                .ForUnityResourceActivity.class));
+                    case R.mipmap.zhizhu://判断apk是否安装
+                        if (AppInfoUtils.isInstall(mContext,"com.SSI.UnityAndroid")){
+                            //领创要发home的广播
+                            lingChang();
+                            mContext.startActivity(new Intent(mContext, com.telit.zhkt_three.Activity.UnityResource
+                                    .ForUnityResourceActivity.class));
+                        }else {
+                            QZXTools.popCommonToast(mContext,"请下载知筑学院应用",false);
+
+                            lingChang();
+                            Intent intent = mContext.getPackageManager().
+                                    getLaunchIntentForPackage("com.ndwill.swd.appstore");
+                            if (intent != null) {
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mContext.startActivity(intent);
+                            }
+                        }
                         break;
                     case R.mipmap.micro_class:
                         //领创要发home的广播
@@ -125,7 +138,7 @@ public class RVHomeAdapter extends RecyclerView.Adapter<RVHomeAdapter.RVHomeView
                         BuriedPointUtils.buriedPoint("2023","","","","");
                         break;
                     case R.mipmap.expected:
-                        QZXTools.popCommonToast(mContext, "尽情期待", false);
+                        QZXTools.popCommonToast(mContext, "敬请期待", false);
                       //  mContext.startActivity(new Intent(mContext, TestActivity.class));
 
                         break;

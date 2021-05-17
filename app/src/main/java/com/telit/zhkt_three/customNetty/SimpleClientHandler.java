@@ -21,7 +21,8 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
     private SimpleClientListener simpleClientListener;
 
     private ChannelHandlerContext channelHandlerContext;
-
+    private int reCount = 0;
+    private boolean isUsabled = true;
     /**
      * 主动断开重连机制，用户退出
      */
@@ -51,25 +52,30 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
+            QZXTools.logE( "userEventTriggered: "+idleStateEvent.state(),null);
             if (idleStateEvent.state() == IdleState.WRITER_IDLE) {
                 //写超时,即设定的写时间内没有进行write操作会自动调用到这个方法中，主动write发送心跳方法给服务端
                 SimpleClientNetty.getInstance().sendMsgToServer(MsgUtils.HEAD_HEART, MsgUtils.heartMsg());
             } else if (idleStateEvent.state() == IdleState.READER_IDLE) {
                 //读超时，即设定的读时间内没有read操作的话，表名服务端停止了，主动断开连接
-                QZXTools.logE("超过30秒没有接收到服务端的信息，主动关闭", null);
-               // ctx.channel().close();
+                QZXTools.logE("超过90秒没有接收到服务端的信息，主动关闭", null);
+                // ctx.channel().close();
+                 ctx.channel().close();
+                if (simpleClientListener != null) {
+                    simpleClientListener.isNoUser();
+                }
             }
         } else {
             super.userEventTriggered(ctx, evt);
         }
     }
-
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, String stringData) throws Exception {
         // Do something with msg
         QZXTools.logE("channelRead0 stringData=" + stringData, null);
         if (simpleClientListener != null) {
             simpleClientListener.receiveData(stringData);
+            isUsabled = true;
         }
     }
 
@@ -80,37 +86,35 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
         this.channelHandlerContext = ctx;
         if (simpleClientListener != null) {
             simpleClientListener.onLine();
+            reCount = 0;
 
         }
     }
+
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         QZXTools.logE("channelInactive Disconnected from: " + ctx.channel().remoteAddress(), null);
         if (simpleClientListener != null) {
             simpleClientListener.offLine();
-
-            //重连
             //使用过程中断线重连
             final EventLoop eventLoop = ctx.channel().eventLoop();
             eventLoop.schedule(new Runnable() {
                 @Override
                 public void run() {
-                   // imConnection.connect(ImClientApp.HOST, ImClientApp.PORT);
+                    // imConnection.connect(ImClientApp.HOST, ImClientApp.PORT);
                     SimpleClientNetty.getInstance().reConnect();
+
+
                 }
-            }, 3L, TimeUnit.SECONDS);
-
-
-
-
+            }, 2, TimeUnit.SECONDS);
         }
     }
-
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         QZXTools.logE("channelUnregistered " + Thread.currentThread().getName() + ";"
                 + Thread.currentThread().getId()
-                + ";autoClosed=" + autoClosed+"我是在掉线重连设置重连的标记，就不应该加入班级", null);
+                + ";autoClosed=" + autoClosed + "我是在掉线重连设置重连的标记，就不应该加入班级", null);
+
     }
 
     @Override
@@ -122,7 +126,7 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
 
     public void sendMsg(String msgInfo) {
         if (channelHandlerContext != null) {
-            QZXTools.logE("channelHandlerContext sendMsg 线程Name:" + Thread.currentThread().getName()+"........"+msgInfo, null);
+            QZXTools.logE("channelHandlerContext sendMsg 线程Name:" + Thread.currentThread().getName() + "........" + msgInfo, null);
             ChannelFuture channelFuture = channelHandlerContext.writeAndFlush(msgInfo);
             channelFuture.addListener(new ChannelFutureListener() {
                 @Override

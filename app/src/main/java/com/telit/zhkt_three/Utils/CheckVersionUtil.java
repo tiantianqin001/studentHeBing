@@ -1,16 +1,14 @@
 package com.telit.zhkt_three.Utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.telit.zhkt_three.Activity.HomeScreen.MainActivity;
+import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.MyApplication;
 import com.zbv.basemodel.FileReceiveDialog;
 import com.zbv.basemodel.OkHttp3_0Utils;
@@ -18,16 +16,15 @@ import com.zbv.basemodel.QZXTools;
 import com.zbv.basemodel.TipsDialog;
 import com.zbv.basemodel.UpdateAppBean;
 import com.zbv.basemodel.UpdateBean;
-import com.zbv.basemodel.UrlUtils;
+
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.Properties;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import static com.aphidmobile.utils.AphidLog.TAG;
 
 /**
  * author: qzx
@@ -36,7 +33,6 @@ import static com.aphidmobile.utils.AphidLog.TAG;
  * notes：引入的Context要是ActivityCompat的Context,因为tipDialog需要getSupportFragmentManager()
  */
 public class CheckVersionUtil {
-
     private static final int NEET_SERVER = 3;
     private  MyHandler myHandler=new MyHandler();;
     private static final int Update_App_Dialog = 0;
@@ -55,8 +51,11 @@ public class CheckVersionUtil {
     public  void requestCheckVersion(final Activity context)  {
         Log.i(TAG, "requestCheckVersion: 我多次被调用");
         this.context = context;
-
-       String url = UrlUtils.BaseUrls + UrlUtils.AppUpdate;
+        //获取版本升级的url
+        String path = QZXTools.getExternalStorageForFiles(context, null) + "/config.txt";
+        Properties properties = QZXTools.getConfigProperties(path);
+       String url =  UrlUtils.BaseUrl + UrlUtils.AppUpdate;
+      // url=UrlUtils.BaseUrl+url;
        // String url = "http://192.168.110.207:8080/download/wisdomclass.apk";
         //String url = "http://resource.ahtelit.com/filesystem/softupdate/wisdomclass-v3.0.apk";
 
@@ -102,14 +101,12 @@ public class CheckVersionUtil {
             }
         });
     }
-
-
     public  class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case NEET_SERVER:
-                    QZXTools.popToast(MyApplication.getInstance(),"网络不能正常上网",true);
+                  //  QZXTools.popToast(MyApplication.getInstance(),"当前网络不佳....",true);
                     break;
                 case Update_App_Dialog:
 
@@ -144,11 +141,10 @@ public class CheckVersionUtil {
                     Toast.makeText(MyApplication.getInstance(), "检测更新失败，请重试！", Toast.LENGTH_SHORT).show();
                     break;
                 case Is_New_Version:
-                    Log.i(TAG, ": Is_New_Version"+Is_New_Version);
-                    Toast.makeText(MyApplication.getInstance(), "已是最新版本", Toast.LENGTH_SHORT).show();
+                    //Log.i(TAG, ": Is_New_Version"+Is_New_Version);
+                    //Toast.makeText(MyApplication.getInstance(), "已是最新版本", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     }
-
 }

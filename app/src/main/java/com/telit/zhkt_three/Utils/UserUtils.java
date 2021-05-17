@@ -108,6 +108,12 @@ public class UserUtils {
         return sharedPreferences.getBoolean("had_access", false);
     }
 
+    public static String getToken() {
+        SharedPreferences sharedPreferences = MyApplication.getInstance().
+                getApplicationContext().getSharedPreferences("student_info", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("token", "");
+    }
+
 
     /**
      * 课后作业的图片设置

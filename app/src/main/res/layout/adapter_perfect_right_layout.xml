@@ -73,6 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
         android:layout_marginTop="@dimen/x20">
 
         <TextView
@@ -89,12 +90,12 @@
         <TextView
             android:id="@+id/perfect_answer_txt_text"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/x250"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/x250"
             android:layout_below="@+id/perfect_txt_title"
             android:layout_marginTop="@dimen/x20"
             android:minWidth="@dimen/x400"
             android:background="@drawable/shape_round_corner_bg"
-            android:padding="@dimen/x10"
-            android:text="        文本文本文本啊" />
+            android:padding="@dimen/x10" />
     </RelativeLayout>
 </LinearLayout>

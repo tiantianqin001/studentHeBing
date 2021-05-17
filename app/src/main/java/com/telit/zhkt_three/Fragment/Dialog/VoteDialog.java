@@ -199,6 +199,7 @@ public class VoteDialog extends DialogFragment implements View.OnClickListener {
                 imgFilePathList.add((String) v.getTag());
                 intent.putStringArrayListExtra("imgResources", imgFilePathList);
                 intent.putExtra("curImgIndex", 0);
+                intent.putExtra("flag", "2");
                 getContext().startActivity(intent);
                 break;
         }

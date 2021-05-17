@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,20 +23,15 @@ import com.telit.zhkt_three.Adapter.MicroClass.RVMicroClassAdapter;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.MicroClassBean;
 import com.telit.zhkt_three.JavaBean.MicroClass.ActualMicBean;
 import com.telit.zhkt_three.JavaBean.MicroClass.OrderByDateMicBean;
 import com.telit.zhkt_three.JavaBean.PreView.Disk;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
-import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -172,21 +166,10 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
         unbinder = ButterKnife.bind(this);
 
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            customHeadLayout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
+
+
+        customHeadLayout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
+
 
         request_retry.setOnClickListener(this);
         link_network.setOnClickListener(this);
@@ -202,7 +185,7 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
             @SuppressLint("LongLogTag")
             @Override
             public void onRefresh() {
-                Log.i(TAG, "onScrollStateChanged: "+1);
+                QZXTools.logE( "onScrollStateChanged: "+1,null);
 
                 requestMicroDatas(true, true);
             }
@@ -220,8 +203,8 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
                         totalY>0 ) {
                     QZXTools.logE("要加载更多... curPageNo=" + curPageNo, null);
                     requestMicroDatas(false, false);
-                    Log.i(TAG, "onScrollStateChanged: "+2+"...." +
-                            "......PageSize="+PageSize+".....+mData=="+mData.size()+".......+totaly"+totalY);
+                    QZXTools.logE( "onScrollStateChanged: "+2+"...." +
+                            "......PageSize="+PageSize+".....+mData=="+mData.size()+".......+totaly"+totalY,null);
                 } else {
                     rvMicroClassAdapter.setFootVisible(false);
 
@@ -244,7 +227,7 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
             circleProgressDialogFragment = new CircleProgressDialogFragment();
         }
         circleProgressDialogFragment.show(getSupportFragmentManager(), CircleProgressDialogFragment.class.getSimpleName());
-        Log.i(TAG, "onScrollStateChanged: "+"第一次");
+        QZXTools.logE("onScrollStateChanged: "+"第一次",null);
         requestMicroDatas(true, false);
 
     }
@@ -288,7 +271,7 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
 
                 curPageNo = 1;
                 mData.clear();
-                Log.i("qin001", "requestMicroDatas: "+mData.size());
+                QZXTools.logE("requestMicroDatas: "+mData.size(),null);
                 rvMicroClassAdapter.notifyDataSetChanged();
             }
         } else {
@@ -354,6 +337,8 @@ public class MicroClassCenterActivity extends BaseActivity implements View.OnCli
                             actualMicBean.setScore(disks.get(i).getAvgStar());
                             actualMicBean.setCreateDate(disks.get(i).getCreateDate());
                             actualMicBean.setThumbnail(disks.get(i).getThumbnail());
+                            actualMicBean.setFileName(disks.get(i).getName());
+
                            // actualMicBean.setThumbnail(disks.get(i).getThumbnail());
                             actualMicBeans.add(actualMicBean);
                         }

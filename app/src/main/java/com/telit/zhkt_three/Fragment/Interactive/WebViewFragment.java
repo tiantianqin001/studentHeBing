@@ -1,29 +1,29 @@
 package com.telit.zhkt_three.Fragment.Interactive;
 
-import android.graphics.Bitmap;
-import android.net.http.SslError;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
-import com.just.agentweb.AgentWeb;
-import com.just.agentweb.AgentWebConfig;
-import com.telit.zhkt_three.Activity.InteractiveScreen.RecordScreen;
+import com.telit.zhkt_three.Activity.InteractiveScreen.JsRecordScreenBean;
+import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
-import com.telit.zhkt_three.MyApplication;
+import com.telit.zhkt_three.Fragment.XwalkFragment;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
+import org.xwalk.core.JavascriptInterface;
+import org.xwalk.core.XWalkCookieManager;
 import org.xwalk.core.XWalkHttpAuthHandler;
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkPreferences;
@@ -33,9 +33,6 @@ import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 import org.xwalk.core.XWalkWebResourceRequest;
 import org.xwalk.core.XWalkWebResourceResponse;
-
-import cn.jpush.android.api.JPushInterface;
-
 /**
  * author: qzx
  * Date: 2019/11/5 9:15
@@ -44,7 +41,7 @@ import cn.jpush.android.api.JPushInterface;
  * <p>
  * 传递参数方式：一、设置 二、setArgument
  */
-public class WebViewFragment extends Fragment {
+public class WebViewFragment extends XwalkFragment{
     private String ip;
     private XWalkView webView;
     private String loadUrl;
@@ -77,6 +74,8 @@ public class WebViewFragment extends Fragment {
         this.interactId = interactId;
     }
 
+
+
 //    private CircleProgressDialogFragment circleProgressDialogFragment;
 
     @Nullable
@@ -88,27 +87,42 @@ public class WebViewFragment extends Fragment {
         loadUrl = UrlUtils.BaseUrl + UrlUtils.WebViewInteract + "?flag=" + flag + "&id=" + interactId
                 + "&sign=view&type=student&studentId=" + UserUtils.getUserId();
 
+        QZXTools.logE("loadUrl:"+loadUrl,null);
+
         if (!TextUtils.isEmpty(ip)) {
             loadUrl = ip;
         }
-      // webView = view.findViewById(R.id.webView);
+        webView = view.findViewById(R.id.webView);
+        webView.addJavascriptInterface(new RecordScreen(),"androidToCallBack");
 
-        AgentWebConfig.clearDiskCache(this.getContext());
-        AgentWeb.with(this)
-                .setAgentWebParent((LinearLayout) view, new LinearLayout.LayoutParams(-1, -1))
-                .useDefaultIndicator()
-                .createAgentWeb()
-                .ready()
-                .go(loadUrl);
+        mBar = view.findViewById(R.id.progress_Bar);
 
-
-      //  onXWalkReady();
-
-
+        EventBus.getDefault().register(this);
         return view;
     }
+
+    public class RecordScreen {
+        /**
+         * @param command 1表示开始 0表示结束 2表示暂停
+         * @param json    提交答案的Json,录制视频不需要传
+         */
+        @JavascriptInterface
+        public void getRecordScreenCommand(int command, String json) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    QZXTools.logE("js call android ===> json=" + json, null);
+                    JsRecordScreenBean jsRecordScreenBean = new JsRecordScreenBean(command, json);
+                    EventBus.getDefault().post(jsRecordScreenBean, Constant.Show_Js_Record);
+                }
+            });
+        }
+    }
+
     private XWalkSettings xWVSettings;
-    private void onXWalkReady() {
+    private ProgressBar mBar;
+    @SuppressLint("SetJavaScriptEnabled")
+    protected void onXWalkReady() {
         XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
 //        XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
 
@@ -170,10 +184,7 @@ public class WebViewFragment extends Fragment {
                 super.onPageLoadStopped(view, url, status);
             }
 
-            @Override
-            public boolean onCreateWindowRequested(XWalkView view, InitiateBy initiator, final ValueCallback<XWalkView> callback) {
-                return true;
-            }
+
         });
 
         webView.setResourceClient(new XWalkResourceClient(webView) {
@@ -190,12 +201,6 @@ public class WebViewFragment extends Fragment {
                 return super.shouldInterceptLoadRequest(view, request);
             }
 
-            @Override
-            public void onReceivedSslError(XWalkView view, ValueCallback<Boolean> callback, SslError error) {
-                //super.onReceivedSslError(view, callback, error);
-                //Log.e(TAG, "onReceivedSslError");
-                //Toast.makeText(ProciapalActivity.this, "证书不合法", Toast.LENGTH_SHORT).show();
-            }
 
             @Override
             public void onLoadFinished(XWalkView view, String url) {
@@ -212,6 +217,13 @@ public class WebViewFragment extends Fragment {
             @Override
             public void onProgressChanged(XWalkView view, int progressInPercent) {
                 super.onProgressChanged(view, progressInPercent);
+                if (progressInPercent == 100) {
+                    mBar.setVisibility(View.GONE);
+                } else {
+                    mBar.setVisibility(View.VISIBLE);
+                    mBar.setProgress(progressInPercent);
+                }
+
             }
 
 
@@ -235,9 +247,37 @@ public class WebViewFragment extends Fragment {
                 super.onReceivedResponseHeaders(view, request, response);
             }
         });
+
+        XWalkCookieManager xWalkCookieManager=new XWalkCookieManager();
+        xWalkCookieManager.removeAllCookie();
         //开始加载地址
         webView.loadUrl(loadUrl);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        if (isXWalkReady()){
+            webView.onDestroy();
+        }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isXWalkReady()){
+            webView.pauseTimers();
+            webView.onHide();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isXWalkReady()){
+            webView.resumeTimers();
+            webView.onShow();
+        }
+    }
 }

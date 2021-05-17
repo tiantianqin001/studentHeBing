@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.telit.zhkt_three.CustomView.SummerLayout;
 import com.telit.zhkt_three.JavaBean.AppInfo;
 import com.telit.zhkt_three.JavaBean.AppListBean;
@@ -45,7 +46,7 @@ public class SysyemFragment extends Fragment {
 
         List<AppInfo> curAppInfos = new ArrayList<>();
         if (applists.size()<12){
-            appInfos = applists.subList(0, curAppInfos.size());
+            appInfos = applists.subList(0, applists.size());
         }else {
              appInfos = applists.subList(0, 12);
         }
@@ -78,6 +79,8 @@ public class SysyemFragment extends Fragment {
         }
 
         QZXTools.logE("curAppInfo=" + curAppInfos, null);
+
+        QZXTools.logE("appInfos=" + new Gson().toJson(appInfos), null);
 
         summerLayout.setAppInfos(curAppInfos);
     }

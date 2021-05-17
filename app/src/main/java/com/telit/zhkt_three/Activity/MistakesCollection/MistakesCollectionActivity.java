@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,13 +12,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,38 +29,45 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.xtoast.OnClickListener;
+import com.hjq.xtoast.XToast;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
 import com.telit.zhkt_three.Activity.BaseActivity;
+import com.telit.zhkt_three.Adapter.AfterHomeWork.MistakesCollectionExportAdapter;
+import com.telit.zhkt_three.Adapter.QuestionAdapter.RVQuestionBankAnswerAdapter;
 import com.telit.zhkt_three.Adapter.QuestionAdapter.RVQuestionTvAnswerAdapter;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
+import com.telit.zhkt_three.CustomView.EmojiEditText;
+import com.telit.zhkt_three.CustomView.NoScrollRecyclerView;
 import com.telit.zhkt_three.CustomView.ToUsePullView;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.MistakesBean;
 import com.telit.zhkt_three.JavaBean.Gson.SubjectiveListBean;
 import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
 import com.telit.zhkt_three.JavaBean.MistakesCollection.SubjectBean;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
 import com.telit.zhkt_three.JavaBean.WorkOwnResult;
-import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
+import com.telit.zhkt_three.Utils.AppInfoUtils;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
+import com.telit.zhkt_three.Utils.FormatUtils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.TimeUtils;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.zbv.docxmodel.DocBean;
 import com.zbv.docxmodel.DocxCallback;
 import com.zbv.docxmodel.DocxUtils;
 import com.zbv.docxmodel.OptionBean;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -103,6 +114,8 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
     ToUsePullView pull_type;
     @BindView(R.id.mistakes_pull_difficulty)
     ToUsePullView pull_difficulty;
+    @BindView(R.id.mistakes_pull_mode)
+    ToUsePullView pull_mode;
     @BindView(R.id.mistakes_pull_date)
     ToUsePullView pull_date;
     @BindView(R.id.mistakes_pull_tag)
@@ -125,12 +138,15 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
     LinearLayout leak_net_layout;
     @BindView(R.id.link_network)
     TextView link_network;
-
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     private Map<String, String> subjectMap;
     //题型
     private Map<String, String> typeMap;
     //难易度
     private Map<String, String> difficultyMap;
+    //方式
+    private Map<String, String> modeMap;
     //时间段
     private List<String> dateTime;
 
@@ -142,6 +158,8 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
     private String endDate;
 
     private RVQuestionTvAnswerAdapter rvQuestionTvAnswerAdapter;
+    //是不是图片出题
+    boolean isImage=false;
 
     /**
      * 错题集详情主体
@@ -167,11 +185,15 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(MistakesCollectionActivity.this, "服务端错误！", false);
+
+                        QZXTools.popToast(MistakesCollectionActivity.this, "网络比较慢！", false);
+
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
+
                         }
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     break;
@@ -181,7 +203,9 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
+
                         }
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     break;
@@ -190,13 +214,21 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                         List<String> subjectiveList = new ArrayList<String>(subjectMap.keySet());
                         pull_subject.setDataList(subjectiveList);
                         pull_subject.setPullContent(subjectiveList.get(0));
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (isImage){
+                            //图片出题
+                            //当主题获取后设置巩固的参数，否则主题Subject是Null,这里xd为1小学，因为没有传递，而且目前只有小学
+                            rvQuestionTvAnswerAdapter.fetchNeedParam(modeMap.get(pull_mode.getPullContent()));
 
-                        //当主题获取后设置巩固的参数，否则主题Subject是Null,这里xd为1小学，因为没有传递，而且目前只有小学
-                        rvQuestionTvAnswerAdapter.fetchNeedParam("1", subjectMap.get(pull_subject.getPullContent()),
-                                difficultyMap.get(pull_difficulty.getPullContent()), typeMap.get(pull_type.getPullContent()));
 
-                        //请求错题详情
-                        requestMistakesDetails(false);
+                            //请求错题详情
+                            requestMistakesDetails(false);
+                        }else {
+                            //题库出题 todo    目前去巩固  还有问题
+                            //请求错题详情
+                            requestMistakesDetails(false);
+                        }
+
                     }
 
 
@@ -206,6 +238,7 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
+
                         }
 
                         //如果没有数据就显示无数据提示画面
@@ -233,7 +266,14 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
 
                             leak_resource.setVisibility(View.VISIBLE);
                         }
-                        rvQuestionTvAnswerAdapter.notifyDataSetChanged();
+                        //判断是图片出题
+                        if (isImage){
+
+                            rvQuestionTvAnswerAdapter.notifyDataSetChanged();
+                        }else {
+                            //题库出题
+                            rvQuestionBankAnswerAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     break;
@@ -242,11 +282,11 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                         requestMistakesDetails(false);
                         datePopup.dismiss();
                     }
-
                     break;
             }
         }
     };
+    private RVQuestionBankAnswerAdapter rvQuestionBankAnswerAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -257,23 +297,8 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         //设置导航栏的颜色
         ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
         unbinder = ButterKnife.bind(this);
-
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            customHeadLayout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
+        customHeadLayout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
 
         pull_tag.setOnClickListener(this);
         mistakes_custom_date_layout.setOnClickListener(this);
@@ -281,6 +306,7 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         pull_subject.setSpinnerClick(this);
         pull_type.setSpinnerClick(this);
         pull_difficulty.setSpinnerClick(this);
+        pull_mode.setSpinnerClick(this);
         pull_date.setSpinnerClick(this);
 
         initData();
@@ -410,7 +436,7 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("poi_");
+        stringBuilder.append("错题集_");
         stringBuilder.append(simpleDateFormat.format(new Date()));
         stringBuilder.append(".doc");
 
@@ -435,6 +461,7 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
     /**
      * 初始化数据
      */
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initData() {
         subjectMap = new LinkedHashMap<>();
@@ -460,13 +487,20 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         pull_difficulty.setDataList(difficulty);
         pull_difficulty.setPullContent(difficulty.get(2));
 
+        modeMap = new LinkedHashMap<>();
+        modeMap.put("题库出题", "2");
+        modeMap.put("自定义出题", "1");
+        List<String> modes = new ArrayList<String>(modeMap.keySet());
+        pull_mode.setDataList(modes);
+        pull_mode.setPullContent(modes.get(0));
+
         dateTime = new ArrayList<>();
         dateTime.add("今天");
         dateTime.add("一周");
         dateTime.add("一月");
         dateTime.add("自定义");
         pull_date.setDataList(dateTime);
-        pull_date.setPullContent(dateTime.get(0));
+        pull_date.setPullContent(dateTime.get(1));
         //默认选中今天
         calculateDateSection(pull_date.getPullContent());
 
@@ -478,37 +512,68 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         xRecyclerView.setLayoutManager(layoutManager);
 
-        //使用带时间的刷新头
-        xRecyclerView
-                .getDefaultRefreshHeaderView()
-                .setRefreshTimeVisible(true);
-
         //设置没有更多数据的显示
         xRecyclerView.getDefaultFootView().setNoMoreHint("没有更多数据了");
 
         // When the item number of the screen number is list.size-2,we call the onLoadMore
 //        xRecyclerView.setLimitNumberToCallLoadMore(2);
-
         //添加上拉或者下拉加载
         xRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                questionInfoList.clear();
                 curPageNo = 1;
                 requestMistakesDetails(false);
             }
 
             @Override
             public void onLoadMore() {
+                //滑动到底部
                 curPageNo++;
                 requestMistakesDetails(true);
+
             }
         });
 
-        rvQuestionTvAnswerAdapter = new RVQuestionTvAnswerAdapter(this, "2",
-                false, true, 1, "");
+
+
+
+        String imageType = modeMap.get(pull_mode.getPullContent());
+
+
+        if (imageType.equals("1")){
+            isImage=true;
+        }else {
+            isImage=false;
+        }
         questionInfoList = new ArrayList<>();
-        rvQuestionTvAnswerAdapter.setQuestionInfoList(questionInfoList, "", null);
-        xRecyclerView.setAdapter(rvQuestionTvAnswerAdapter);
+        //若果是图片出题，走图片出题的适配，题库出题走题库的适配
+        if (isImage){
+
+            /**
+             * status 作业的状态,
+             * isImage 是不是图片出题
+             * mistakesShown 是不是错题集
+             *  types   0 是互动   1是作业
+             */
+            questionInfoList = new ArrayList<>();
+            rvQuestionTvAnswerAdapter = new RVQuestionTvAnswerAdapter(this, "2",
+                    isImage, true, 1);
+
+            rvQuestionTvAnswerAdapter.setQuestionInfoList(questionInfoList, "");
+            xRecyclerView.setAdapter(rvQuestionTvAnswerAdapter);
+        }else {
+            //这里是题库出题的作业详情
+            questionInfoList = new ArrayList<>();
+            rvQuestionBankAnswerAdapter = new RVQuestionBankAnswerAdapter(this, "2",
+                    isImage );
+
+            rvQuestionBankAnswerAdapter.setQuestionInfoList(questionInfoList, difficultyMap.get(pull_difficulty.getPullContent()),
+                    subjectMap.get(pull_subject.getPullContent()));
+            xRecyclerView.setAdapter(rvQuestionBankAnswerAdapter);
+        }
+
+
 
         fetchNetSubjectData();
     }
@@ -527,6 +592,7 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                 mHandler.sendEmptyMessage(Server_Error);
             }
 
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -540,6 +606,9 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                             subjectMap.put(subjectBean.getName(), subjectBean.getId());
                         }
                         mHandler.sendEmptyMessage(Operate_Subject_Query_Success);
+
+                        QZXTools.logE("resultJson=" + subjectiveListBean.getResult().size()+"", null);
+
                     }catch (Exception e){
                         e.fillInStackTrace();
                         if (circleProgressDialogFragment != null) {
@@ -557,63 +626,6 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         });
     }
 
-    /**
-     * 获取错题详情
-     * <p>
-     * {
-     * "success": true,
-     * "errorCode": "1",
-     * "msg": "操作成功",
-     * "result": [{
-     * "id": "ddce8d8d55164dd3a24e8d43b3d01623",
-     * "homeworkId": "402649872f32466cbb5096edb3e2b85f",
-     * "questionContent": null,
-     * "image": null,
-     * "imageopted": null,
-     * "list": [{
-     * "id": "edb337dfccae4dceb937faa1356cd35e",
-     * "content": null,
-     * "index": 1,
-     * "options": "A"
-     * },
-     * {
-     * "id": "7d3dc913930f4e80adfa8fe3fedb7a26",
-     * "content": null,
-     * "index": 2,
-     * "options": "B"
-     * },
-     * {
-     * "id": "a428af2243004fe99045483fb866ac99",
-     * "content": null,
-     * "index": 3,
-     * "options": "C"
-     * },
-     * {
-     * "id": "c2f059930bd3451c94d38bab626931e2",
-     * "content": null,
-     * "index": 4,
-     * "options": "D"
-     * }
-     * ],
-     * "attachment": null,
-     * "knowledge": "[{'tid': '4602', 'name': '基础知识'}]",
-     * "leftList": [],
-     * "rightList": [],
-     * "ownList": [
-     * "B"
-     * ],
-     * "answer": "B",
-     * "analysis": null,
-     * "imgFile": [],
-     * "voiceFile": []
-     * }
-     * ],
-     * "total": 0,
-     * "pageNo": 0
-     * }
-     * <p>
-     * 34262218745142@fllxx 用这个登录
-     */
     private void requestMistakesDetails(boolean isLoadingMore) {
         if (!QZXTools.isNetworkAvailable()) {
             leak_net_layout.setVisibility(View.VISIBLE);
@@ -629,10 +641,12 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
         circleProgressDialogFragment = new CircleProgressDialogFragment();
         circleProgressDialogFragment.show(getSupportFragmentManager(), CircleProgressDialogFragment.class.getSimpleName());
 
-        //如果不是加载更多的话就清空集合
-        if (!isLoadingMore) {
+        //如果不是加载更多的话就清空集合 是图片出题
+        if (!isLoadingMore && isImage) {
             questionInfoList.clear();
+
             rvQuestionTvAnswerAdapter.notifyDataSetChanged();
+
         }
 
         String url = UrlUtils.BaseUrl + UrlUtils.MistakesDetails;
@@ -643,7 +657,6 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
 
         //如果学科为‘全部’则不传该字段
         if (!TextUtils.isEmpty(subjectMap.get(pull_subject.getPullContent()))) {
-
             paraMap.put("subjectid", subjectMap.get(pull_subject.getPullContent()));
         }
         //如果题型为‘全部’则不传该字段
@@ -651,22 +664,23 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
             paraMap.put("questionType", typeMap.get(pull_type.getPullContent()));
         }
         paraMap.put("difficultIndex", difficultyMap.get(pull_difficulty.getPullContent()));
+        paraMap.put("byhand", modeMap.get(pull_mode.getPullContent()));
         // 例如 2019-05-12 00:00:00
         paraMap.put("startTime", startDate);
         paraMap.put("endTime", endDate);
-//        paraMap.put("pageSize","30");
+
+        paraMap.put("pageSize","10");
+
         paraMap.put("pageNo", curPageNo + "");
 
         // 9c5e8fc2cc6e5a197b4ea823497f3da7e11c63b33fa2c7c3b1d76c42aa45b88c746fcb62bd7ab0fb00131e0cb389bea9a6b7c3b97860a87a
-        QZXTools.logE("studentid=" + UserUtils.getStudentId() + ";subjectid=" + subjectMap.get(pull_subject.getPullContent())
-                + ";questionType=" + typeMap.get(pull_type.getPullContent())
-                + ";difficultIndex" + difficultyMap.get(pull_difficulty.getPullContent())
-                + ";startTime=" + startDate + ";endTime=" + endDate + ";pageNo=" + curPageNo, null);
+        QZXTools.logE("paraMap:"+new Gson().toJson(paraMap), null);
 
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 //服务端错误
+                e.fillInStackTrace();
                 mHandler.sendEmptyMessage(Server_Error);
             }
             @Override
@@ -891,6 +905,15 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                 curPageNo = 1;
                 pull_difficulty.setPullContent(text);
                 break;
+            case R.id.mistakes_pull_mode:
+                curPageNo = 1;
+                pull_mode.setPullContent(text);
+                if (text.equals("自定义出题")){
+                    isImage=true;
+                }else {
+                    isImage=false;
+                }
+                break;
             case R.id.mistakes_pull_date:
                 curPageNo = 1;
                 pull_date.setPullContent(text);
@@ -904,12 +927,39 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
                 }
                 break;
         }
+        if (isImage){
+            //更新参数  学科   难度    typeMap  题型  比如简单和困难    模式   题库出题 和图片出题
+            /**
+             * status 作业的状态,
+             * isImage 是不是图片出题
+             * mistakesShown 是不是错题集
+             *  types   0 是互动   1是作业
+             */
+            questionInfoList = new ArrayList<>();
+            rvQuestionTvAnswerAdapter = new RVQuestionTvAnswerAdapter(this, "2",
+                    isImage, true, 1);
 
-        //更新参数
-        rvQuestionTvAnswerAdapter.fetchNeedParam("1", subjectMap.get(pull_subject.getPullContent()),
-                difficultyMap.get(pull_difficulty.getPullContent()), typeMap.get(pull_type.getPullContent()));
+            rvQuestionTvAnswerAdapter.setQuestionInfoList(questionInfoList, "");
+            xRecyclerView.setAdapter(rvQuestionTvAnswerAdapter);
+            rvQuestionTvAnswerAdapter.fetchNeedParam(modeMap.get(pull_mode.getPullContent()));
 
-        requestMistakesDetails(false);
+
+            requestMistakesDetails(false);
+        }else {
+            //题库出题
+
+            questionInfoList = new ArrayList<>();
+            rvQuestionBankAnswerAdapter = new RVQuestionBankAnswerAdapter(this, "2",
+                    isImage );
+
+            rvQuestionBankAnswerAdapter.setQuestionInfoList(questionInfoList, difficultyMap.get(pull_difficulty.getPullContent()),
+                    subjectMap.get(pull_subject.getPullContent()));
+            xRecyclerView.setAdapter(rvQuestionBankAnswerAdapter);
+
+
+            requestMistakesDetails(false);
+        }
+
         //错题集点击学科埋点
         BuriedPointUtils.buriedPoint("2020","","",text,"");
     }
@@ -963,5 +1013,476 @@ public class MistakesCollectionActivity extends BaseActivity implements View.OnC
 
         //popup只有具体的尺寸，底部空间不够才会在上面显示
         datePopup.showAsDropDown(mistakes_custom_date_layout, 0, 0);
+    }
+
+
+    /**
+     * 导出Docx
+     */
+    public void exportDocx(View view) {
+        if (questionInfoList==null||questionInfoList.size()==0){
+            QZXTools.popCommonToast(MistakesCollectionActivity.this,"暂无错题",false);
+            return;
+        }
+
+        if (!ViewUtils.isFastClick(1000)){
+            return;
+        }
+
+        //设置为全不选
+        for (QuestionInfo questionInfo:questionInfoList){
+            questionInfo.setChecked(false);
+        }
+
+        if ("1".equals(modeMap.get(pull_mode.getPullContent()))){//图片出题
+            showImageQuestionDialog(questionInfoList);
+        }else {//题库出题
+            showQuestionDialog(questionInfoList);
+        }
+    }
+
+    private XToast toast;
+    private boolean checkedAll;
+    private MistakesCollectionExportAdapter exportAdapter;
+    private String flag;
+    private EmojiEditText et_email;
+
+    /**
+     * 题库出题选择
+     *
+     * @param list
+     */
+    private void showImageQuestionDialog(List<QuestionInfo> list) {
+        toast = new XToast(this)
+                .setView(R.layout.toast_export_questions)
+                .setOutsideTouchable(false)
+                .setBackgroundDimAmount(0.5f)
+                .setText(R.id.tv_name,"错题集导出")
+                .setAnimStyle(android.R.style.Animation_Translucent)
+                .setGravity(Gravity.CENTER)
+                .setOnClickListener(R.id.iv_close, new OnClickListener() {
+                    @Override
+                    public void onClick(XToast toast, View view) {
+                        toast.cancel();
+
+                        flag = null;
+                    }
+                })
+                .setOnClickListener(R.id.btn_send, new OnClickListener() {
+                    @Override
+                    public void onClick(XToast toast, View view) {
+                        ImageView iv_process = toast.getView().findViewById(R.id.iv_process);
+                        RelativeLayout rl_email = toast.getView().findViewById(R.id.rl_email);
+                        Button btn_send = toast.getView().findViewById(R.id.btn_send);
+                        ImageView iv_status = toast.getView().findViewById(R.id.iv_sendStatus);
+
+                        if ("1".equals(flag)){
+                            //校验邮箱
+                            if (TextUtils.isEmpty(et_email.getText().toString())){
+                                QZXTools.popToast(MistakesCollectionActivity.this, "邮箱不可为空", false);
+                                return;
+                            }
+
+                            if (!FormatUtils.isEmail(et_email.getText().toString())){
+                                QZXTools.popToast(MistakesCollectionActivity.this, "邮箱格式不正确", false);
+                                return;
+                            }
+
+                            iv_process.setImageResource(R.mipmap.send_finish);
+                            rl_email.setVisibility(View.GONE);
+                            iv_status.setVisibility(View.VISIBLE);
+                            btn_send.setText("完成");
+
+                            flag = "2";
+
+                            //提交
+                            sendEmailFromImage(list,et_email.getText().toString(),iv_status);
+                        }else if ("2".equals(flag)){
+                            iv_process.setImageResource(R.mipmap.question_export);
+
+                            toast.cancel();
+                            flag = null;
+                        }
+                    }
+                })
+                .show();
+
+        et_email = toast.getView().findViewById(R.id.et_email);
+        if (!TextUtils.isEmpty(SharedPreferenceUtil.getInstance(this).getString("exportEmail"))){
+            et_email.setText(SharedPreferenceUtil.getInstance(this).getString("exportEmail"));
+            et_email.setSelection(SharedPreferenceUtil.getInstance(this).getString("exportEmail").length());
+        }
+        TextView tv_questions = toast.getView().findViewById(R.id.tv_questions);
+        NoScrollRecyclerView rv_questions = toast.getView().findViewById(R.id.rv_questions);
+        RelativeLayout rl_email = toast.getView().findViewById(R.id.rl_email);
+        tv_questions.setCompoundDrawables(null, null, null, null);
+
+        ImageView iv_process = toast.getView().findViewById(R.id.iv_process);
+        iv_process.setImageResource(R.mipmap.input_email);
+        tv_questions.setVisibility(View.GONE);
+        rv_questions.setVisibility(View.GONE);
+        rl_email.setVisibility(View.VISIBLE);
+        flag = "1";
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param list
+     * @param email
+     * @param iv_status
+     */
+    private void sendEmailFromImage(List<QuestionInfo> list, String email, ImageView iv_status){
+        String url = UrlUtils.BaseUrl + UrlUtils.Mistake_Collection_Export_Image;
+
+        Map<String, String> mapParams = new LinkedHashMap<>();
+        mapParams.put("homeworkids", getHomeworkIdsFromImage(list));
+        mapParams.put("questionids", getQuestionIdsFromImage(list));
+        mapParams.put("email", email);
+        mapParams.put("byhand","1");
+        mapParams.put("studentid", UserUtils.getUserId());
+        mapParams.put("title", "错题集"+ TimeUtils.timeStamp());
+        mapParams.put("tip", AppInfoUtils.getAppName(this)+"导出错题集");
+
+        QZXTools.logE("param:"+new Gson().toJson(mapParams),null);
+
+        /**
+         * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
+         * */
+        OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, mapParams, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        QZXTools.popToast(MistakesCollectionActivity.this, "服务端错误！", false);
+                        iv_status.setImageResource(R.mipmap.email_send_fail);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resultJson = null;
+                    try {
+                        resultJson = response.body().string();
+                        QZXTools.logE("commit questions resultJson=" + resultJson, null);
+
+                        JSONObject jsonObject=JSONObject.parseObject(resultJson);
+                        String errorCode = jsonObject.getString("errorCode");
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if ("1".equals(errorCode)){
+                                    iv_status.setImageResource(R.mipmap.email_send_success);
+                                }else {
+                                    iv_status.setImageResource(R.mipmap.email_send_fail);
+                                }
+                            }
+                        });
+
+                        SharedPreferenceUtil.getInstance(MistakesCollectionActivity.this).setString("exportEmail",et_email.getText().toString());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+//                    iv_status.setImageResource(R.mipmap.email_send_fail);
+                }
+            }
+        });
+    }
+
+    /**
+     * 问题选择
+     */
+    private void showQuestionDialog(List<QuestionInfo> list) {
+        toast = new XToast(this)
+                .setView(R.layout.toast_export_questions)
+                .setOutsideTouchable(false)
+                .setBackgroundDimAmount(0.5f)
+                .setText(R.id.tv_name,"错题集导出")
+                .setAnimStyle(android.R.style.Animation_Translucent)
+                .setGravity(Gravity.CENTER)
+                .setOnClickListener(R.id.iv_close, new OnClickListener() {
+                    @Override
+                    public void onClick(XToast toast, View view) {
+                        toast.cancel();
+
+                        flag = null;
+                    }
+                })
+                .setOnClickListener(R.id.tv_questions, new OnClickListener() {
+                    @Override
+                    public void onClick(XToast toast, View view) {
+                        TextView tv_questions = (TextView) view;
+                        Drawable leftDrawable;
+                        if (checkedAll){
+                            checkedAll = false;
+                            for (QuestionInfo questionInfo:list){
+                                questionInfo.setChecked(false);
+                            }
+                            leftDrawable = getResources().getDrawable(R.mipmap.contact_unchecked_icon);
+                        }else {
+                            checkedAll = true;
+                            for (QuestionInfo questionInfo:list){
+                                questionInfo.setChecked(true);
+                            }
+                            leftDrawable = getResources().getDrawable(R.mipmap.contact_checked_icon);
+                        }
+                        exportAdapter.notifyDataSetChanged();
+                        leftDrawable.setBounds(0, 0, leftDrawable.getMinimumWidth(), leftDrawable.getMinimumHeight());
+                        tv_questions.setCompoundDrawables(leftDrawable, null, null, null);
+                    }
+                })
+                .setOnClickListener(R.id.btn_send, new OnClickListener() {
+                    @Override
+                    public void onClick(XToast toast, View view) {
+                        if (TextUtils.isEmpty(getQuestionIds(list))){
+                            QZXTools.popToast(MistakesCollectionActivity.this, "请选择导出的题目", false);
+                            return;
+                        }
+
+                        ImageView iv_process = toast.getView().findViewById(R.id.iv_process);
+                        TextView tv_questions = toast.getView().findViewById(R.id.tv_questions);
+                        RelativeLayout rl_email = toast.getView().findViewById(R.id.rl_email);
+                        Button btn_send = toast.getView().findViewById(R.id.btn_send);
+                        NoScrollRecyclerView rv_questions = toast.getView().findViewById(R.id.rv_questions);
+                        ImageView iv_status = toast.getView().findViewById(R.id.iv_sendStatus);
+
+                        if (TextUtils.isEmpty(flag)){
+                            iv_process.setImageResource(R.mipmap.input_email);
+                            tv_questions.setVisibility(View.GONE);
+                            rv_questions.setVisibility(View.GONE);
+                            rl_email.setVisibility(View.VISIBLE);
+
+                            flag = "1";
+                        }else if ("1".equals(flag)){
+                            //校验邮箱
+                            if (TextUtils.isEmpty(et_email.getText().toString())){
+                                QZXTools.popToast(MistakesCollectionActivity.this, "邮箱不可为空", false);
+                                return;
+                            }
+
+                            if (!FormatUtils.isEmail(et_email.getText().toString())){
+                                QZXTools.popToast(MistakesCollectionActivity.this, "邮箱格式不正确", false);
+                                return;
+                            }
+
+                            iv_process.setImageResource(R.mipmap.send_finish);
+                            rl_email.setVisibility(View.GONE);
+                            iv_status.setVisibility(View.VISIBLE);
+                            btn_send.setText("完成");
+
+                            flag = "2";
+
+                            //提交
+                            sendEmail(list,et_email.getText().toString(),iv_status);
+                        }else if ("2".equals(flag)){
+                            iv_process.setImageResource(R.mipmap.question_export);
+
+                            toast.cancel();
+                            flag = null;
+                        }
+                    }
+                })
+                .show();
+
+        NoScrollRecyclerView rv_questions = toast.getView().findViewById(R.id.rv_questions);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_questions.setLayoutManager(manager);
+        exportAdapter = new MistakesCollectionExportAdapter(this,list);
+        rv_questions.setAdapter(exportAdapter);
+        exportAdapter.setOnCheckListener(new MistakesCollectionExportAdapter.OnCheckListener() {
+            @Override
+            public void OnCheckListener(int position) {
+                QZXTools.logE("选择:"+position,null);
+
+                list.get(position).setChecked(!list.get(position).isChecked());
+                exportAdapter.notifyDataSetChanged();
+
+                TextView tv_questions = toast.getView().findViewById(R.id.tv_questions);
+                Drawable leftDrawable;
+                checkedAll = checkedAll(list);
+                QZXTools.logE("checkedAll:"+checkedAll,null);
+                if (checkedAll){
+                    leftDrawable = getResources().getDrawable(R.mipmap.contact_checked_icon);
+                }else {
+                    leftDrawable = getResources().getDrawable(R.mipmap.contact_unchecked_icon);
+                }
+                leftDrawable.setBounds(0, 0, leftDrawable.getMinimumWidth(), leftDrawable.getMinimumHeight());
+                tv_questions.setCompoundDrawables(leftDrawable, null, null, null);
+            }
+        });
+
+        et_email = toast.getView().findViewById(R.id.et_email);
+        if (!TextUtils.isEmpty(SharedPreferenceUtil.getInstance(this).getString("exportEmail"))){
+            et_email.setText(SharedPreferenceUtil.getInstance(this).getString("exportEmail"));
+            et_email.setSelection(SharedPreferenceUtil.getInstance(this).getString("exportEmail").length());
+        }
+    }
+
+    /**
+     * 是否全选
+     *
+     * @param list
+     * @return
+     */
+    private boolean checkedAll(List<QuestionInfo> list){
+        for (QuestionInfo questionInfo:list){
+            if (!questionInfo.isChecked()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param email
+     * @param iv_status
+     */
+    private void sendEmail(List<QuestionInfo> list, String email, ImageView iv_status){
+        String url = UrlUtils.BaseUrl + UrlUtils.Mistake_Collection_Export_Image;
+
+        Map<String, String> mapParams = new LinkedHashMap<>();
+        mapParams.put("homeworkids", getHomeworkIds(list));
+        mapParams.put("questionids", getQuestionIds(list));
+        mapParams.put("email", email);
+        mapParams.put("byhand","2");
+        mapParams.put("studentid", UserUtils.getUserId());
+        mapParams.put("title", "错题集"+ TimeUtils.timeStamp());
+        mapParams.put("tip", AppInfoUtils.getAppName(this)+"导出错题集");
+
+        QZXTools.logE("param:"+new Gson().toJson(mapParams),null);
+
+        /**
+         * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
+         * */
+        OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, mapParams, new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        QZXTools.popToast(MistakesCollectionActivity.this, "服务端错误！", false);
+                        iv_status.setImageResource(R.mipmap.email_send_fail);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resultJson = null;
+                    try {
+                        resultJson = response.body().string();
+                        QZXTools.logE("commit questions resultJson=" + resultJson, null);
+
+                        JSONObject jsonObject=JSONObject.parseObject(resultJson);
+                        String errorCode = jsonObject.getString("errorCode");
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if ("1".equals(errorCode)){
+                                    iv_status.setImageResource(R.mipmap.email_send_success);
+                                }else {
+                                    iv_status.setImageResource(R.mipmap.email_send_fail);
+                                }
+                            }
+                        });
+
+                        SharedPreferenceUtil.getInstance(MistakesCollectionActivity.this).setString("exportEmail",et_email.getText().toString());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    iv_status.setImageResource(R.mipmap.email_send_fail);
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取问题Id
+     *
+     * @param list
+     * @return
+     */
+    private String getQuestionIds(List<QuestionInfo> list){
+        StringBuffer questionIds = new StringBuffer();
+        for (int i=0;i<list.size();i++){
+            if (list.get(i).isChecked()){
+                questionIds.append(list.get(i).getId()+",");
+            }
+        }
+        if (questionIds.toString().length()>0){
+            return questionIds.toString().substring(0,questionIds.toString().length()-1);
+        }else {
+            return questionIds.toString();
+        }
+    }
+
+    /**
+     * 获取问题Id
+     *
+     * @param list
+     * @return
+     */
+    private String getQuestionIdsFromImage(List<QuestionInfo> list){
+        StringBuffer questionIds = new StringBuffer();
+        for (int i=0;i<list.size();i++){
+            questionIds.append(list.get(i).getId()+",");
+        }
+        if (questionIds.toString().length()>0){
+            return questionIds.toString().substring(0,questionIds.toString().length()-1);
+        }else {
+            return questionIds.toString();
+        }
+    }
+
+    /**
+     * 获取作业Id
+     *
+     * @param list
+     * @return
+     */
+    private String getHomeworkIds(List<QuestionInfo> list){
+        StringBuffer questionIds = new StringBuffer();
+        for (int i=0;i<list.size();i++){
+            if (list.get(i).isChecked()){
+                questionIds.append(list.get(i).getHomeworkId()+",");
+            }
+        }
+        if (questionIds.toString().length()>0){
+            return questionIds.toString().substring(0,questionIds.toString().length()-1);
+        }else {
+            return questionIds.toString();
+        }
+    }
+
+    /**
+     * 获取作业Id
+     *
+     * @param list
+     * @return
+     */
+    private String getHomeworkIdsFromImage(List<QuestionInfo> list){
+        StringBuffer questionIds = new StringBuffer();
+        for (int i=0;i<list.size();i++){
+            questionIds.append(list.get(i).getHomeworkId()+",");
+        }
+        if (questionIds.toString().length()>0){
+            return questionIds.toString().substring(0,questionIds.toString().length()-1);
+        }else {
+            return questionIds.toString();
+        }
     }
 }

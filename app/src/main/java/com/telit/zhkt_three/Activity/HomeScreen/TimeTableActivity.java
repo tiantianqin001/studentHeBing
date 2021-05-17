@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,8 +14,6 @@ import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.TimeTableView;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.Gson.TimeTableBean;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
@@ -52,7 +49,7 @@ public class TimeTableActivity extends BaseActivity {
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToastTwo(TimeTableActivity.this, "服务端错误！", false);
+                        QZXTools.popToastTwo(TimeTableActivity.this, "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -99,7 +96,7 @@ isShow=true;
         back_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("", "onClick: ");
+                QZXTools.logE("onClick: ",null);
                 finish();
             }
         });

@@ -34,7 +34,9 @@
         android:layout_marginTop="@dimen/x75"
         android:background="@drawable/shape_rating_bg"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
 
         <ImageView
             android:layout_width="@dimen/x48"

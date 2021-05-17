@@ -14,8 +14,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.telit.zhkt_three.Utils.QZXTools;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class PaletteView extends View {
     private Bitmap mBufferBitmap;
     private Canvas mBufferCanvas;
 
-    private static final int MAX_CACHE_STEP = 20;
+    private static final int MAX_CACHE_STEP = 100;
 
     private List<PathDrawingInfo> mDrawingList;
     private List<PathDrawingInfo> mRemovedList;

@@ -1,23 +1,29 @@
 package com.telit.zhkt_three;
 
-import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Process;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.iflytek.oauth.EduOauth;
+import com.lzy.okgo.OkGo;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.JavaBean.MaiDian.SelfLearningVo;
@@ -29,11 +35,13 @@ import com.telit.zhkt_three.greendao.DaoMaster;
 import com.telit.zhkt_three.greendao.DaoSession;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.greenrobot.greendao.database.Database;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.CustomPushNotificationBuilder;
@@ -50,7 +58,6 @@ import okhttp3.Response;
  */
 public class MyApplication extends Application {
 
-    private static final String TAG = "MyApplication";
     private static MyApplication myApplication;
 
     public static MyApplication getInstance() {
@@ -58,6 +65,9 @@ public class MyApplication extends Application {
     }
 
     private static final String DATABASE_NAME = "greendao.db";
+
+    private static final String APP_ID = "2882303761519875618";
+    private static final String APP_KEY = "5991987565618";
 
     @Override
     public void onCreate() {
@@ -90,12 +100,38 @@ public class MyApplication extends Application {
         initGreenDAO();
         ToastUtils.init(this);
 
+        //初始化SmartRefreshLayout刷新样式
+        initSmartRefreshLayout();
 
+        //关闭日志
+       // QZXTools.openLog=false;
+        //开启日志
+        QZXTools.openLog=true;
 
+        OkGo.getInstance().init(this);
 
+        //初始化小米推送
+        initMIPush();
     }
 
+    private void initMIPush(){
+        if (shouldInit()) {
+            MiPushClient.registerPush(this, APP_ID, APP_KEY);
+        }
+    }
 
+    private boolean shouldInit() {
+        ActivityManager am = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        String mainProcessName = getPackageName();
+        int myPid = Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 设置通知栏样式 - 定义通知栏Layout
@@ -180,7 +216,7 @@ public class MyApplication extends Application {
 
         //塞入埋点数据
         StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).list().get(0);
         SelfLearningVo selfLearningVo = new SelfLearningVo();
         selfLearningVo.setsId(studentInfo.getStudentId());
         selfLearningVo.setClassId(studentInfo.getClassId());
@@ -230,7 +266,7 @@ public class MyApplication extends Application {
         Map<String, String> mapParams = new LinkedHashMap<>();
 
         StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).list().get(0);
         mapParams.put("classId", studentInfo.getClassId());
         String gradeId = studentInfo.getGradeId();
         if (!TextUtils.isEmpty(gradeId)) {
@@ -260,6 +296,24 @@ public class MyApplication extends Application {
         });
     }
 
+    //初始化SmartRefreshLayout刷新样式
+    private void initSmartRefreshLayout() {
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
+            @NonNull
+            @Override
+            public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
+                layout.setPrimaryColorsId(R.color.primaryColor_fa_bg, R.color.list_bottom_color);//全局设置主题颜色
+                return new ClassicsHeader(context).setSpinnerStyle(SpinnerStyle.Translate);
+            }
+        });
 
-
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
+            @NonNull
+            @Override
+            public RefreshFooter createRefreshFooter(@NonNull Context context, @NonNull RefreshLayout layout) {
+                //指定为经典Footer，默认是 BallPulseFooter
+                return new ClassicsFooter(context).setSpinnerStyle(SpinnerStyle.Translate);
+            }
+        });
+    }
 }

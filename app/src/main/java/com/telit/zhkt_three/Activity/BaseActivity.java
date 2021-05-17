@@ -1,22 +1,18 @@
 package com.telit.zhkt_three.Activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.gyf.immersionbar.ImmersionBar;
-import com.telit.zhkt_three.Activity.InteractiveScreen.InteractiveActivity;
+import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.manager.AppManager;
 
 /**
@@ -34,8 +30,6 @@ public class BaseActivity extends AppCompatActivity {
             "android.permission.ACCESS_FINE_LOCATION",
             "android.permission.ACCESS_COARSE_LOCATION"
     };
-
-
     private boolean isfist=true;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,8 +74,8 @@ public class BaseActivity extends AppCompatActivity {
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 // 只要有一个权限没有被授予, 则直接返回 false
-                Log.i("checkPermissionAllGranted", "checkPermissionAllGranted: "+permission);
-                return false;
+                QZXTools.logE("permission=" +permission, null);
+
             }
         }
         return true;

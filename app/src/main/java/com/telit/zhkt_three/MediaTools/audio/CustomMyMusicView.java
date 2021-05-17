@@ -293,7 +293,7 @@ public class CustomMyMusicView extends RelativeLayout implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.music_img) {
-            Log.d("zbv", "music button");
+            //Log.d("zbv", "music button");
             if (!isInitMusic) {
                 isInitMusic = true;
                 if (sourceUri != null) {

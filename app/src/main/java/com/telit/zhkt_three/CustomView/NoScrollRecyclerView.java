@@ -24,9 +24,9 @@ public class NoScrollRecyclerView extends RecyclerView {
         super(context);
     }
 
- /*   @Override
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE>>2, View.MeasureSpec.AT_MOST);
+        int height = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE>>2, MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, height);
-    }*/
+    }
 }

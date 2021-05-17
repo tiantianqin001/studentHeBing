@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/subjective_img_one"
                 android:layout_width="match_parent"
-                android:layout_height="53dp"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher" />
 
@@ -144,15 +144,52 @@
         android:layout_marginBottom="@dimen/x15"
         android:layout_marginTop="@dimen/x15"
         android:background="#E5E5E5" />
+   <com.telit.zhkt_three.CustomView.ScrollviewEdit
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:minHeight="@dimen/y180">
 
-    <EditText
-        android:id="@+id/subjective_input"
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+           <EditText
+               android:id="@+id/subjective_input"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="@null"
+               android:gravity="top"
+               android:hint="此栏输入文字说明"
+               android:textColorHint="#CCCCCC"
+               android:textSize="@dimen/x36"
+               />
+
+       </LinearLayout>
+
+
+
+   </com.telit.zhkt_three.CustomView.ScrollviewEdit>
+
+    <TextView
+        android:id="@+id/tv_teacher_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="top"
-        android:hint="此栏输入文字说明"
-        android:lines="3"
-        android:textColorHint="#CCCCCC"
-        android:textSize="@dimen/x36" />
+        android:textSize="@dimen/x36"
+        android:layout_marginTop="@dimen/x16"
+        />
+
+
+
+
+
+    <TextView
+        android:id="@+id/tv_teacher_answer_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/x36"
+        android:layout_marginTop="@dimen/x16"
+
+        />
+
+
 </LinearLayout>

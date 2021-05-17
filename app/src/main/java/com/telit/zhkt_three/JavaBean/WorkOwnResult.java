@@ -11,6 +11,35 @@ public class WorkOwnResult {
     private String state;
     private String score;
     private String answerContent;
+    private String comment;
+    private String attachment;
+
+    private String teaDesc;
+
+
+    private String answerId;
+
+    public String getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(String answerId){
+        this.answerId=answerId;
+    }
+
+    public void setTeaDesc(String teaDesc){
+        this.teaDesc=teaDesc;
+    }
+    public String getTeaDesc(){
+        return teaDesc;
+    }
+
+    public void setAttachment(String attachment){
+        this.attachment=attachment;
+    }
+    public String getAttachment(){
+        return attachment;
+    }
 
     public String getState() {
         return state;
@@ -36,12 +65,24 @@ public class WorkOwnResult {
         this.answerContent = answerContent;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return "WorkOwnResult{" +
                 "state='" + state + '\'' +
                 ", score='" + score + '\'' +
                 ", answerContent='" + answerContent + '\'' +
+                ", comment='" + comment + '\'' +
+                ", attachment='" + attachment + '\'' +
+                ", teaDesc='" + teaDesc + '\'' +
+                ", answerId='" + answerId + '\'' +
                 '}';
     }
 }

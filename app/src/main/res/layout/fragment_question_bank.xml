@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zbv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AutonomousLearning.AutoLearningActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/learning_xRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/x86"/>
+
+        <!--无资源-->
+        <ImageView
+            android:id="@+id/leak_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/leak_resource"
+            android:visibility="gone" />
+
+        <!--无网络-->
+        <LinearLayout
+            android:id="@+id/leak_net_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/leak_network" />
+
+            <TextView
+                android:id="@+id/link_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_link_net_bg"
+                android:gravity="center"
+                android:text="连接网络"
+                android:textColor="#4562CF"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+
+
+        <!--条件选择-->
+        <LinearLayout
+            android:id="@+id/learning_pull_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/learning_pull_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x99"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/learning_pull_subject_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.telit.zhkt_three.CustomView.ToUsePullView
+                        android:id="@+id/learning_pull_subject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        zbv:hint_text="选择学科"
+                        zbv:pop_choosed_text_color="@color/bg_blue"
+                        zbv:pop_menu_bg="@android:color/white"
+                        zbv:pop_text_color="@color/word_gray_deep"
+                        zbv:pull_icon="@mipmap/down_gray"
+                        zbv:text_color="@color/word_gray_deep"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/learning_pull_section_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.telit.zhkt_three.CustomView.ToUsePullView
+                        android:id="@+id/learning_pull_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        zbv:hint_text="选择学段"
+                        zbv:pop_choosed_text_color="@color/bg_blue"
+                        zbv:pop_menu_bg="@android:color/white"
+                        zbv:pop_text_color="@color/word_gray_deep"
+                        zbv:pull_icon="@mipmap/down_gray"
+                        zbv:text_color="@color/word_gray_deep"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/learning_pull_grade_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.telit.zhkt_three.CustomView.ToUsePullView
+                        android:id="@+id/learning_pull_grade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        zbv:hint_text="选择年级"
+                        zbv:pop_choosed_text_color="@color/bg_blue"
+                        zbv:pop_menu_bg="@android:color/white"
+                        zbv:pop_text_color="@color/word_gray_deep"
+                        zbv:pull_icon="@mipmap/down_gray"
+                        zbv:text_color="@color/word_gray_deep"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/learning_pull_press_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone">
+
+                    <com.telit.zhkt_three.CustomView.ToUsePullView
+                        android:id="@+id/learning_pull_press"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        zbv:hint_text="出版社"
+                        zbv:pop_choosed_text_color="@color/bg_blue"
+                        zbv:pop_menu_bg="@android:color/white"
+                        zbv:pop_text_color="@color/word_gray_deep"
+                        zbv:pull_icon="@mipmap/down_gray"
+                        zbv:text_color="@color/word_gray_deep"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/learning_pull_select_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.telit.zhkt_three.CustomView.ToUsePullView
+                        android:id="@+id/learning_pull_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        zbv:hint_text="手动组卷"
+                        zbv:pop_choosed_text_color="@color/bg_blue"
+                        zbv:pop_menu_bg="@android:color/white"
+                        zbv:pop_text_color="@color/word_gray_deep"
+                        zbv:pull_icon="@mipmap/down_gray"
+                        zbv:text_color="@color/word_gray_deep"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

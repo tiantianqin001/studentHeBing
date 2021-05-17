@@ -729,7 +729,7 @@ public class QZXTools {
     //--------------------------DIMENSION---------------------
 
     //------------------------LOGCAT----------------------------
-    private static final boolean openLog = true;
+    public static  boolean openLog = true;
 
     /**
      * 如果传入的Exception不为空就会打印出异常信息，否则置空普通log处理
@@ -750,7 +750,9 @@ public class QZXTools {
         }
     }
 
-    public static void logD(String content,Exception e) {
+
+
+    public static void logD(String content, Exception e) {
         if (openLog) {
             Log.d(TAG, content);
             if (e == null) {
@@ -2581,6 +2583,33 @@ public class QZXTools {
 //        }
     }
 
+
+    /**
+     * 安装应用
+     *
+     * @param file
+     */
+    public static void installApk(Context context, File file) {
+        Log.i(TAG, "安装应用");
+
+        try {
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                Uri contentUri = FileProvider.getUriForFile(context.getApplicationContext(), context.getPackageName() + ".fileprovider", file);
+                intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+            } else {
+                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            }
+            intent.setAction(Intent.ACTION_VIEW);
+            context.startActivity(intent);
+
+        } catch (Exception e) {
+            Log.i("OkGo ", e.toString());
+        }
+    }
+
+
     /* 卸载apk */
     public static void uninstallApk(Context context, String packageName) {
         Uri uri = Uri.parse("package:" + packageName);
@@ -2693,11 +2722,46 @@ public class QZXTools {
         return convert.toUpperCase();
     }
 
-    public static String getDeviceSN(){
-
-        String serialNumber = android.os.Build.SERIAL;
-
+    public static String getDeviceSN() {
+        String serialNumber = Build.SERIAL;
         return serialNumber;
+    }
+
+    /* @author suncat
+  2  * @category 判断是否有外网连接（普通方法不能判断外网的网络是否连接，比如连接上局域网）
+  3  * @return
+  4  */
+    public static final boolean ping() {
+
+        String result = null;
+        try {
+            String ip = "www.baidu.com";// ping 的地址，可以换成任何一种可靠的外网
+            Process p = Runtime.getRuntime().exec("ping -c 3 -w 100 " + ip);// ping网址3次
+            // 读取ping的内容，可以不加
+            InputStream input = p.getInputStream();
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            StringBuffer stringBuffer = new StringBuffer();
+            String content = "";
+            while ((content = in.readLine()) != null) {
+                stringBuffer.append(content);
+            }
+            Log.d("------ping-----", "result content : " + stringBuffer.toString());
+            // ping的状态
+            int status = p.waitFor();
+            if (status == 0) {
+                result = "success";
+                return true;
+            } else {
+                result = "failed";
+            }
+        } catch (IOException e) {
+            result = "IOException";
+        } catch (InterruptedException e) {
+            result = "InterruptedException";
+        } finally {
+            Log.d("----result---", "result = " + result);
+        }
+        return false;
     }
 
 }

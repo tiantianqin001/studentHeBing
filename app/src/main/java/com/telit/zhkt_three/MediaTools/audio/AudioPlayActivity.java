@@ -3,6 +3,7 @@ package com.telit.zhkt_three.MediaTools.audio;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,6 +49,10 @@ public class AudioPlayActivity extends BaseActivity {
         audio_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (customMyMusicView!=null){
+                    customMyMusicView.releaseMusicResource();
+                }
+
                 finish();
             }
         });
@@ -72,7 +77,7 @@ public class AudioPlayActivity extends BaseActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(shareId)) {
+    /*    if (TextUtils.isEmpty(shareId)) {
             //隐藏评论
             audio_note.setVisibility(View.GONE);
         } else {
@@ -81,7 +86,7 @@ public class AudioPlayActivity extends BaseActivity {
             } else {
                 audio_note.setVisibility(View.GONE);
             }
-        }
+        }*/
 
         if (TextUtils.isEmpty(audioFileName)) {
             customMyMusicView.setMusicName(null);
@@ -119,4 +124,27 @@ public class AudioPlayActivity extends BaseActivity {
         }
         super.onDestroy();
     }
+
+    /**
+     * 监听返回事件
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+            finish();
+
+            if (customMyMusicView != null) {
+                customMyMusicView.releaseMusicResource();
+            }
+
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
+
 }

@@ -97,7 +97,7 @@ public class SelectGroupFragment extends DialogFragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(getContext(), "服务端错误！", false);
+                    QZXTools.popToast(getContext(), "当前网络不佳....", false);
 
                     progress_linear.setVisibility(View.GONE);
 

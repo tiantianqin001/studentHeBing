@@ -10,4 +10,5 @@ public interface SimpleClientListener {
     void offLine();
 
     void receiveData(String msgInfo);
+    void isNoUser();
 }

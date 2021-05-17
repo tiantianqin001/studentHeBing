@@ -11,5 +11,6 @@
         android:layout_height="@dimen/x800"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/x10"
-        app:mcv_selectionMode="range"></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+        app:mcv_selectionMode="range"/>
+
 </RelativeLayout>

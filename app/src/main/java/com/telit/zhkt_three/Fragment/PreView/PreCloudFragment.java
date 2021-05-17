@@ -3,7 +3,6 @@ package com.telit.zhkt_three.Fragment.PreView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -28,16 +27,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.telit.zhkt_three.Adapter.PreView.PreCloudRVAdapter;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.Fragment.Dialog.TBSDownloadDialog;
 import com.telit.zhkt_three.JavaBean.Gson.PreQueryDiskBeans;
 import com.telit.zhkt_three.JavaBean.Gson.PreShareFilesBeans;
@@ -56,17 +55,18 @@ import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.SerializeUtil;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.ViewUtils;
 import com.telit.zhkt_three.Utils.ZBVPermission;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
-
 import com.zbv.basemodel.WpsUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -96,8 +96,8 @@ import okhttp3.Response;
  * <p>
  * 使用SwipeRefreshLayout + RecyclerView  网格视图 row=4
  */
-public class PreCloudFragment extends android.support.v4.app.Fragment  implements View.OnClickListener,
-        ValueCallback<String>, ZBVPermission.PermPassResult,WpsUtil.WpsInterface  {
+public class PreCloudFragment extends android.support.v4.app.Fragment implements View.OnClickListener,
+        ValueCallback<String>, ZBVPermission.PermPassResult, WpsUtil.WpsInterface, PreCloudRVAdapter.OnItemCollectionClickListener {
 
     private LinearLayout pre_cloud_bread;
     private TextView pre_bread_tv_home;
@@ -129,7 +129,7 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -191,7 +191,7 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                             request_retry_layout.setVisibility(View.GONE);
                             leak_resource_layout.setVisibility(View.VISIBLE);
                         }
-                        preCloudRVAdapter.notifyDataSetChanged();
+                        preCloudRVAdapter.setmDatas(preViewDiaplayBeans);
                     }
 
                     break;
@@ -244,7 +244,8 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         pre_cloud_content_recycler.setLayoutManager(gridLayoutManager);
         preViewDiaplayBeans = new ArrayList<>();
-        preCloudRVAdapter = new PreCloudRVAdapter(getActivity(), preViewDiaplayBeans);
+        preCloudRVAdapter = new PreCloudRVAdapter(getActivity(), preViewDiaplayBeans,"1");
+        preCloudRVAdapter.setOnItemCollectionClickListener(this);
         pre_cloud_content_recycler.setAdapter(preCloudRVAdapter);
 
         pre_cloud_content_swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -283,13 +284,12 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                 }
             }
         });
+        if (!isWpsBack){
 
-        requestDatas(false, true);
+            requestDatas(false, true);
+        }
         return view;
     }
-
-
-
 
 
     @Override
@@ -380,7 +380,10 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
         Map<String, String> paraMap = new HashMap<>();
         paraMap.put("classId", UserUtils.getClassId());
         paraMap.put("studentId", UserUtils.getUserId());
-        paraMap.put("dateSize", -1 + "");
+        //paraMap.put("dateSize", -1 + "");
+        paraMap.put("pageNo", curPageNo + "");
+        //一次加载十个数据
+        paraMap.put("pageSize", PageSize + "");
 
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
             @Override
@@ -440,6 +443,11 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                             if (!TextUtils.isEmpty(sysFileShare.getCreateDate())) {
                                 preViewDiaplayBean.setCreateDate(sysFileShare.getCreateDate());
                             }
+
+                            preViewDiaplayBean.setCollectionState(sysFileShare.getCollectionState());
+                            preViewDiaplayBean.setCollectionTime(sysFileShare.getCollectionTime());
+                            preViewDiaplayBean.setCollectionId(sysFileShare.getCollectionId());
+                            preViewDiaplayBean.setFileId(sysFileShare.getFileId()+"");
 
                             //fileId
                             if (!TextUtils.isEmpty(sysFileShare.getFileId()+"")) {
@@ -592,6 +600,11 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                             preViewDiaplayBean.setCreateDate(disk.getCreateDate());
                         }
 
+                        preViewDiaplayBean.setCollectionState(disk.getCollectionState());
+                        preViewDiaplayBean.setCollectionTime(disk.getCollectionTime());
+                        preViewDiaplayBean.setCollectionId(disk.getCollectionId());
+                        preViewDiaplayBean.setFileId(disk.getFileId()+"");
+
                         //id
                         if (disk.getId() != null) {
                             preViewDiaplayBean.setId(disk.getId());
@@ -685,6 +698,7 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
             intent_comment.putExtra("resId", clickTV.getFileId());
             intent_comment.putExtra("resName",  clickTV.getFileName());
             intent_comment.putExtra("studentId", UserUtils.getUserId() );
+            intent_comment.putExtra("curPosition", clickTV.getCurPosition());
             startActivity(intent_comment);
         }else {
             //显示评价的结果
@@ -694,12 +708,23 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
             intent_comment.putExtra("resId", clickTV.getFileId());
             intent_comment.putExtra("resName",  clickTV.getFileName());
             intent_comment.putExtra("commentId", clickTV.getCommentId() );
+            intent_comment.putExtra("resStars", clickTV.getResStars());
             startActivity(intent_comment);
         }
+    }
 
+    //评价的完成的监听
+    @Subscriber(tag = Constant.click_cloud_item_ping_jia_submit, mode = ThreadMode.MAIN)
+    public void handlerCloudClickPingJiaSubmit(PreViewDisplayBean preViewDisplayBean) {
+        if (preViewDisplayBean!=null&&preViewDisplayBean.getCurPosition()!=-1){
+            int curPosition = preViewDisplayBean.getCurPosition();
+            preViewDiaplayBeans.get(curPosition).setStatus("1");
+            preViewDiaplayBeans.get(curPosition).setAvgStar(preViewDisplayBean.getAvgStar());
+            preViewDiaplayBeans.get(curPosition).setShareTitle(preViewDisplayBean.getShareTitle());
+            preCloudRVAdapter.notifyDataSetChanged();
 
-
-
+            QZXTools.logE("评价的完成"+curPosition, null);
+        }
     }
 
     /**
@@ -710,6 +735,10 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Subscriber(tag = Constant.CLICK_CLOUD_ITEM, mode = ThreadMode.MAIN)
     public void handlerCloudClick(PreViewDisplayBean clickTV) {
+        if (!ViewUtils.isFastClick(1000)){
+            return;
+        }
+
         this.clickTV = clickTV;
         if (clickTV.getType() == 0) {
             //埋点学习资源次数
@@ -762,6 +791,7 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                 intent_img.putExtra("shareTitle", clickTV.getShareTitle());
                 intent_img.putExtra("resId", clickTV.getResId());
                 intent_img.putExtra("resName", clickTV.getFileName());
+                intent_img.putExtra("flag", "1");
 
                 intent_img.putExtra("resComment", clickTV.getCommentContent());
 
@@ -879,12 +909,9 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
 
 
                        wpsUtil.openDocument(new File(recordStatus.getSavedFilePath()));
-
-
+                   }else {
+                       QZXTools.popToast(getContext(), "请先安装WPS Office", false);
                    }
-
-
-
                     return;
                 }
             }
@@ -991,6 +1018,8 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
                             }
                             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivity(intent);
+                        }else {
+                            QZXTools.popToast(getContext(), "请先安装WPS Office", false);
                         }
                         //查看评论
                         requestWindowPermission();
@@ -1185,65 +1214,119 @@ public class PreCloudFragment extends android.support.v4.app.Fragment  implement
         }
     }
 
- /*   public void appBack() {
-
-        //如果有评论关闭评论
-        //隐藏windowmanage
-        if (scheduledThreadPool!=null){
-            scheduledThreadPool.shutdownNow();
-        }
-        try {
-            if(windowManager!=null && pinglunView!=null){
-                windowManager.removeView(pinglunView);
-            }
-        }catch (Exception e){
-
-        }finally {
-            windowManager=null;
-            pinglunView=null;
-        }
-
-        try {
-            //获取ActivityManager
-            ActivityManager mAm = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-            //获得当前运行的task
-            List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(1);
-            for (ActivityManager.RunningTaskInfo rti : taskList) {
-                if (rti.topActivity.getPackageName().equals(getActivity().getPackageName())) {
-                    mAm.moveTaskToFront(rti.id, ActivityManager.MOVE_TASK_WITH_HOME);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    //获取当前应用的app
-    private String getCurrentApp(){
-        ActivityManager am = (ActivityManager)getActivity(). getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
-        ActivityManager.RunningTaskInfo runningTaskInfo = runningTasks.get(0);
-        ComponentName topActivity = runningTaskInfo.topActivity;
-        String packageName = topActivity.getPackageName();
-
-        Log.i("qin123", "getCurrentApp: "+packageName);
-        return packageName;
-    }
-
 
     @Override
     public void doRequest(String filePath) {
         Log.d("MainActivity", "这里处理你的文件保存事件");
     }
-
+    private static boolean isWpsBack=false;
     @Override
     public void doFinish() {
-        wpsUtil.appBack();
-
+       // wpsUtil.appBack();
+       // isWpsBack=true;
         if (TextUtils.isEmpty(clickTV.getCommentContent())) {
           //  popCommentWindow();
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isWpsBack=false;
+    }
+
+    //资源收藏成功的事件
+    @Subscriber(tag = Constant.Resource_Share_Collect_Success, mode = ThreadMode.MAIN)
+    public void collectionResource(String tag) {
+        QZXTools.logE("资源收藏成功的事件",null);
+    }
+
+    //收藏
+    @Override
+    public void onItemCollectionClickListener(PreCloudRVAdapter.PreCloudViewHolder holder, int position) {
+        QZXTools.logE("收藏："+position,null);
+
+        if (ViewUtils.isFastClick(1000)){
+            PreViewDisplayBean preViewDisplayBean = preViewDiaplayBeans.get(position);
+            if ("1".equals(preViewDisplayBean.getCollectionState())){
+                collectYeOrNo(preViewDisplayBean,UserUtils.getUserId(),preViewDiaplayBeans.get(position).getShareId(),"0",holder);
+            }else {
+                collectYeOrNo(preViewDisplayBean,UserUtils.getUserId(),preViewDiaplayBeans.get(position).getShareId(),"1",holder);
+            }
+        }
+
+    }
+
+    /**
+     * 收藏或取消收藏
+     *
+     * @param preViewDisplayBean
+     * @param studentId
+     * @param shareId
+     */
+    private void collectYeOrNo(PreViewDisplayBean preViewDisplayBean, String studentId, String shareId,String collectionState,PreCloudRVAdapter.PreCloudViewHolder holder){
+        String url = UrlUtils.BaseUrl + UrlUtils.CollectShareYesOrNo;
+
+        Map<String, String> mapParams = new LinkedHashMap<>();
+        mapParams.put("studentId", studentId);
+        mapParams.put("shareId", shareId);
+        mapParams.put("fileId", preViewDisplayBean.getFileId());
+        mapParams.put("collectionId", preViewDisplayBean.getCollectionId());
+        mapParams.put("collectionState", collectionState);
+
+        QZXTools.logE("param:"+new Gson().toJson(mapParams),null);
+
+        /**
+         * post传参数时，不管是int类型还是布尔类型统一传入字符串的样式即可
+         * */
+        OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, mapParams, new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        QZXTools.popToast(getActivity(), getResources().getString(R.string.current_net_err), false);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resultJson = response.body().string();
+                    QZXTools.logE("commit questions resultJson=" + resultJson, null);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            QZXTools.logE("query dir resultJson=" + resultJson, null);
+
+                            JSONObject jsonObject= JSONObject.parseObject(resultJson);
+                            String collectionId = jsonObject.getString("result");
+                            String errorCode = jsonObject.getString("errorCode");
+
+                            if ("1".equals(errorCode)){
+                                preViewDisplayBean.setCollectionState(collectionState);
+
+                                ImageView iv_collection = holder.itemView.findViewById(R.id.iv_collection);
+                                if ("1".equals(collectionState)){
+                                    iv_collection.setImageResource(R.mipmap.collect_red_icon);
+                                }else {
+                                    iv_collection.setImageResource(R.mipmap.collect_gray_icon);
+                                }
+
+                                preViewDisplayBean.setCollectionId(collectionId);
+
+                                EventBus.getDefault().post("Cloud_Share_Collect_Success", Constant.Cloud_Share_Collect_Success);
+                            }
+                        }
+                    });
+                } else {
+                    QZXTools.popToast(getActivity(), "没有相关资源！", false);
+                }
+            }
+        });
     }
 }

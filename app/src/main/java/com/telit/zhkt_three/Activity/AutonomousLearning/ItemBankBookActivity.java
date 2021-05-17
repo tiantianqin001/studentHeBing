@@ -29,8 +29,6 @@ import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.ToUsePullView;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionDifficult;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionKnowledge;
@@ -41,6 +39,7 @@ import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.ScreenUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
@@ -99,6 +98,11 @@ public class ItemBankBookActivity extends BaseActivity implements ToUsePullView.
     @BindView(R.id.link_network)
     TextView link_network;
 
+    @BindView(R.id.ll_knowledge)
+    LinearLayout ll_knowledge;
+
+
+
     //题型Map和难度Map,点击进入知识点后就固定了,汉字为key，下标为值
     private Map<String, String> questTypeMap;
     private Map<String, String> difficultyMap;
@@ -148,7 +152,7 @@ public class ItemBankBookActivity extends BaseActivity implements ToUsePullView.
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(ItemBankBookActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(ItemBankBookActivity.this, getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -240,6 +244,8 @@ public class ItemBankBookActivity extends BaseActivity implements ToUsePullView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_bank_knowledge);
         unbinder = ButterKnife.bind(this);
+
+        ll_knowledge.setPadding(0,0,0, ScreenUtils.getNavigationBarHeight(this));
 
         EventBus.getDefault().register(this);
         isShow=true;

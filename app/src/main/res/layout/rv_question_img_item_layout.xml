@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.telit.zhkt_three.Activity.PreView.HackyProblematicViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     >
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photoView_question_item"
         android:layout_width="match_parent"
         android:layout_height="388dp"
 
+
         />
 
-</com.telit.zhkt_three.Activity.PreView.HackyProblematicViewGroup>
+</LinearLayout>

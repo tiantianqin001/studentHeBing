@@ -87,7 +87,7 @@
         <!--批改作业-->
         <TextView
             android:id="@+id/tv_comment_teacher"
-            android:layout_width="match_parent"
+            android:layout_width="900dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/x18"
             android:textSize="@dimen/x32"

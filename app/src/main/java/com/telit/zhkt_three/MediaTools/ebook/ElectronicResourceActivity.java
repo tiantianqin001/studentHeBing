@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -91,6 +90,8 @@ public class ElectronicResourceActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_electronic_resource);
         unbinder = ButterKnife.bind(this);
+
+        QZXTools.logE("电子书课本详情1",null);
 
         Intent intent = getIntent();
 

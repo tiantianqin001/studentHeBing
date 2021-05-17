@@ -97,14 +97,11 @@ public class SimpleSocketLinkServer extends Service {
                     @Override
                     public void serviceFound(DNSSDService browser, int flags, int ifIndex,
                                              final String serviceName, String regType, String domain) {
-                        Log.i("qin", "Found " + serviceName + "......domain="
-                                + domain + "......regType=" + regType + "...browser=" + browser);
-                        Log.d("TAG", "Found " + serviceName);
+
                     }
                     @Override
                     public void serviceLost(DNSSDService browser, int flags, int ifIndex,
                                             String serviceName, String regType, String domain) {
-                        Log.i("qin2345", "Lost " + serviceName);
                       String serviceName1=  SharedPreferenceUtil.getInstance(MyApplication.getInstance())
                                 .getString("serviceName");
                         if (TextUtils.isEmpty(serviceName1) || TextUtils.isEmpty(serviceName)){
@@ -125,12 +122,12 @@ public class SimpleSocketLinkServer extends Service {
 
                     @Override
                     public void operationFailed(DNSSDService service, int errorCode) {
-                        Log.e("qin2345", "error: " + errorCode);
+
 
                     }
                 });
             } catch (DNSSDException e) {
-                Log.e("TAG", "error", e);
+
             }
 
         }

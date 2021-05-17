@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.zbv.meeting.util.LameUtil;
 
@@ -100,7 +101,7 @@ public class DataEncodeThread extends HandlerThread implements AudioRecord.OnRec
             Task task = mTasks.remove(0);
             short[] buffer = task.getData();
             int readSize = task.getReadSize();
-            int encodedSize = com.zbv.meeting.util.LameUtil.encode(buffer, buffer, readSize, mMp3Buffer);
+            int encodedSize = LameUtil.encode(buffer, buffer, readSize, mMp3Buffer);
             if (encodedSize > 0) {
                 try {
                     mFileOutputStream.write(mMp3Buffer, 0, encodedSize);
@@ -118,11 +119,12 @@ public class DataEncodeThread extends HandlerThread implements AudioRecord.OnRec
      */
     private void flushAndRelease() {
         //将MP3结尾信息写入buffer中
-        final int flushResult = com.zbv.meeting.util.LameUtil.flush(mMp3Buffer);
+        final int flushResult = LameUtil.flush(mMp3Buffer);
         if (flushResult > 0) {
             try {
                 mFileOutputStream.write(mMp3Buffer, 0, flushResult);
             } catch (IOException e) {
+                Log.e("IOException:",e.getMessage());
                 e.printStackTrace();
             } finally {
                 if (mFileOutputStream != null) {

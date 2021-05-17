@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.LoginFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -37,6 +37,8 @@ import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
 import com.telit.zhkt_three.CustomView.ToUsePullView;
+import com.telit.zhkt_three.Fragment.AutonomousLearning.ReadFragment;
+import com.telit.zhkt_three.Fragment.AutonomousLearning.ResourceFragment;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionGrade;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionKnowledge;
@@ -50,8 +52,6 @@ import com.telit.zhkt_three.JavaBean.Gson.ResourceInfoBean;
 import com.telit.zhkt_three.JavaBean.Resource.FillResource;
 import com.telit.zhkt_three.JavaBean.Resource.LocalResourceRecord;
 import com.telit.zhkt_three.JavaBean.Resource.ResourceBean;
-import com.telit.zhkt_three.JavaBean.Resource.ResourceCondition;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
@@ -62,7 +62,6 @@ import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
 import com.telit.zhkt_three.greendao.LocalResourceRecordDao;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
 import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.IOException;
@@ -100,12 +99,21 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
     LinearLayout layout_audio;
     @BindView(R.id.learning_picture)
     LinearLayout layout_picture;
+    @BindView(R.id.learning_resource)
+    LinearLayout learning_resource;
+    @BindView(R.id.learning_read)
+    LinearLayout learning_read;
     @BindView(R.id.learning_book)
     LinearLayout layout_book;
     @BindView(R.id.learning_item_bank)
     LinearLayout layout_item_bank;
     @BindView(R.id.learning_xRecycler)
     XRecyclerView xRecyclerView;
+
+    @BindView(R.id.fl_list)
+    FrameLayout fl_list;
+    @BindView(R.id.fl_resource)
+    FrameLayout fl_resource;
 
     //条件选择
     @BindView(R.id.learning_pull_all)
@@ -133,6 +141,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.learning_pull_press)
     ToUsePullView press_view;
 
+    private List<Fragment> fragments = new ArrayList<>();
 
     //缺少网络和资源视图
     @BindView(R.id.leak_resource)
@@ -205,7 +214,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(AutoLearningActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(AutoLearningActivity.this, "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -301,10 +310,12 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                         press_view.setPullContent(chubansheList.get(0));
                         section_view.setPullContent(xueqiList.get(0));
 
+                        curPageNo = 1;
+
                         fetchNetworkForResourceContent(false, subjectMap.get(subject_view.getPullContent()),
                                 gradeMap.get(grade_view.getPullContent()),
-                                pressMap.get(press_view.getPullContent()),
-                                sectionMap.get(section_view.getPullContent()));
+                                sectionMap.get(section_view.getPullContent()),
+                                pressMap.get(press_view.getPullContent()));
 
                     }
 
@@ -362,21 +373,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
         MyApplication.getInstance().AutoLearningMaiDian(MyApplication.FLAG_AUTO_LEARNING_TWO, -1, -1, "");
 
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            customHeadLayout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
+        customHeadLayout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
 
         //网格布局，一行四列
         fillResourceList = new ArrayList<>();
@@ -387,8 +384,10 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         xRecyclerView.setLayoutManager(gridLayoutManager);
         xRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        rvAutoLearningAdapter = new RVAutoLearningAdapter(this, fillResourceList);
+        rvAutoLearningAdapter = new RVAutoLearningAdapter(this, fillResourceList,"1");
         xRecyclerView.setAdapter(rvAutoLearningAdapter);
+
+        xRecyclerView.setItemViewCacheSize(20);
 
         //加载更多回调
         xRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -413,11 +412,9 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onLoadMore() {
-
                 try {
                     curPageNo++;
                     if (isItemBank) {
-
                     } else {
                         fetchNetworkForResourceContent(true, subjectMap.get(subject_view.getPullContent()),
                                 gradeMap.get(grade_view.getPullContent()), sectionMap.get(section_view.getPullContent()),
@@ -427,7 +424,6 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                     e.fillInStackTrace();
                     QZXTools.popToast(MyApplication.getInstance(),"网络不可用",true);
                 }
-
             }
         });
 
@@ -436,6 +432,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
         layout_micro.setOnClickListener(this);
         layout_audio.setOnClickListener(this);
         layout_picture.setOnClickListener(this);
+        learning_resource.setOnClickListener(this);
+        learning_read.setOnClickListener(this);
         layout_book.setOnClickListener(this);
         layout_item_bank.setOnClickListener(this);
 
@@ -526,6 +524,12 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
             auto_learning_pull_tag.setVisibility(View.GONE);
         }
 
+        initFragment();
+    }
+
+    private void initFragment(){
+        fragments.add(ResourceFragment.newInstance(""));
+        fragments.add(ReadFragment.newInstance());
     }
 
     /**
@@ -639,7 +643,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
         OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
+                QZXTools.logE( "onFailure: "+e.getMessage(),e);
                 //服务端错误
                 mHandler.sendEmptyMessage(Server_Error);
             }
@@ -677,6 +681,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
             }
         });
     }
+
     private void fetchNetworkForSubjectGrade(String xd, String isSearchChapter, String subjectId, String pressId) {
         String url = UrlUtils.BaseUrl + UrlUtils.QueryKnowledgeSubjectGrade;
         Map<String, String> mapParams = new LinkedHashMap<>();
@@ -1213,7 +1218,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
+                QZXTools.logE("onFailure: "+e.getMessage(),e);
                 //服务端错误
                 mHandler.sendEmptyMessage(Server_Error);
             }
@@ -1245,7 +1250,7 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                             gradeMap.put(gradeBean.getName(), gradeBean.getCode());
                         }
 
-                        Log.i(TAG, "onResponse: "+gradeMap);
+                        QZXTools.logE("onResponse: "+gradeMap,null);
                         //出版社
                         List<ResourceConditionBean.ResultBean.PressBean> press = result.getPress();
                         for (ResourceConditionBean.ResultBean.PressBean pressBean : press) {
@@ -1256,6 +1261,10 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                         for (ResourceConditionBean.ResultBean.TermBean termBean : term) {
                             sectionMap.put(termBean.getName(), termBean.getId());
                         }
+
+
+                        QZXTools.logE("sectionMap: "+new Gson().toJson(sectionMap),null);
+
 
                         mHandler.sendEmptyMessage(Operate_Resource_Condition_Success);
                     }catch (Exception e){
@@ -1331,10 +1340,12 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
             paraMap.put("press", pressId);
         }
 
+        QZXTools.logE("paraMap:"+new Gson().toJson(paraMap),null);
+
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
+                QZXTools.logE("onFailure: "+e.getMessage(),e);
                 //服务端错误
                 mHandler.sendEmptyMessage(Server_Error);
             }
@@ -1413,6 +1424,9 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.learning_micro:
+                fl_list.setVisibility(View.VISIBLE);
+                fl_resource.setVisibility(View.GONE);
+
                 resetViewInterface(false);
 
                 if (pullOperationBeans != null && pullOperationBeans.size() > 0) {
@@ -1424,6 +1438,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 layout_micro.setSelected(true);
                 layout_audio.setSelected(false);
                 layout_picture.setSelected(false);
+                learning_resource.setSelected(false);
+                learning_read.setSelected(false);
                 layout_book.setSelected(false);
                 layout_item_bank.setSelected(false);
 
@@ -1432,6 +1448,9 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 fetchNetworkForResourceCondition();
                 break;
             case R.id.learning_audio:
+                fl_list.setVisibility(View.VISIBLE);
+                fl_resource.setVisibility(View.GONE);
+
                 resetViewInterface(false);
 
                 if (pullOperationBeans != null && pullOperationBeans.size() > 0) {
@@ -1451,6 +1470,9 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 fetchNetworkForResourceCondition();
                 break;
             case R.id.learning_picture:
+                fl_list.setVisibility(View.VISIBLE);
+                fl_resource.setVisibility(View.GONE);
+
                 resetViewInterface(false);
 
                 if (pullOperationBeans != null && pullOperationBeans.size() > 0) {
@@ -1462,6 +1484,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 layout_micro.setSelected(false);
                 layout_audio.setSelected(false);
                 layout_picture.setSelected(true);
+                learning_resource.setSelected(false);
+                learning_read.setSelected(false);
                 layout_book.setSelected(false);
                 layout_item_bank.setSelected(false);
 
@@ -1470,6 +1494,9 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 fetchNetworkForResourceCondition();
                 break;
             case R.id.learning_book:
+                fl_list.setVisibility(View.VISIBLE);
+                fl_resource.setVisibility(View.GONE);
+
                 resetViewInterface(false);
 
                 if (pullOperationBeans != null && pullOperationBeans.size() > 0) {
@@ -1481,6 +1508,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 layout_micro.setSelected(false);
                 layout_audio.setSelected(false);
                 layout_picture.setSelected(false);
+                learning_resource.setSelected(false);
+                learning_read.setSelected(false);
                 layout_book.setSelected(true);
                 layout_item_bank.setSelected(false);
 
@@ -1489,6 +1518,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 fetchNetworkForResourceCondition();
                 break;
             case R.id.learning_item_bank:
+                fl_list.setVisibility(View.VISIBLE);
+                fl_resource.setVisibility(View.GONE);
 
                 if (pullOperationBeans != null && pullOperationBeans.size() > 0) {
                     auto_learning_pull_tag.setVisibility(View.GONE);
@@ -1501,6 +1532,8 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 layout_micro.setSelected(false);
                 layout_audio.setSelected(false);
                 layout_picture.setSelected(false);
+                learning_resource.setSelected(false);
+                learning_read.setSelected(false);
                 layout_book.setSelected(false);
                 layout_item_bank.setSelected(true);
 
@@ -1511,6 +1544,34 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                  * 请求学段信息
                  * */
                 fetchNetworkForSection();
+                break;
+            case R.id.learning_resource:
+                layout_micro.setSelected(false);
+                layout_audio.setSelected(false);
+                layout_picture.setSelected(false);
+                learning_resource.setSelected(true);
+                learning_read.setSelected(false);
+                layout_book.setSelected(false);
+                layout_item_bank.setSelected(false);
+
+                fl_list.setVisibility(View.GONE);
+                fl_resource.setVisibility(View.VISIBLE);
+
+                showResourceOrReadFragment(0,1);
+                break;
+            case R.id.learning_read:
+                layout_micro.setSelected(false);
+                layout_audio.setSelected(false);
+                layout_picture.setSelected(false);
+                learning_resource.setSelected(false);
+                learning_read.setSelected(true);
+                layout_book.setSelected(false);
+                layout_item_bank.setSelected(false);
+
+                fl_list.setVisibility(View.GONE);
+                fl_resource.setVisibility(View.VISIBLE);
+
+                showResourceOrReadFragment(1,0);
                 break;
             case R.id.link_network:
                 QZXTools.enterWifiSetting(this);
@@ -1676,6 +1737,18 @@ public class AutoLearningActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
         }
+    }
+
+    /**
+     * 展示省平台资源,课外读物
+     */
+    private void showResourceOrReadFragment(int showIndex,int hideIndex){
+        FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+        trx.hide(fragments.get(hideIndex));
+        if (!fragments.get(showIndex).isAdded()) {
+            trx.add(R.id.fl_resource, fragments.get(showIndex));
+        }
+        trx.show(fragments.get(showIndex)).commit();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

@@ -1,6 +1,7 @@
 package com.telit.zhkt_three.Adapter.Mistake;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,9 +15,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.telit.zhkt_three.CustomView.CircleImageView;
 import com.telit.zhkt_three.JavaBean.MistakesCollection.PerfectRightBean;
+import com.telit.zhkt_three.MediaTools.image.ImageLookActivity;
 import com.telit.zhkt_three.R;
-import com.telit.zhkt_three.Utils.QZXTools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,6 +111,37 @@ public class PerfectAnswerRightAdapter extends RecyclerView.Adapter<PerfectAnswe
                         break;
                 }
             }
+
+            perfectAnswerRightViewHolder.perfect_answer_pic_one.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ImageLookActivity.class);
+                    intent.putStringArrayListExtra("imgResources", (ArrayList<String>) imgList);
+                    intent.putExtra("NeedComment", false);
+                    intent.putExtra("curImgIndex", 0);
+                    context.startActivity(intent);
+                }
+            });
+            perfectAnswerRightViewHolder.perfect_answer_pic_two.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ImageLookActivity.class);
+                    intent.putStringArrayListExtra("imgResources", (ArrayList<String>) imgList);
+                    intent.putExtra("NeedComment", false);
+                    intent.putExtra("curImgIndex", 1);
+                    context.startActivity(intent);
+                }
+            });
+            perfectAnswerRightViewHolder.perfect_answer_pic_three.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ImageLookActivity.class);
+                    intent.putStringArrayListExtra("imgResources", (ArrayList<String>) imgList);
+                    intent.putExtra("NeedComment", false);
+                    intent.putExtra("curImgIndex", 2);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }

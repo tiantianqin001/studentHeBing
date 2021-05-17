@@ -87,7 +87,6 @@ public class FileReceiveDialog extends DialogFragment {
                     new OkHttp3_0Utils.DownloadCallback() {
                         @Override
                         public void downloadProcess(int value) {
-                            Log.i(TAG, "downloadProcess: "+value);
                             receive_progressBar.setCurProgress(value);
                         }
 

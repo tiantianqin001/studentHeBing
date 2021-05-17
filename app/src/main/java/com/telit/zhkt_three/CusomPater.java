@@ -8,7 +8,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class CusomPater extends ViewPager {
+import com.telit.zhkt_three.CustomView.LazyViewPager;
+
+public class CusomPater extends LazyViewPager {
     public CusomPater(@NonNull Context context) {
         super(context);
     }
@@ -34,13 +36,13 @@ public class CusomPater extends ViewPager {
     public boolean onInterceptTouchEvent(MotionEvent event) {
         boolean b=false;
         try {
-             b = super.onInterceptTouchEvent(event);
+            b = super.onInterceptTouchEvent(event);
 
         } catch (IllegalArgumentException  e) {
             Log.e( "ImageOriginPager-error" , "IllegalArgumentException 错误被活捉了！");
             e.printStackTrace();
             b=true;
         }
-      return b;
+        return b;
     }
 }

@@ -1,7 +1,6 @@
 package com.telit.zhkt_three.Fragment;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.telit.zhkt_three.Activity.InteractiveScreen.InteractiveActivity;
 import com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity;
 import com.telit.zhkt_three.Adapter.RVHomeAdapter;
+import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
-import com.telit.zhkt_three.Utils.eventbus.EventBus;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +61,20 @@ public class HomeStopOneFragment extends Fragment {
                 //领创要发home的广播
                 lingChang();
                 //  mContext.startActivity(new Intent(mContext, InteractiveActivity.class));
-                getActivity().startActivity(new Intent(getContext(), SelectClassActivity.class));
+                boolean openHome = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getBoolean("openHome");
+                if (openHome){
+
+                    getActivity().startActivity(new Intent(getContext(), InteractiveActivity.class));
+                }else {
+
+                    getActivity().startActivity(new Intent(getContext(), SelectClassActivity.class));
+                }
+
             }
         });
         iv_fist_viewpage_shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //领创要发home的广播
                 // if (appInfos.size()<=0)return;
                 lingChang();
@@ -79,20 +87,12 @@ public class HomeStopOneFragment extends Fragment {
             }
         });
     }
-
     private void initView(View layout) {
         recyclerView = layout.findViewById(R.id.vp_item_recyclerview);
         iv_fist_viewpage_show = layout.findViewById(R.id.iv_fist_viewpage_show);
         iv_fist_viewpage_shop = layout.findViewById(R.id.iv_fist_viewpage_shop);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.set(0, 15, 0, 15);
-            }
-        });
+       // recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 

@@ -67,10 +67,11 @@
                 android:id="@+id/perfect_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/perfect_avatar"
+                android:layout_below="@+id/perfect_name"
                 android:layout_marginLeft="@dimen/x10"
                 android:layout_toRightOf="@+id/perfect_avatar"
-                android:text="得分：5" />
+                android:text="得分：5"
+                android:layout_marginTop="18dp"/>
         </RelativeLayout>
 
         <ImageView

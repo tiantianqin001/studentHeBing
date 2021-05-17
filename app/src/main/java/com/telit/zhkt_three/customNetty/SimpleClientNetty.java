@@ -1,22 +1,14 @@
 package com.telit.zhkt_three.customNetty;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.telit.zhkt_three.Activity.InteractiveScreen.InteractiveActivity;
-import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.Utils.FileLogUtils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -40,8 +30,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 
 /**
  * author: qzx
@@ -61,7 +49,7 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
 
     private static volatile SimpleClientNetty instance;
     private EventLoopGroup workGroup1;
-    private ExecutorService executorService;
+
 
     private SimpleClientNetty() {
 
@@ -118,8 +106,8 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
                         protected void initChannel(Channel channel) throws Exception {
                             ChannelPipeline channelPipeline = channel.pipeline();
                             //一秒接收不到写操作则发送心跳
-                            channelPipeline.addLast("heart", new IdleStateHandler(30,
-                                    5, 0, TimeUnit.SECONDS));
+                            channelPipeline.addLast("heart", new IdleStateHandler(90,
+                                    10, 0, TimeUnit.SECONDS));
 
                             // netty提供了多种解码器用于处理半包问题
                             channelPipeline.addLast("frameDecoder", new LineBasedFrameDecoder(1024 * 1024));
@@ -166,6 +154,12 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
                 channel.close();
                 channel = null;
             }
+            //教师端关闭了
+            if (simpleClientListener != null && e instanceof IOException) {
+                simpleClientListener.isNoUser();
+            }
+
+
 
         }
 
@@ -174,9 +168,9 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
 
     private Bootstrap bootstrap;
     private Channel channel;
-
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     public synchronized void connectAsyncTwo() {
-        executorService = Executors.newSingleThreadExecutor();
+
 
         fileLogUtils.saveLogs("connectAsyncTwo，现在就是重连");
         //异步 同步需要加sync()
@@ -216,7 +210,6 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
             }
         }
     }
-
     /**
      * 断线重连,如果执行init操作的话，NioEventLoopGroup多次创建导致OOM
      */
@@ -231,8 +224,6 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
 
         QZXTools.logD("sent msg ===>" + "....reConnect");
     }
-
-
     /**
      * 主动断开连接
      */
@@ -328,7 +319,7 @@ public class SimpleClientNetty implements InteractiveActivity.onCellNettyListene
                 }
 
                 if (isReconnected) {
-                    setReconnected(false);
+                    //setReconnected(false);
                     //先发送队列的消息
                     for (String q : concurrentLinkedQueue) {
                         QZXTools.logE("重发queue:" + q, null);

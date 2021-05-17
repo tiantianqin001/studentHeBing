@@ -5,7 +5,6 @@ package com.telit.zhkt_three.MediaTools.video;
  * 视频播放器管理器.
  */
 public class NiceVideoPlayerManager {
-
     private NiceVideoPlayer mVideoPlayer;
 
     private NiceVideoPlayerManager() {

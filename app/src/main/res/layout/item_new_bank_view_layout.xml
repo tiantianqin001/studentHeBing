@@ -31,7 +31,8 @@
                 android:layout_toRightOf="@+id/Item_Bank_head_title"
                 android:text="基友三只腿对不对"
                 android:textColor="#5D5D5D"
-                android:textSize="@dimen/x24" />
+                android:textSize="@dimen/x24"
+                android:maxWidth="700dp"/>
 
 
             <!--显示问题：如果上面的Item_Bank_head_content太长了就会导致Item_Bank_head_score看不见并且增加所谓的留白-->
@@ -54,38 +55,76 @@
                 android:src="@mipmap/collect_gray_icon" />
 
 
-            <!--优秀答案-->
-            <TextView
-                android:id="@+id/Item_Bank_head_good_answer"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="查看优秀答案"
-                android:layout_toLeftOf="@+id/Item_Bank_head_promote"
-                android:textColor="#FF9600"
-                android:textSize="@dimen/x24"
-                android:layout_marginRight="@dimen/x20"
-                android:visibility="invisible" />
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
 
-            <TextView
-                android:id="@+id/Item_Bank_head_promote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="去巩固>>"
-                android:textColor="#FF9600"
-                android:textSize="@dimen/x24"
-                android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/img_total_learn_resource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查看学习资源>>"
+                    android:textColor="#FF9600"
+                    android:textSize="@dimen/x24"
+                    android:paddingRight="@dimen/x20"
+                    android:layout_marginLeft="@dimen/x40"
+                    />
+
+                <TextView
+                    android:id="@+id/img_total_typical_answers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查看典型答题>>"
+                    android:textColor="#FF9600"
+                    android:textSize="@dimen/x24"
+                    android:visibility="gone"
+                    android:paddingRight="@dimen/x20"
+
+                    />
+
+                <!--优秀答案-->
+                <TextView
+                    android:id="@+id/Item_Bank_head_good_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查看优秀答案>>"
+                    android:textColor="#FF9600"
+                    android:textSize="@dimen/x24"
+                    android:visibility="gone"
+                    android:paddingRight="@dimen/x20"/>
+
+                <TextView
+                    android:id="@+id/Item_Bank_head_study"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="去学习>>"
+                    android:textColor="#FF9600"
+                    android:textSize="@dimen/x24"
+                    android:visibility="gone"
+                    android:paddingRight="@dimen/x20"/>
+
+                <TextView
+                    android:id="@+id/Item_Bank_head_promote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="去巩固>>"
+                    android:textColor="#FF9600"
+                    android:textSize="@dimen/x24"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
         <!--选项 选择、填空、主观 List为空-->
-        <LinearLayout
-            android:id="@+id/Item_Bank_options_layout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_item_bank_options_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Item_Bank_Work_Head_layout"
-            android:orientation="vertical"
-            android:visibility="gone"></LinearLayout>
+            />
 
         <!--存在List下,不给作答-->
         <LinearLayout
@@ -102,7 +141,7 @@
             android:id="@+id/Item_Bank_Answer_Scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/Item_Bank_options_layout"
+            android:layout_below="@+id/rv_item_bank_options_layout"
             android:layout_marginLeft="10dp"
             android:overScrollMode="never">
 

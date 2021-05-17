@@ -11,12 +11,15 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.telit.zhkt_three.Activity.BaseActivity;
+import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
+import com.telit.zhkt_three.JavaBean.PreView.PreViewDisplayBean;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -60,8 +63,7 @@ public class CommentActivity extends BaseActivity {
         String shareTitle = getIntent().getStringExtra("shareTitle");
         String resId = getIntent().getStringExtra("resId");
         String resName = getIntent().getStringExtra("resName");
-        String studentId = getIntent().getStringExtra("studentId");
-
+        int curPosition = getIntent().getIntExtra("curPosition",-1);
 
         comment_rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -132,6 +134,13 @@ public class CommentActivity extends BaseActivity {
 
                                 if (circleProgressDialogFragment != null)
                                     circleProgressDialogFragment.dismissAllowingStateLoss();
+
+                                PreViewDisplayBean preViewDisplayBean = new PreViewDisplayBean();
+                                preViewDisplayBean.setCurPosition(curPosition);
+                                preViewDisplayBean.setAvgStar(comment_rating_bar.getRating() * 2);
+                                preViewDisplayBean.setShareTitle(shareTitle);
+
+                                EventBus.getDefault().post(preViewDisplayBean, Constant.click_cloud_item_ping_jia_submit);
 
                                 finish();
                             }

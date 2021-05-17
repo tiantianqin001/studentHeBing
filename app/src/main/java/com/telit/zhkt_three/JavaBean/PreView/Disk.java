@@ -57,6 +57,10 @@ public class Disk {
     private String updateDate;
     private String ids;
 
+    private String collectionState;
+    private String collectionTime;
+    private String collectionId;
+
     //新增资源评论字段
     private String resComment;
 
@@ -234,5 +238,33 @@ public class Disk {
 
     public void setResComment(String resComment) {
         this.resComment = resComment;
+    }
+
+    public String getCollectionState() {
+        return collectionState;
+    }
+
+    public void setCollectionState(String collectionState) {
+        this.collectionState = collectionState;
+    }
+
+    public String getCollectionTime() {
+        return collectionTime;
+    }
+
+    public void setCollectionTime(String collectionTime) {
+        this.collectionTime = collectionTime;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 }

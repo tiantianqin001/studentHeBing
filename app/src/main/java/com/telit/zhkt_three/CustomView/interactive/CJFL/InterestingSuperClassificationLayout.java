@@ -264,8 +264,8 @@ public class InterestingSuperClassificationLayout extends ViewGroup implements V
      */
     public void addContainerImages(String title, int totalContainerSize, int index) {
         Rect rect_container = new Rect();
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams
-                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams layoutParams = new MarginLayoutParams
+                (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         View view = LayoutInflater.from(mContext).inflate(R.layout.view_cjfl_item_home, null);
         TextView textView = view.findViewById(R.id.cjfl_item_home_tv);
         textView.setText(title);

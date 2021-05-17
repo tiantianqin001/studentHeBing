@@ -21,6 +21,9 @@ public class PreViewDisplayBean {
 
     private String savePath;
     private String status;
+    private String collectionState;
+    private String collectionTime;
+    private String collectionId;
 
     public int getCommentId() {
         return commentId;
@@ -47,6 +50,8 @@ public class PreViewDisplayBean {
 
     //已评论的内容
     private String commentContent;
+    private String resStars;
+    private int curPosition;
 
     public int getType() {
         return type;
@@ -174,5 +179,45 @@ public class PreViewDisplayBean {
 
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
+    }
+
+    public String getResStars() {
+        return resStars;
+    }
+
+    public void setResStars(String resStars) {
+        this.resStars = resStars;
+    }
+
+    public int getCurPosition() {
+        return curPosition;
+    }
+
+    public void setCurPosition(int curPosition) {
+        this.curPosition = curPosition;
+    }
+
+    public String getCollectionState() {
+        return collectionState;
+    }
+
+    public void setCollectionState(String collectionState) {
+        this.collectionState = collectionState;
+    }
+
+    public String getCollectionTime() {
+        return collectionTime;
+    }
+
+    public void setCollectionTime(String collectionTime) {
+        this.collectionTime = collectionTime;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 }

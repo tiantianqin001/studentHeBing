@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
-import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivityOne;
 import com.telit.zhkt_three.JavaBean.AfterHomework.AfterHomeworkBean;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.QZXTools;
@@ -107,10 +106,10 @@ public class RVItemAfterWorkAdapter extends RecyclerView.Adapter<RVItemAfterWork
                          *
                          * 以前是区分是否todo来进入报告，暂时有问题改为都进入作业详情，然后可以查看报告
                          * */
-                       // Intent intent = new Intent(mContext, HomeWorkDetailActivity.class);
-                        Intent intent = new Intent(mContext, HomeWorkDetailActivityOne.class);
+                        Intent intent = new Intent(mContext, HomeWorkDetailActivity.class);
                         intent.putExtra("homeworkId", mDatas.get(getAdapterPosition()).getId());
                         intent.putExtra("status", mDatas.get(getAdapterPosition()).getStatus());
+                        intent.putExtra("showAnswerDate",mDatas.get(getAdapterPosition()).getShowAnswerDate());
                         mContext.startActivity(intent);
                     }
                 }

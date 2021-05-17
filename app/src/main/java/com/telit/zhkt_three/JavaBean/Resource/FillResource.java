@@ -1,12 +1,14 @@
 package com.telit.zhkt_three.JavaBean.Resource;
 
+import java.io.Serializable;
+
 /**
  * author: qzx
  * Date: 2019/6/10 9:28
  * <p>
  * 填充Adapter的资源javabean
  */
-public class FillResource {
+public class FillResource implements Serializable {
     private String id;
     private String title;
     private String pressname;

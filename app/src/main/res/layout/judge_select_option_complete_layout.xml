@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/x100"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/y39"
     android:layout_marginTop="@dimen/x33"
     app:layout_goneMarginTop="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:minHeight="@dimen/x100">
 
     <TextView
         android:id="@+id/option_do_tv"
@@ -14,6 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/selector_circle_bg"
         android:gravity="center"
+        android:layout_gravity="center_vertical"
         android:text="A"
         android:textColor="@drawable/selector_text_color"
         android:textSize="@dimen/x36" />
@@ -24,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/y36"
         android:text="正确"
+        android:layout_gravity="center_vertical"
         android:textColor="@color/word_gray_deep"
         android:textSize="@dimen/x36"
         />

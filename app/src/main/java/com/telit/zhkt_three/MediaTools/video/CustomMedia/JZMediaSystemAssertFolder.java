@@ -101,7 +101,7 @@ public class JZMediaSystemAssertFolder extends JZMediaInterface implements Media
         }
     }
 
-    //TODO 测试这种问题是否在threadHandler中是否正常，所有的操作mediaplayer是否不需要thread，挨个测试，是否有问题
+    //TODO 这种问题是否在threadHandler中是否正常，所有的操作mediaplayer是否不需要thread，挨个，是否有问题
     @Override
     public long getCurrentPosition() {
         if (mediaPlayer != null) {

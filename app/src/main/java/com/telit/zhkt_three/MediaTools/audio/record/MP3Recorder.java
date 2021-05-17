@@ -210,7 +210,9 @@ public class MP3Recorder {
         LameUtil.init(DEFAULT_SAMPLING_RATE, DEFAULT_LAME_IN_CHANNEL, DEFAULT_SAMPLING_RATE, DEFAULT_LAME_MP3_BIT_RATE, DEFAULT_LAME_MP3_QUALITY);
         // Create and run thread used to encode data
         // The thread will
-        mEncodeThread = new DataEncodeThread(mRecordFile, mBufferSize);
+        if (mEncodeThread==null){
+            mEncodeThread = new DataEncodeThread(mRecordFile, mBufferSize);
+        }
         mEncodeThread.start();
         mAudioRecord.setRecordPositionUpdateListener(mEncodeThread, mEncodeThread.getHandler());
         mAudioRecord.setPositionNotificationPeriod(FRAME_COUNT);

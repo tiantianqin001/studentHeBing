@@ -69,7 +69,7 @@ public class ManagerControllerClient {
 
         Intent intent = new Intent();
         ComponentName componentName = new ComponentName("com.example.edcationcloud",
-                "com.example.edcationcloud.ccs.remote.RemoteConnectServerService");
+                "com.telit.zhkt_three.Activity.HomeScreen.MainActivity.BroadcastReceiver");
         intent.setComponent(componentName);
         application.bindService(intent, mcConnect, Service.BIND_AUTO_CREATE);
     }

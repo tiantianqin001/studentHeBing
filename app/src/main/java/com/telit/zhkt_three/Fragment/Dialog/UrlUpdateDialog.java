@@ -64,6 +64,9 @@ public class UrlUpdateDialog extends DialogFragment {
     @BindView(R.id.url_change_confirm)
     TextView url_change_confirm;
 
+    @BindView(R.id.url_change_point_server_out)
+    EditText url_change_point_server_out;
+
     private String req_socketIp;
     private String req_socketPort;
 
@@ -153,7 +156,11 @@ public class UrlUpdateDialog extends DialogFragment {
                 String socketIp = url_change_socket_ip.getText().toString().trim();
                 String socketPort = url_change_socket_port.getText().toString().trim();
                 String imgIp = url_change_img_server_ip.getText().toString().trim();
+                //这个是内网的地址
                 String pointIp = url_change_point_server_ip.getText().toString().trim();
+
+                //修改成外网的地址
+                String outAddress = url_change_point_server_out.getText().toString().trim();
 
                 //配置文件
                 String path = QZXTools.getExternalStorageForFiles(getContext(), null) + "/config.txt";
@@ -184,16 +191,20 @@ public class UrlUpdateDialog extends DialogFragment {
                 if (!TextUtils.isEmpty(imgIp) && !imgIp.equals("http://")) {
                     UrlUtils.ImgBaseUrl = imgIp;
                 }
-
-                if (!TextUtils.isEmpty(pointIp) && !pointIp.equals("http://")) {
-                    UrlUtils.MaiDianUrl = pointIp;
+                //这个是设置版本升级是内网的地址
+                if (!TextUtils.isEmpty(pointIp)) {
+                    UrlUtils.AppUpdate="/wisdomclass/interface/soft/softwareUpdate?softType=1&updateType=0";
+                }
+                //设置版本升级是外网的地址
+                if (!TextUtils.isEmpty(outAddress)){
+                    UrlUtils.AppUpdate="/wisdomclass/interface/soft/softwareUpdate?softType=1&updateType=1";
                 }
 
                 properties.setProperty("rootIp", UrlUtils.BaseUrl);
-                properties.setProperty("socketIp", UrlUtils.SocketIp);
+               /* properties.setProperty("socketIp", UrlUtils.SocketIp);
                 properties.setProperty("socketPort", UrlUtils.SocketPort + "");
-                properties.setProperty("imgIp", UrlUtils.ImgBaseUrl);
-                properties.setProperty("pointIp", UrlUtils.MaiDianUrl);
+                properties.setProperty("imgIp", UrlUtils.ImgBaseUrl);*/
+                properties.setProperty("uPAddressIp", UrlUtils.AppUpdate);
 
                 try {
                     FileOutputStream fos = new FileOutputStream(path);

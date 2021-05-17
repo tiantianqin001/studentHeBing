@@ -49,7 +49,7 @@ public class JpushApply {
         }
 
         //学生id设置为别名,因为讯飞的id超过40字符，无效所以使用用户id
-        setAlias(context, UserUtils.getUserId());
+    //    setAlias(context, UserUtils.getUserId());
 
         //班级id和用户id设置为标签
         String classId = UserUtils.getClassId();
@@ -63,7 +63,7 @@ public class JpushApply {
 //        } else {
 //            addTags(context, shortClassId);
 //        }
-        addTags(context, classId);
+       // addTags(context, classId);
     }
 
     /**
@@ -75,8 +75,8 @@ public class JpushApply {
             JPushInterface.resumePush(MyApplication.getInstance());
         }
 
-        deleteAlias(context);
-        clearTags(context);
+      //  deleteAlias(context);
+     //   clearTags(context);
     }
 
     /**

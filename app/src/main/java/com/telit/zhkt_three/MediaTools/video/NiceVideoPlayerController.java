@@ -7,11 +7,10 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import androidx.annotation.DrawableRes;
 
+import java.util.Timer;
+import java.util.TimerTask;
 /**
  * Created by XiaoJianjun on 2017/6/21.
  * 控制器抽象类

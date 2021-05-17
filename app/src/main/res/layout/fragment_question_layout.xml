@@ -90,12 +90,19 @@
 
 
     <!--练习题主体内容-->
-    <com.telit.zhkt_three.CusomPater
+   <!-- <com.telit.zhkt_three.CusomPater
         android:id="@+id/practice_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/practice_commit_layout"
-        android:layout_below="@+id/practice_head"></com.telit.zhkt_three.CusomPater>
+        android:layout_below="@+id/practice_head"></com.telit.zhkt_three.CusomPater>-->
+
+    <com.telit.zhkt_three.CustomView.LazyViewPager
+        android:id="@+id/practice_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/practice_commit_layout"
+        android:layout_below="@+id/practice_head"/>
 
     <!--底部按钮-->
     <LinearLayout

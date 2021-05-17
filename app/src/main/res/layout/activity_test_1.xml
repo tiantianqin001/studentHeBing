@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/rl_login"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x80"
-        android:background="@color/colorPrimary"
-        >
+        android:background="@color/colorPrimary">
         <TextView
             android:id="@+id/tv_click_login"
             android:layout_width="wrap_content"
@@ -20,6 +17,8 @@
             android:textSize="18dp"
             android:textColor="@color/white"
             />
+
+
         <ImageView
             android:id="@+id/iv_open_wifi"
             android:layout_width="40dp"
@@ -30,44 +29,85 @@
             android:layout_marginRight="10dp"
             />
 
+        <TextView
+            android:id="@+id/tv_click_login_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="离线登录"
+            android:layout_centerInParent="true"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:layout_marginRight="@dimen/x26"
+            android:layout_toLeftOf="@+id/iv_open_wifi"
+            />
+
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/ll_show_login"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/rl_login">
 
-        >
-        <TextView
-            android:id="@+id/tv_last_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="上次登录:"
-            android:textSize="22dp"
-            android:textColor="@color/word_gray_deep"
-            />
-        <TextView
-            android:id="@+id/tv_next_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="立即登录"
-            android:textSize="22dp"
-            android:textColor="@color/word_white"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/shape_version_login_bg"
+        <LinearLayout
+            android:id="@+id/ll_show_login"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:padding="5dp"
-           />
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/tv_last_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上次登录:"
+                android:textSize="22dp"
+                android:textColor="@color/word_gray_deep"
+                />
+            <TextView
+                android:id="@+id/tv_next_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="立即登录"
+                android:textSize="22dp"
+                android:textColor="@color/word_white"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_version_login_bg"
+                android:gravity="center"
+                android:padding="5dp"
+                />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_Bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:progressDrawable="@drawable/layer_list_progress_bar_webview"
+            android:visibility="gone" />
+
+        <org.xwalk.core.XWalkView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
+    <include layout="@layout/activity_no_net"
+        android:id="@+id/view_no_net"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/rl_login" />
 
-            <org.xwalk.core.XWalkView
-                android:id="@+id/webView"
+    <TextView
+        android:id="@+id/tv_versionCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#B3B9C7"
+        android:textSize="16sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="90dp"/>
 
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-</LinearLayout>
+</RelativeLayout>

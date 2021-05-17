@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.telit.zhkt_three.Constant.Constant;
-import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.QuestionBank;
 import com.telit.zhkt_three.JavaBean.AutonomousLearning.TempSaveItemInfo;
 import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.AnswerItem;
@@ -464,7 +463,7 @@ public class NewKnowledgeToDoView extends RelativeLayout {
                     subjectiveToDoView.hideAnswerTools(false);
                     subjectiveToDoView.setQuestionInfo(questionBank);
                     //答案回显,在方法内部判断localTextAnswersBean是否空指针
-                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean_sub);
+                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean_sub, status);
 
                     Item_Bank_list_options_layout.addView(subjectiveToDoView);
 
@@ -481,7 +480,7 @@ public class NewKnowledgeToDoView extends RelativeLayout {
                     subjectiveToDoView.hideAnswerTools(true);
                     subjectiveToDoView.setQuestionInfo(questionBank);
                     //答案回显,在方法内部判断localTextAnswersBean是否空指针
-                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean_sub);
+                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean_sub, status);
 
                     Item_Bank_list_options_layout.addView(subjectiveToDoView);
 

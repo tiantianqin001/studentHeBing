@@ -19,9 +19,7 @@ import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
  * Date: 2019/12/23 20:39
  */
 public class TBSDownloadDialog extends DialogFragment {
-
     private DownloadProgressBar tbs_downloadBar;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +41,20 @@ public class TBSDownloadDialog extends DialogFragment {
     }
 
     public void download(int value) {
-        tbs_downloadBar.setProgress(value);
-    }
+        try {
+            tbs_downloadBar.setProgress(value);
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
 
+    }
     @Override
     public void show(FragmentManager manager, String tag) {
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, tag);
-        // 这里吧原来的commit()方法换成了commitAllowingStateLoss()
-        ft.commitAllowingStateLoss();
+        if (!isAdded()){
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, tag);
+            // 这里吧原来的commit()方法换成了commitAllowingStateLoss()
+            ft.commitAllowingStateLoss();
+        }
     }
 }

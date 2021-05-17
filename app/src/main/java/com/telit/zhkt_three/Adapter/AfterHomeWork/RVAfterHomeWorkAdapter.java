@@ -1,28 +1,20 @@
 package com.telit.zhkt_three.Adapter.AfterHomeWork;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.telit.zhkt_three.Activity.HomeWork.HomeWorkDetailActivity;
 import com.telit.zhkt_three.CustomView.AfterWork.ItemAfterHomeworkView;
 import com.telit.zhkt_three.JavaBean.AfterHomework.AfterHomeworkBean;
 import com.telit.zhkt_three.JavaBean.AfterHomework.HandlerByDateHomeworkBean;
 import com.telit.zhkt_three.R;
-import com.telit.zhkt_three.Utils.QZXTools;
-import com.telit.zhkt_three.Utils.UserUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,6 +37,12 @@ public class RVAfterHomeWorkAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         datas = list;
     }
 
+    public RVAfterHomeWorkAdapter(Context context, List<HandlerByDateHomeworkBean> list,OnExportClickListener onExportClickListener) {
+        mContext = context;
+        datas = list;
+        this.onExportClickListener = onExportClickListener;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -59,30 +57,43 @@ public class RVAfterHomeWorkAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof RVAfterHomeWorkViewHolder) {
-            RVAfterHomeWorkViewHolder rvAfterHomeWorkViewHolder = (RVAfterHomeWorkViewHolder) viewHolder;
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("发布日期：");
-            String sameDate = datas.get(i).getSameDate();
-            sameDate = sameDate.replace("-", "/");
-            stringBuilder.append(sameDate);
-            rvAfterHomeWorkViewHolder.after_homework_head_date.setText(stringBuilder.toString());
 
-            //先清除LinearLayout
-            rvAfterHomeWorkViewHolder.after_homework_linear.removeAllViews();
-            List<AfterHomeworkBean> afterHomeworkBeans = datas.get(i).getAfterHomeworkBeans();
-            //添加下面的作业列表
-            for (AfterHomeworkBean afterHomeworkBean : afterHomeworkBeans) {
-                ItemAfterHomeworkView itemAfterHomeworkView = new ItemAfterHomeworkView(mContext);
-                itemAfterHomeworkView.setAfterHomeworkBean(afterHomeworkBean);
-                itemAfterHomeworkView.setType(comType);
-                itemAfterHomeworkView.setTypes(types);
-                rvAfterHomeWorkViewHolder.after_homework_linear.addView(itemAfterHomeworkView);
+            try {
+                RVAfterHomeWorkViewHolder rvAfterHomeWorkViewHolder = (RVAfterHomeWorkViewHolder) viewHolder;
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("发布日期：");
+                String sameDate = datas.get(i).getSameDate();
+                sameDate = sameDate.replace("-", "/");
+                stringBuilder.append(sameDate);
+                rvAfterHomeWorkViewHolder.after_homework_head_date.setText(stringBuilder.toString());
+
+                //先清除LinearLayout
+                rvAfterHomeWorkViewHolder.after_homework_linear.removeAllViews();
+                List<AfterHomeworkBean> afterHomeworkBeans = datas.get(i).getAfterHomeworkBeans();
+                //添加下面的作业列表
+                Iterator<AfterHomeworkBean> homeworkBeanIterator = afterHomeworkBeans.iterator();
+                while (homeworkBeanIterator.hasNext()){
+                    AfterHomeworkBean afterHomeworkBean = homeworkBeanIterator.next();
+
+                    ItemAfterHomeworkView itemAfterHomeworkView = new ItemAfterHomeworkView(mContext, new ItemAfterHomeworkView.OnExportClickListener() {
+                        @Override
+                        public void onExportClick(View view, String homeworkId,String byHand,String homeworkName,String status) {
+                            if (onExportClickListener!=null){
+                                onExportClickListener.onExportClick(view,homeworkId,byHand,homeworkName,status);
+                            }
+                        }
+                    });
+                    itemAfterHomeworkView.setAfterHomeworkBean(afterHomeworkBean);
+                    itemAfterHomeworkView.setType(comType);
+                    itemAfterHomeworkView.setTypes(types);
+                    rvAfterHomeWorkViewHolder.after_homework_linear.addView(itemAfterHomeworkView);
+                }
+                homeworkBeanIterator.remove();
+            }catch (Exception e){
+                e.fillInStackTrace();
             }
-
-//            rvAfterHomeWorkViewHolder.after_homework_recycler.setLayoutManager(new LinearLayoutManager(mContext));
-//            RVItemAfterWorkAdapter rvItemAfterWorkAdapter = new RVItemAfterWorkAdapter(mContext, datas.get(i).getAfterHomeworkBeans());
-//            rvAfterHomeWorkViewHolder.after_homework_recycler.setAdapter(rvItemAfterWorkAdapter);
         }
     }
 
@@ -113,5 +124,11 @@ public class RVAfterHomeWorkAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             after_homework_linear = itemView.findViewById(R.id.after_homework_linear);
 //            after_homework_recycler = itemView.findViewById(R.id.after_homework_recycler);
         }
+    }
+
+    private OnExportClickListener onExportClickListener;
+
+    public interface OnExportClickListener {
+        void onExportClick(View view, String homeworkId,String byHand,String homeworkName,String status);
     }
 }

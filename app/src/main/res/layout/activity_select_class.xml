@@ -49,9 +49,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-
-            >
+            android:orientation="horizontal">
             <!--左边的布局-->
             <LinearLayout
                 android:id="@+id/ll_join_left_class"
@@ -98,24 +96,19 @@
                     >
                     <ImageView
                         android:id="@+id/board_wifi"
-                        android:layout_width="@dimen/x60"
-                        android:layout_height="@dimen/y56"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/y30"
-                        android:src="@mipmap/join_class_wifi"
-                        />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/y15"
+                        android:src="@mipmap/wifi_icon"
+                        android:layout_gravity="center_vertical"/>
                     <TextView
                         android:id="@+id/tv_wifi_name1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
                         android:text="显示wifi名称"
                         android:textColor="#737373"
-                        android:layout_marginRight="10dp"
                         android:textSize="@dimen/x36"
-                        />
+                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
                 <!--切换网络-->
@@ -129,10 +122,10 @@
                     android:background="@drawable/shape_join_lesson"
                     android:text="切换网络"
                     android:textColor="#30B5B9"
-                    android:paddingTop="@dimen/x20"
-                    android:paddingBottom="6dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingTop="@dimen/x15"
+                    android:paddingBottom="@dimen/x15"
+                    android:paddingLeft="@dimen/x20"
+                    android:paddingRight="@dimen/x20"
                     android:textSize="@dimen/x36" />
 
             </LinearLayout>
@@ -194,6 +187,25 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/no_class" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_classCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/x30"
+            android:background="@drawable/shape_join_lesson"
+            android:text="班级码连接"
+            android:textColor="#303753"
+            android:paddingTop="@dimen/x15"
+            android:paddingBottom="@dimen/x15"
+            android:paddingLeft="@dimen/x25"
+            android:paddingRight="@dimen/x25"
+            android:textSize="@dimen/x30"
+            android:onClick="showInputClassCodeDialog"
+            android:drawableLeft="@mipmap/class_link_code_icon"
+            android:gravity="center_vertical"
+            android:drawablePadding="2dp"/>
+
     </FrameLayout>
 
 </LinearLayout>

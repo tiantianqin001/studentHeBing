@@ -2,24 +2,15 @@ package com.telit.zhkt_three.CustomView.QuestionView;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
-import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.AnswerItem;
-import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
-import com.telit.zhkt_three.MyApplication;
+import com.telit.zhkt_three.CustomView.EmojiEditText;
 import com.telit.zhkt_three.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * author: qzx
@@ -30,7 +21,7 @@ import java.util.List;
 public class FillBlankToDoView extends RelativeLayout {
 
     private TextView fill_blank_option;
-    public EditText fill_blank_content;
+    public EmojiEditText fill_blank_content;
 
     public FillBlankToDoView(Context context) {
         this(context, null);

@@ -102,16 +102,4 @@
             android:textSize="@dimen/x30" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/comment_btn_commit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/x18"
-        android:background="@mipmap/commit_bg"
-        android:gravity="center"
-        android:text="提交"
-        android:visibility="gone"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/x36" />
 </LinearLayout>

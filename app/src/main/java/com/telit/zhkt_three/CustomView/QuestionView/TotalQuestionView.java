@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.telit.zhkt_three.Activity.AfterHomeWork.LearnResourceActivity;
+import com.telit.zhkt_three.Activity.AfterHomeWork.TypicalAnswersActivity;
 import com.telit.zhkt_three.Activity.MistakesCollection.MistakesImproveActivity;
 import com.telit.zhkt_three.Activity.MistakesCollection.PerfectAnswerActivity;
 import com.telit.zhkt_three.Constant.Constant;
@@ -90,7 +92,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
     /**
      * 随堂练习头
      */
-    private LinearLayout practice_head_layout;
+    private RelativeLayout practice_head_layout;
     private TextView practice_head_type;//随堂练习的题型文本
     private TextView practice_head_index;//随堂练习的题型个数
     private TextView practise_head_score;//随堂练习的题目分值
@@ -114,6 +116,10 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
     private FrameLayout practice_img_frame;
     private ImageView practice_img_four;
     private TextView practice_img_count;
+
+    private TextView img_total_work_good_answer;
+    private TextView img_total_learn_resource;
+    private TextView img_total_typical_answers;
 
     /**
      * 题型的选项或者说作答方式
@@ -182,12 +188,167 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
      */
     public void setQuestionInfo(int totalQuestionCount, int curPosition, String status, boolean isImgQuestion,
                                 boolean isMistakesShown, QuestionInfo questionInfo) {
+
         this.totalQuestionCount = totalQuestionCount;
         this.curPosition = curPosition;
         taskStatus = status;
         this.isImgQuestion = isImgQuestion;
         this.isMistakesShown = isMistakesShown;
         this.questionInfo = questionInfo;
+        //判断是作业还是提问
+        int types = bundle.getInt("types", 0);
+
+        //保存 打回重做保存到本地  只有作业保存  ，提问的作业不保存  0是互动  1，是作业
+        if (types == 1) {
+            if (taskStatus.equals(Constant.Retry_Status) || taskStatus.equals(Constant.Save_Status)
+                    || taskStatus.equals(Constant.Commit_Status) || taskStatus.equals(Constant.Review_Status)) {
+                //-------------------------答案保存，依据作业题目id
+                int questionType = questionInfo.getQuestionType();
+                if (questionType == Constant.Subject_Item) {
+                    String attachment = null;
+                    if (questionInfo.getOwnList().size() > 0) {
+                        //这里只有主观题打回重做
+                        WorkOwnResult workOwnResult = questionInfo.getOwnList().get(0);
+                        if (taskStatus.equals(Constant.Review_Status)) {
+                            attachment = workOwnResult.getTeaDesc();
+
+                        } else {
+
+                            attachment = workOwnResult.getAttachment();
+                        }
+                        if (imgFilePathList == null) {
+                            imgFilePathList = new ArrayList<>();
+                        }
+                        if (!TextUtils.isEmpty(attachment)) {
+                            String[] strings = attachment.split("\\|");
+                            for (String string : strings) {
+                                imgFilePathList.add(string);
+                            }
+                        }
+
+
+                        LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                        localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                        localTextAnswersBean.setQuestionId(questionInfo.getId());
+                        localTextAnswersBean.setUserId(UserUtils.getUserId());
+                        localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                        localTextAnswersBean.setAnswerContent(workOwnResult.getAnswerContent());
+                        localTextAnswersBean.setImageList(imgFilePathList);
+                        QZXTools.logE("subjective Save localTextAnswersBean=" + localTextAnswersBean, null);
+                        //插入或者更新数据库
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                    } else {
+                        //移除上次本地保存的数据
+                        MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().deleteByKey(questionInfo.getId());
+                    }
+                }
+
+                //当前题型是连线题
+                if (questionType == Constant.Linked_Line) {
+                    WorkOwnResult workOwnResult = questionInfo.getOwnList().get(0);
+                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                    localTextAnswersBean.setAnswerContent(workOwnResult.getAnswerContent());
+                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                    //插入或者更新数据库
+                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                }
+
+                //判断题
+                if (questionType == Constant.Judge_Item) {
+                    WorkOwnResult workOwnResult = questionInfo.getOwnList().get(0);
+                    //-------------------------答案保存，依据作业题目id
+                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                    localTextAnswersBean.setAnswerContent(workOwnResult.getAnswerContent());
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                    //插入或者更新数据库
+                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                }
+                //单选 题
+                if (questionType == Constant.Single_Choose) {
+                    WorkOwnResult workOwnResult = questionInfo.getOwnList().get(0);
+                    //当前选中的下标
+
+                    //-------------------------答案保存，依据作业题目id
+                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                    List<AnswerItem> answerItems = new ArrayList<>();
+                    AnswerItem answerItem = new AnswerItem();
+                    answerItem.setItemId(workOwnResult.getAnswerId());
+                    answerItem.setContent(workOwnResult.getAnswerContent());
+                    answerItems.add(answerItem);
+                    localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                    //插入或者更新数据库
+                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                }
+                //多选题
+                if (questionType == Constant.Multi_Choose) {
+                    List<WorkOwnResult> ownList = questionInfo.getOwnList();
+                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                    List<AnswerItem> answerItems = new ArrayList<>();
+                    for (int j = 0; j < ownList.size(); j++) {
+                        AnswerItem answerItem = new AnswerItem();
+                        answerItem.setItemId(ownList.get(j).getAnswerId());
+                        answerItem.setContent(ownList.get(j).getAnswerContent());
+                        answerItems.add(answerItem);
+                    }
+                    localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                    //插入或者更新数据库
+                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                }
+                //填空题
+                if (questionType == Constant.Fill_Blank) {
+                    //-------------------------答案保存，依据作业题目id
+                    List<WorkOwnResult> ownList = questionInfo.getOwnList();
+                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                    List<AnswerItem> answerItems = new ArrayList<>();
+                    List<String> answers = new ArrayList<>();
+                    for (int j = 0; j < ownList.size(); j++) {
+                        //以及遍历的选项布局获取子类
+                        FillBlankToDoView blankedView = (FillBlankToDoView) total_options_layout.getChildAt(j);
+                        AnswerItem answerItem = new AnswerItem();
+                        answerItem.setItemId(ownList.get(j).getAnswerId());
+                        //保存文本内容:采用index:content形式
+//                                    answerItem.setContent(selectBeans.get(j).getIndex() + ":"
+//                                            + blankedView.fill_blank_content.getText().toString().trim());
+
+                        // blanknum从1开始，因为从零开始服务端拼写有问题
+                        answerItem.setBlanknum((j + 1) + "");
+                        answerItem.setContent(ownList.get(j).getAnswerContent());
+                        answerItems.add(answerItem);
+                    }
+                    localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("fill blank Save localTextAnswersBean=" + localTextAnswersBean, null);
+                    //插入或者更新数据库
+                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                }
+            }
+
+
+        }
         initData();
     }
 
@@ -263,6 +424,9 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
         practice_img_four = findViewById(R.id.practice_img_four);
         practice_img_count = findViewById(R.id.practice_img_count);
         practice_img_count.setTypeface(typeface);
+        img_total_work_good_answer = findViewById(R.id.img_total_work_good_answer);
+        img_total_typical_answers = findViewById(R.id.img_total_typical_answers);
+        img_total_learn_resource = findViewById(R.id.img_total_learn_resource);
 
         total_options_layout = findViewById(R.id.total_options_layout);
 
@@ -310,10 +474,20 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
 
         //优秀答案
         total_work_good_answer.setOnClickListener(this);
+        img_total_work_good_answer.setOnClickListener(this);
+        img_total_learn_resource.setOnClickListener(this);
+        img_total_typical_answers.setOnClickListener(this);
         //获取正确答案
         tv_get_current_quint = (TextView) findViewById(R.id.tv_get_current_quint);
+
+        QZXTools.logE("TotalQuestionView", null);
     }
+
     private void initData() {
+
+        QZXTools.logE("====================111111", null);
+
+
         //清空之前的题型
         total_options_layout.removeAllViews();
         work_my_answer.removeAllViews();
@@ -330,30 +504,39 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
             //当前时间
             Date date = new Date();
             //批阅完毕需要显示答案
-            if (taskStatus.equals(Constant.Review_Status) ||
-                    (!TextUtils.isEmpty(showAnswerDate)
-                            && QZXTools.getDateValue(showAnswerDate, "yyyy-MM-dd HH:mm:ss") <= date.getTime())) {
+            if (taskStatus.equals(Constant.Review_Status) || (!TextUtils.isEmpty(showAnswerDate)
+                    && QZXTools.getDateValue(showAnswerDate, "yyyy-MM-dd HH:mm:ss") <= date.getTime())) {
+                //如果当前是保存没有提交  就不显示答案
+
+
                 //批阅后的正确答案   todo   再这里显示答案
                 String rightAnswer = questionInfo.getAnswer();
                 //当答案不为空字符串时显示答案
                 if (!TextUtils.isEmpty(rightAnswer)) {
                     if (questionType == Constant.Fill_Blank) {
-                        practice_blank_answer_layout.setVisibility(VISIBLE);
-                        if (rightAnswer.contains("|")) {
-                            //多道填空答案
-                            String[] rightAnswers = rightAnswer.split("\\|");
-                            for (int i = 0; i < rightAnswers.length; i++) {
-                                showPracticeFillBlankAnswer(i, rightAnswers[i]);
-                            }
+
+                        if (taskStatus.equals(Constant.Save_Status)) {
+                            //这里是保存
                         } else {
-                            //只有一道填空答案 todo
-                            showPracticeFillBlankAnswer(0, rightAnswer);
+                            practice_blank_answer_layout.setVisibility(VISIBLE);
+                            if (rightAnswer.contains("|")) {
+                                //多道填空答案
+                                String[] rightAnswers = rightAnswer.split("\\|");
+                                for (int i = 0; i < rightAnswers.length; i++) {
+                                    showPracticeFillBlankAnswer(i, rightAnswers[i]);
+                                }
+                            } else {
+                                //只有一道填空答案 todo
+                                showPracticeFillBlankAnswer(0, rightAnswer);
+                            }
                         }
+
+
                     } else if (questionType == Constant.Judge_Item) {
                         //这里是判断题
                         if (rightAnswer.equals("0")) {
                             //错误选A todo  这个是周斌加的判断的显示，我在我没有在用了
-                           // option_do_tv_one.setVisibility(VISIBLE);
+                            // option_do_tv_one.setVisibility(VISIBLE);
                         } else {
                             //正确选B
                             //option_do_tv_two.setVisibility(VISIBLE);
@@ -361,6 +544,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     } else if (questionType == Constant.Single_Choose) {
                         practice_select_judge_answer.setVisibility(VISIBLE);
                         practice_select_judge_answer.setText("正确答案：" + rightAnswer);
+
                     } else if (questionType == Constant.Multi_Choose) {
                         practice_select_judge_answer.setVisibility(VISIBLE);
                         StringBuffer stringBuffer = new StringBuffer();
@@ -395,6 +579,13 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
             }
         }
 
+        int types = bundle.getInt("types", 0);
+        if (types == 0) {
+            img_total_learn_resource.setVisibility(GONE);
+        }else {
+            img_total_learn_resource.setVisibility(VISIBLE);
+        }
+
         //初始化选项内容---依据题型来加载题型选项   0 单项选择题 1多项选择题 2填空题 3解答题 4连线题 5判断题
         List<QuestionInfo.SelectBean> selectBeans = questionInfo.getList();
         switch (questionType) {
@@ -406,12 +597,17 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                     LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
                                     LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
-                    //获取正确答案 获取类型  0是互动  1 是作业
-                    int types = bundle.getInt("types",0);
                     //答案的回显
-                    if (types==0 && localTextAnswersBean!=null){
-                        practice_select_judge_answer.setVisibility(VISIBLE);
-                        practice_select_judge_answer.setText("正确答案：" + questionInfo.getAnswer());
+                    if (types == 0 && localTextAnswersBean != null) {
+                        if ("0".equals(taskStatus)) {
+                            practice_select_judge_answer.setVisibility(GONE);
+                        } else {
+                            practice_select_judge_answer.setVisibility(VISIBLE);
+                            practice_select_judge_answer.setText("正确答案：" + questionInfo.getAnswer());
+                        }
+
+                        QZXTools.logE("正确答案111", null);
+                        QZXTools.logE("taskStatus:" + taskStatus, null);
                     }
                     //塞入选项数据
                     for (int i = 0; i < selectBeans.size(); i++) {
@@ -456,6 +652,8 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                     String rightAnswer = questionInfo.getAnswer();
                                     practice_select_judge_answer.setVisibility(VISIBLE);
                                     practice_select_judge_answer.setText("正确答案：" + rightAnswer);
+
+                                    QZXTools.logE("正确答案222", null);
                                 }
                             }
                         });
@@ -474,30 +672,88 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     }
                 } else {
                     //塞入已提交或者批阅的选项数据
-                    if (isImgQuestion || isPracticeType) {
+                    //如果当前状态是保存
+                    if (taskStatus.equals(Constant.Save_Status)) {
+                        practice_select_judge_answer.setVisibility(GONE);
+                        //塞入选项数据
                         for (int i = 0; i < selectBeans.size(); i++) {
                             JudgeSelectToDoView judgeSelectToDoView = new JudgeSelectToDoView(getContext());
-                            judgeSelectToDoView.fillOptionAndContent(selectBeans.get(i).getOptions(), selectBeans.get(i).getContent());
-                            //这个答案是selectBeans.get(i).getOptions()
+                            judgeSelectToDoView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //因为是单选取消之前选中的
+                                    for (int i = 0; i < total_options_layout.getChildCount(); i++) {
+                                        JudgeSelectToDoView childJudeSelectedToDoView = (JudgeSelectToDoView) total_options_layout.getChildAt(i);
+                                        if (childJudeSelectedToDoView.isSelected()) {
+                                            childJudeSelectedToDoView.handSelectedStatus();
+                                        }
+                                    }
+
+                                    JudgeSelectToDoView selectedView = (JudgeSelectToDoView) v;
+
+                                    selectedView.handSelectedStatus();
+
+                                    //当前选中的下标
+                                    int selectedIndex = total_options_layout.indexOfChild(selectedView);
+
+                                    //-------------------------答案保存，依据作业题目id
+                                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                                    List<AnswerItem> answerItems = new ArrayList<>();
+                                    AnswerItem answerItem = new AnswerItem();
+                                    answerItem.setItemId(selectBeans.get(selectedIndex).getId());
+                                    answerItem.setContent(selectBeans.get(selectedIndex).getOptions());
+                                    answerItems.add(answerItem);
+                                    localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                                    //插入或者更新数据库
+                                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                                }
+                            });
+
                             if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
                                 String myAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
                                 if (myAnswer.equals(selectBeans.get(i).getOptions())) {
                                     judgeSelectToDoView.handSelectedStatus();
                                 }
                             }
+                            judgeSelectToDoView.fillOptionAndContent(selectBeans.get(i).getOptions(), selectBeans.get(i).getContent());
                             total_options_layout.addView(judgeSelectToDoView);
                         }
+
                     } else {
-                        for (int i = 0; i < selectBeans.size(); i++) {
-                            JudgeSelectToShowView judgeSelectToShowView = new JudgeSelectToShowView(getContext());
-                            StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(selectBeans.get(i).getOptions());
-                            stringBuilder.append("、");
-                            stringBuilder.append(selectBeans.get(i).getContent());
-                            judgeSelectToShowView.fillDatas(stringBuilder.toString());
-                            total_options_layout.addView(judgeSelectToShowView);
+                        //判断是不是图片出题
+                        if (isImgQuestion || isPracticeType) {
+                            for (int i = 0; i < selectBeans.size(); i++) {
+                                JudgeSelectToDoView judgeSelectToDoView = new JudgeSelectToDoView(getContext());
+                                judgeSelectToDoView.fillOptionAndContent(selectBeans.get(i).getOptions(), selectBeans.get(i).getContent());
+                                //这个答案是selectBeans.get(i).getOptions()
+                                if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
+                                    String myAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
+                                    if (myAnswer.equals(selectBeans.get(i).getOptions())) {
+                                        judgeSelectToDoView.handSelectedStatus();
+                                    }
+                                }
+                                total_options_layout.addView(judgeSelectToDoView);
+                            }
+                        } else {
+                            for (int i = 0; i < selectBeans.size(); i++) {
+                                JudgeSelectToShowView judgeSelectToShowView = new JudgeSelectToShowView(getContext());
+                                StringBuilder stringBuilder = new StringBuilder();
+                                stringBuilder.append(selectBeans.get(i).getOptions());
+                                stringBuilder.append("、");
+                                stringBuilder.append(selectBeans.get(i).getContent());
+                                judgeSelectToShowView.fillDatas(stringBuilder.toString());
+                                total_options_layout.addView(judgeSelectToShowView);
+                            }
                         }
                     }
+
+
                 }
                 break;
             case Constant.Multi_Choose:
@@ -511,9 +767,11 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     if (localTextAnswersBean != null)
                         QZXTools.logE("homeid=" + localTextAnswersBean.getHomeworkId(), null);
                     //获取正确答案 获取类型  0是互动  1 是作业
-                    int types = bundle.getInt("types",0);
                     //答案的回显
-                    if (types==0 && localTextAnswersBean!=null){
+                    if (types == 0 && localTextAnswersBean != null) {
+                        if ("0".equals(taskStatus)) {
+                            practice_select_judge_answer.setVisibility(GONE);
+                        } else {
                             String rightAnswer = questionInfo.getAnswer();
                             practice_select_judge_answer.setVisibility(VISIBLE);
                             StringBuffer stringBuffer = new StringBuffer();
@@ -526,6 +784,9 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                 }
                             }
                             practice_select_judge_answer.setText(stringBuffer.toString());
+                        }
+
+                        QZXTools.logE("正确答案333", null);
                     }
 
                     //塞入选项数据
@@ -563,18 +824,24 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
 
                                 // 显示提问的答案 for 多选
                                 if (isShowTiWenAnswer && answerItems.size() >= 2) {
-                                    String rightAnswer = questionInfo.getAnswer();
-                                    practice_select_judge_answer.setVisibility(VISIBLE);
-                                    StringBuffer stringBuffer = new StringBuffer();
-                                    stringBuffer.append("正确答案：");
-                                    String[] rightAnswers = rightAnswer.split("\\|");
-                                    for (int i = 0; i < rightAnswers.length; i++) {
-                                        stringBuffer.append(rightAnswers[i]);
-                                        if (i < (rightAnswers.length - 1)) {
-                                            stringBuffer.append("、");
+                                    if ("0".equals(taskStatus)) {
+                                        practice_select_judge_answer.setVisibility(GONE);
+                                    } else {
+                                        String rightAnswer = questionInfo.getAnswer();
+                                        practice_select_judge_answer.setVisibility(VISIBLE);
+                                        StringBuffer stringBuffer = new StringBuffer();
+                                        stringBuffer.append("正确答案：");
+                                        String[] rightAnswers = rightAnswer.split("\\|");
+                                        for (int i = 0; i < rightAnswers.length; i++) {
+                                            stringBuffer.append(rightAnswers[i]);
+                                            if (i < (rightAnswers.length - 1)) {
+                                                stringBuffer.append("、");
+                                            }
                                         }
+                                        practice_select_judge_answer.setText(stringBuffer.toString());
+
+                                        QZXTools.logE("正确答案444", null);
                                     }
-                                    practice_select_judge_answer.setText(stringBuffer.toString());
                                 }
                             }
                         });
@@ -592,12 +859,43 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                         total_options_layout.addView(judgeSelectToDoView);
                     }
                 } else {
-                    //塞入已提交或者批阅的选项数据
-                    if (isImgQuestion || isPracticeType) {
+                    //如果当前状态是保存
+                    if (taskStatus.equals(Constant.Save_Status)) {
+                        practice_select_judge_answer.setVisibility(GONE);
+                        //塞入选项数据
                         for (int i = 0; i < selectBeans.size(); i++) {
                             JudgeSelectToDoView judgeSelectToDoView = new JudgeSelectToDoView(getContext());
+                            judgeSelectToDoView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    JudgeSelectToDoView selectedView = (JudgeSelectToDoView) v;
+
+                                    selectedView.handSelectedStatus();
+
+                                    //-------------------------答案保存，依据作业题目id
+                                    //选中或者取消
+                                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                                    localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                                    localTextAnswersBean.setQuestionId(questionInfo.getId());
+                                    localTextAnswersBean.setUserId(UserUtils.getUserId());
+                                    localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                                    List<AnswerItem> answerItems = new ArrayList<>();
+                                    for (int j = 0; j < total_options_layout.getChildCount(); j++) {
+                                        //是否选中
+                                        if (total_options_layout.getChildAt(j).isSelected()) {
+                                            AnswerItem answerItem = new AnswerItem();
+                                            answerItem.setItemId(selectBeans.get(j).getId());
+                                            answerItem.setContent(selectBeans.get(j).getOptions());
+                                            answerItems.add(answerItem);
+                                        }
+                                    }
+                                    localTextAnswersBean.setList(answerItems);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                                    //插入或者更新数据库
+                                    MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+                                }
+                            });
                             judgeSelectToDoView.fillOptionAndContent(selectBeans.get(i).getOptions(), selectBeans.get(i).getContent());
-                            //这个答案是selectBeans.get(i).getOptions()
                             List<WorkOwnResult> myAnswers = questionInfo.getOwnList();
                             for (WorkOwnResult myAnswer : myAnswers) {
                                 if ((myAnswer.getAnswerContent()).equals(selectBeans.get(i).getOptions())) {
@@ -606,17 +904,43 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                             }
                             total_options_layout.addView(judgeSelectToDoView);
                         }
+
+
                     } else {
-                        for (int i = 0; i < selectBeans.size(); i++) {
-                            JudgeSelectToShowView judgeSelectToShowView = new JudgeSelectToShowView(getContext());
-                            StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(selectBeans.get(i).getOptions());
-                            stringBuilder.append("、");
-                            stringBuilder.append(selectBeans.get(i).getContent());
-                            judgeSelectToShowView.fillDatas(stringBuilder.toString());
-                            total_options_layout.addView(judgeSelectToShowView);
+                        //如果当前状态是打回重做
+                        if (taskStatus.equals(Constant.Retry_Status)) {
+
+
+                        }
+
+                        //塞入已提交或者批阅的选项数据
+                        if (isImgQuestion || isPracticeType) {
+                            for (int i = 0; i < selectBeans.size(); i++) {
+                                JudgeSelectToDoView judgeSelectToDoView = new JudgeSelectToDoView(getContext());
+                                judgeSelectToDoView.fillOptionAndContent(selectBeans.get(i).getOptions(), selectBeans.get(i).getContent());
+                                //这个答案是selectBeans.get(i).getOptions()
+                                List<WorkOwnResult> myAnswers = questionInfo.getOwnList();
+                                for (WorkOwnResult myAnswer : myAnswers) {
+                                    if ((myAnswer.getAnswerContent()).equals(selectBeans.get(i).getOptions())) {
+                                        judgeSelectToDoView.handSelectedStatus();
+                                    }
+                                }
+                                total_options_layout.addView(judgeSelectToDoView);
+                            }
+                        } else {
+                            for (int i = 0; i < selectBeans.size(); i++) {
+                                JudgeSelectToShowView judgeSelectToShowView = new JudgeSelectToShowView(getContext());
+                                StringBuilder stringBuilder = new StringBuilder();
+                                stringBuilder.append(selectBeans.get(i).getOptions());
+                                stringBuilder.append("、");
+                                stringBuilder.append(selectBeans.get(i).getContent());
+                                judgeSelectToShowView.fillDatas(stringBuilder.toString());
+                                total_options_layout.addView(judgeSelectToShowView);
+                            }
                         }
                     }
+
+
                 }
                 break;
             case Constant.Fill_Blank:
@@ -628,9 +952,8 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                     LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
                                     LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
-                    Log.i(TAG, "initData: "+localTextAnswersBean);
+                    Log.i(TAG, "initData: " + localTextAnswersBean);
                     //获取正确答案 获取类型  0是互动  1 是作业
-                    int types = bundle.getInt("types",0);
                     //塞入填空题数据
                     for (int i = 0; i < selectBeans.size(); i++) {
                         fillBlankToDoView = new FillBlankToDoView(getContext());
@@ -672,9 +995,8 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                         //-------------------------答案保存，依据作业题目id
                         //获取正确答案 获取类型
                         //只有在作业的时候保存答案
-                        if (types==1 || types==0){
+                        if (types == 1 || types == 0) {
                             ///在作业中获取学生输入的作业
-
                             //把答案保存到本地
                             //saveQuieAnsult(selectBeans);
 
@@ -700,7 +1022,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                     localTextAnswersBean.setUserId(UserUtils.getUserId());
                                     localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
                                     List<AnswerItem> answerItems = new ArrayList<>();
-                                    List<String> answers=new ArrayList<>();
+                                    List<String> answers = new ArrayList<>();
                                     for (int j = 0; j < total_options_layout.getChildCount(); j++) {
                                         //以及遍历的选项布局获取子类
                                         FillBlankToDoView blankedView = (FillBlankToDoView) total_options_layout.getChildAt(j);
@@ -734,61 +1056,77 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     }
 
 
-                    if (types==0 && localTextAnswersBean==null){
+                    if (types == 0 && localTextAnswersBean == null) {
                         //互动 显示正确答案 TODO  目前不显示答案
                         tv_get_current_quint.setVisibility(GONE);
-                    }else {
+                    } else {
                         tv_get_current_quint.setVisibility(GONE);
-
                     }
 
                     //答案的回显
-                    if (types==0 && localTextAnswersBean!=null) {
+                    if (types == 0 && localTextAnswersBean != null) {
                         //-------------------------答案保存，依据作业题目id
                         saveQuieAnsult(localTextAnswersBean);
 
                         tv_get_current_quint.setVisibility(GONE);
                         //显示题目
-
-
                     }
                     //获取正确答案的按钮
                     tv_get_current_quint.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            EditText  viewById = fillBlankToDoView.fill_blank_content.findViewById(R.id.fill_blank_content);
-                            if (TextUtils.isEmpty(viewById.getText().toString())){
+                            EditText viewById = fillBlankToDoView.fill_blank_content.findViewById(R.id.fill_blank_content);
+                            if (TextUtils.isEmpty(viewById.getText().toString())) {
                                 QZXTools.popToast(viewById.getContext(), "请输入内容", false);
-                            }else {
+                            } else {
                                 //文本改变后实时保存
                                 tv_get_current_quint.setVisibility(GONE);
                                 //获取答案
-                                Log.i(TAG, "onClick: "+localTextAnswersBean);
-                               // saveQuieAnsult(localTextAnswersBean);
+                                Log.i(TAG, "onClick: " + localTextAnswersBean);
+                                // saveQuieAnsult(localTextAnswersBean);
                                 // 显示提问的答案 for 填空
-                                    if (isShowTiWenAnswer) {
-                                        practice_blank_answer_layout.setVisibility(VISIBLE);
-                                        String rightAnswer = questionInfo.getAnswer();
-                                        if (!TextUtils.isEmpty(rightAnswer)) {
-                                            if (rightAnswer.contains("|")) {
-                                                //多道填空答案
-                                                String[] rightAnswers = rightAnswer.split("\\|");
-                                                for (int i = 0; i < rightAnswers.length; i++) {
-                                                    showPracticeFillBlankAnswer(i, rightAnswers[i]);
-                                                }
-                                            } else {
-                                                //只有一道填空答案
-                                                showPracticeFillBlankAnswer(0, rightAnswer);
+                                if (isShowTiWenAnswer) {
+                                    practice_blank_answer_layout.setVisibility(VISIBLE);
+                                    String rightAnswer = questionInfo.getAnswer();
+                                    if (!TextUtils.isEmpty(rightAnswer)) {
+                                        if (rightAnswer.contains("|")) {
+                                            //多道填空答案
+                                            String[] rightAnswers = rightAnswer.split("\\|");
+                                            for (int i = 0; i < rightAnswers.length; i++) {
+                                                showPracticeFillBlankAnswer(i, rightAnswers[i]);
                                             }
+                                        } else {
+                                            //只有一道填空答案
+                                            showPracticeFillBlankAnswer(0, rightAnswer);
                                         }
                                     }
+                                }
                             }
                         }
                     });
 
                 } else {
-                    //塞入已提交或者批阅的填空题数据
-                    List<WorkOwnResult> myAnswers = questionInfo.getOwnList();
+                    //如果当前状态是保存
+                    if (taskStatus.equals(Constant.Save_Status)) {
+                        //塞入已提交或者批阅的填空题数据
+                        List<WorkOwnResult> myAnswers = questionInfo.getOwnList();
+                        for (int i = 0; i < selectBeans.size(); i++) {
+                            FillBlankToDoView fillBlankToDoView = new FillBlankToDoView(getContext());
+                            //EditText如果不允许聚焦是否就和TextView差不多了？
+                            // fillBlankToDoView.fill_blank_content.setFocusable(false);
+                            if (i < myAnswers.size()) {
+                                //fillBlankToDoView.fillDatas(i, jsonObject.getString(i + ""));
+                                fillBlankToDoView.fillDatas(i, myAnswers.get(i).getAnswerContent());
+                            } else {
+                                fillBlankToDoView.fillDatas(i);
+                            }
+                            total_options_layout.addView(fillBlankToDoView);
+                        }
+
+
+                    } else {
+                        //塞入已提交或者批阅的填空题数据
+                        List<WorkOwnResult> myAnswers = questionInfo.getOwnList();
                         for (int i = 0; i < selectBeans.size(); i++) {
                             FillBlankToDoView fillBlankToDoView = new FillBlankToDoView(getContext());
                             //EditText如果不允许聚焦是否就和TextView差不多了？
@@ -801,8 +1139,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                             }
                             total_options_layout.addView(fillBlankToDoView);
                         }
-
-
+                    }
                 }
                 break;
             case Constant.Subject_Item:
@@ -811,7 +1148,6 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                  * 同时答案保存既需要LocalText
                  * */
                 //获取正确答案 获取类型  0是互动  1 是作业
-                int types = bundle.getInt("types",0);
                 if (taskStatus.equals(Constant.Todo_Status)) {
                     //查询保存的答案,这是多选，所以存在多个答案
                     LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
@@ -823,58 +1159,130 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
                     subjectiveToDoView.setQuestionInfo(questionInfo);
                     //答案回显,在方法内部判断localTextAnswersBean是否空指针
-                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types);
-
+                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types, taskStatus);
                     subjectiveToDoView.hideAnswerTools(false);
-
                     total_options_layout.addView(subjectiveToDoView);
-                    if (types==0){
+                    if (types == 0) {
                         //只有在互动的时候显示
                         tv_get_current_quint.setVisibility(GONE);
 
                     }
-                    if (localTextAnswersBean==null){
+
+                    if (localTextAnswersBean == null) {
                         tv_get_current_quint.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 //获取答案
-                                EditText subjective_input=   subjectiveToDoView.findViewById(R.id.subjective_input);
-                                if (TextUtils.isEmpty(subjective_input.getText())){
-                                    QZXTools.popToast(getContext(),"输入文字说明不能为空",true);
+                                EditText subjective_input = subjectiveToDoView.findViewById(R.id.subjective_input);
+                                if (TextUtils.isEmpty(subjective_input.getText())) {
+                                    QZXTools.popToast(getContext(), "输入文字说明不能为空", true);
                                     return;
                                 }
-                                tv_get_current_quint.setText("正确答案: "+questionInfo.getAnswer());
+                                tv_get_current_quint.setText("正确答案: " + questionInfo.getAnswer());
                             }
                         });
-                    }else {
-                        tv_get_current_quint.setText("正确答案: "+localTextAnswersBean.getAnswerContent());
+                    } else {
+                        tv_get_current_quint.setText("正确答案: " + localTextAnswersBean.getAnswerContent());
                     }
-
-
                 } else {
-                    total_work_good_answer.setVisibility(VISIBLE);
 
-                    //塞入已提交或者批阅的选项数据
-                    SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
-                    subjectiveToDoView.hideAnswerTools(true);
+                    //打回重做  只有主观题打回从做
+                    if (taskStatus.equals(Constant.Retry_Status)) {
+                        LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfo.getId()),
+                                        LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
+                                        LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                        //塞入主观题数据
+                        SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
+                        subjectiveToDoView.setQuestionInfo(questionInfo);
+                        //答案回显,在方法内部判断localTextAnswersBean是否空指针
+                        if (questionInfo.getOwnList().size() == 0) {
 
-                    //塞入文本答案以及图片集合答案
-                    String textAnswer = "";
-                    if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
-                        textAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
+                            subjectiveToDoView.showImgsAndContent(null, types, taskStatus);
+                        } else {
+
+                            subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types, taskStatus);
+                        }
+
+
+                        subjectiveToDoView.hideAnswerTools(false);
+
+                        total_options_layout.addView(subjectiveToDoView);
+
+                    } else {
+                        if (taskStatus.equals(Constant.Commit_Status)) {
+                            //已经提交
+                            //查询保存的答案,这是多选，所以存在多个答案
+                            LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                    .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfo.getId()),
+                                            LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
+                                            LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                            //塞入主观题数据
+                            SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
+                            subjectiveToDoView.setQuestionInfo(questionInfo);
+                            //答案回显,在方法内部判断localTextAnswersBean是否空指针
+                            subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types, taskStatus);
+
+                            subjectiveToDoView.hideAnswerTools(false);
+
+                            total_work_good_answer.setVisibility(VISIBLE);
+
+                            if (types == 1) {//作业
+                                img_total_work_good_answer.setVisibility(VISIBLE);
+                                img_total_typical_answers.setVisibility(VISIBLE);
+                            }
+
+
+                            total_options_layout.addView(subjectiveToDoView);
+
+                        } else if (taskStatus.equals(Constant.Review_Status)) {
+                            //作业已经批改
+                            //查询保存的答案,这是多选，所以存在多个答案
+                            LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                    .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfo.getId()),
+                                            LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
+                                            LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                            //塞入主观题数据
+                            SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
+                            subjectiveToDoView.setQuestionInfo(questionInfo);
+                            //答案回显,在方法内部判断localTextAnswersBean是否空指针
+                            subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types, taskStatus);
+
+                            subjectiveToDoView.hideAnswerTools(false);
+
+                            total_work_good_answer.setVisibility(VISIBLE);
+
+                            if (types == 1) {//作业
+                                img_total_work_good_answer.setVisibility(VISIBLE);
+                                img_total_typical_answers.setVisibility(VISIBLE);
+                            }
+
+                            total_options_layout.addView(subjectiveToDoView);
+
+                        }
+                        //如果当前状态是保存
+                        else if (taskStatus.equals(Constant.Save_Status)) {
+                            LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                    .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfo.getId()),
+                                            LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
+                                            LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                            //塞入主观题数据
+                            SubjectiveToDoView subjectiveToDoView = new SubjectiveToDoView(getContext());
+                            subjectiveToDoView.setQuestionInfo(questionInfo);
+                            //答案回显,在方法内部判断localTextAnswersBean是否空指针
+                            subjectiveToDoView.showImgsAndContent(localTextAnswersBean, types, taskStatus);
+
+                            subjectiveToDoView.hideAnswerTools(false);
+
+                            total_options_layout.addView(subjectiveToDoView);
+
+                        }
+
                     }
-                    List<String> imgFile = questionInfo.getImgFile();
-                    LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
-                    localTextAnswersBean.setAnswerContent(textAnswer);
-                    localTextAnswersBean.setImageList(imgFile);
-                    localTextAnswersBean.setAnswer(questionInfo.getAnswer());
-                    //这个主要显示互动提问中的作业
-                    //显示图片和学生答案
-                    subjectiveToDoView.showImgsAndContent(localTextAnswersBean,types);
 
-
-
-                    total_options_layout.addView(subjectiveToDoView);
                 }
                 break;
             case Constant.Linked_Line:
@@ -908,7 +1316,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                 break;
             //判断题
             case Constant.Judge_Item:
-                //  判断题修改样式
+                //  判断题修改样式  0是错误  1是正确
                 if (taskStatus.equals(Constant.Todo_Status)) {
                     //查询保存的答案,这是多选，所以存在多个答案
                     LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
@@ -917,32 +1325,154 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                     LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
 
                     //塞入判断题数据 selectBeans为空 ，只有两种选择：正确和错误
-                    Log.i(TAG, "initData: "+localTextAnswersBean);
-                        JudgeSelectToDoView_two judgeSelectToDoView_two = new JudgeSelectToDoView_two(getContext());
+                    Log.i(TAG, "initData: " + localTextAnswersBean);
+                    JudgeSelectToDoView_two judgeSelectToDoView_two = new JudgeSelectToDoView_two(getContext());
                     //点击显示背景      //同时再作业完成的时候才显示
                     String comType = bundle.getString("comType");
                     int anInt = bundle.getInt("types");
-                    if (anInt==0 && localTextAnswersBean!=null){
+                    if (anInt == 0 && localTextAnswersBean != null) {
                         //提问已经提交答案的回显
                         String answerContent = localTextAnswersBean.answerContent;
                         //显示正确答案
                         // 显示提问的答案 for 单选  显示正确答案
                         if (isShowTiWenAnswer) {
-                          //  judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
+                            //  judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
                         }
 
-                        if (answerContent.equals("0")){
+                        if (answerContent.equals("0")) {
 
                             judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
-                            judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+                            judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_selected);
                         } else {
                             judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
                             //选择你已经选中的
+                            judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+
+                        }
+                    }
+
+                    if (anInt == 1 && localTextAnswersBean != null) {
+                        String answerContent = localTextAnswersBean.answerContent;
+                        if (answerContent.equals("0")) {
+
+                            judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
                             judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_selected);
+                        } else {
+                            judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
+                            //选择你已经选中的
+                            judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+
                         }
                     }
 
                     //再作业的时候不显示答案
+                    //再互动的时候显示作业
+                    judgeSelectToDoView_two.option_do_tv_one.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+                            judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_normal);
+                            //显示答案 只有再互动的时候显示答案
+                            if (anInt == 0 && isShowTiWenAnswer) {
+                                judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
+                                String rightAnswer = questionInfo.getAnswer();
+
+                                if (rightAnswer.equals("0")) {
+
+                                    judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
+                                } else {
+                                    judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
+                                }
+                            }
+
+                            //只有作业的时候保存答案 提问也要保留答案
+                            //-------------------------答案保存，依据作业题目id
+                            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                            localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                            localTextAnswersBean.setQuestionId(questionInfo.getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                            localTextAnswersBean.setAnswerContent(1 + "");
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                        }
+                    });
+                    judgeSelectToDoView_two.option_do_tv_two.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_selected);
+                            judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_normal);
+
+
+                            //显示答案
+                            if (anInt == 0 && isShowTiWenAnswer) {
+                                judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
+                                String rightAnswer = questionInfo.getAnswer();
+                                if (rightAnswer.equals("0")) {
+                                    judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
+
+                                    //错误选A
+                                    //   practice_select_judge_answer.setText("正确答案：A");
+                                } else {
+                                    //正确选B
+                                    if (isShowTiWenAnswer) {
+
+                                        judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
+                                    }
+                                }
+                            } else {
+
+                            }
+
+                            //只有作业的时候保存答案 提问也要保留答案
+                            //-------------------------答案保存，依据作业题目id
+                            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+                            localTextAnswersBean.setHomeworkId(questionInfo.getHomeworkId());
+                            localTextAnswersBean.setQuestionId(questionInfo.getId());
+                            localTextAnswersBean.setUserId(UserUtils.getUserId());
+                            localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+                            localTextAnswersBean.setAnswerContent(0 + "");
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+                            //插入或者更新数据库
+                            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+
+                        }
+                    });
+                    Log.i(TAG, "initData: " + questionInfo);
+                    total_options_layout.addView(judgeSelectToDoView_two);
+
+                } else {
+                    //如果当前状态是保存
+                    if (taskStatus.equals(Constant.Save_Status)) {
+
+                        LocalTextAnswersBean localTextAnswersBean = MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao()
+                                .queryBuilder().where(LocalTextAnswersBeanDao.Properties.QuestionId.eq(questionInfo.getId()),
+                                        LocalTextAnswersBeanDao.Properties.HomeworkId.eq(questionInfo.getHomeworkId()),
+                                        LocalTextAnswersBeanDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+
+                        //塞入判断题数据 selectBeans为空 ，只有两种选择：正确和错误
+                        Log.i(TAG, "initData: " + localTextAnswersBean);
+                        JudgeSelectToDoView_two judgeSelectToDoView_two = new JudgeSelectToDoView_two(getContext());
+                        //点击显示背景      //同时再作业完成的时候才显示
+                        if (localTextAnswersBean != null) {
+                            //提问已经提交答案的回显
+                            String answerContent = localTextAnswersBean.answerContent;
+
+                            if (answerContent.equals("0")) {
+
+                                judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
+                                judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_selected);
+
+                            } else {
+                                judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
+                                //选择你已经选中的
+                                judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+                            }
+                        }
+
+                        //再作业的时候不显示答案
                         //再互动的时候显示作业
                         judgeSelectToDoView_two.option_do_tv_one.setOnClickListener(new OnClickListener() {
                             @Override
@@ -950,7 +1480,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                 judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
                                 judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_normal);
                                 //显示答案 只有再互动的时候显示答案
-                                if (anInt==0 && isShowTiWenAnswer){
+                                if (isShowTiWenAnswer) {
                                     judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
                                     String rightAnswer = questionInfo.getAnswer();
 
@@ -984,7 +1514,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
 
 
                                 //显示答案
-                                if (anInt==0 && isShowTiWenAnswer){
+                                if (isShowTiWenAnswer) {
                                     judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
                                     String rightAnswer = questionInfo.getAnswer();
                                     if (rightAnswer.equals("0")) {
@@ -994,12 +1524,12 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                                         //   practice_select_judge_answer.setText("正确答案：A");
                                     } else {
                                         //正确选B
-                                        if (isShowTiWenAnswer){
+                                        if (isShowTiWenAnswer) {
 
                                             judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
                                         }
                                     }
-                                }else {
+                                } else {
 
                                 }
 
@@ -1017,30 +1547,45 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
 
                             }
                         });
-                    Log.i(TAG, "initData: "+questionInfo);
+                        Log.i(TAG, "initData: " + questionInfo);
                         total_options_layout.addView(judgeSelectToDoView_two);
 
-                } else {
-                    //塞入已提交或者批阅的选项数据
-                    if (isImgQuestion || isPracticeType) {
-                       //获取学生回答的内容
-                        JudgeSelectToDoView_two judgeSelectToDoView_two = new JudgeSelectToDoView_two(getContext());
-                        total_options_layout.addView(judgeSelectToDoView_two);
-                        if (isImgQuestion) {
-                            judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
-                        }
-                        if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
-                          String  myAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
-                           if (myAnswer.equals("1")){
-                               judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
-                               judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
 
-                           }else {
-                               judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
-                               judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
-                           }
+                    } else {
+                        //塞入已提交或者批阅的选项数据
+                        if (isImgQuestion || isPracticeType) {
+                            //获取学生回答的内容
+                            JudgeSelectToDoView_two judgeSelectToDoView_two = new JudgeSelectToDoView_two(getContext());
+                            total_options_layout.addView(judgeSelectToDoView_two);
+                            if (isImgQuestion) {
+                                judgeSelectToDoView_two.ll_current_quint_show.setVisibility(VISIBLE);
+                            }
+                            if (questionInfo.getOwnList() != null && questionInfo.getOwnList().size() > 0) {
+                                String myAnswer = questionInfo.getOwnList().get(0).getAnswerContent();
+                                if (myAnswer.equals("1")) {
+                                    //我的答案
+                                    judgeSelectToDoView_two.option_do_tv_one.setBackgroundResource(R.drawable.shape_circle_selected);
+                                } else {
+                                    judgeSelectToDoView_two.option_do_tv_two.setBackgroundResource(R.drawable.shape_circle_selected);
+                                }
+                            }
+                            //显示正确答案
+                            if (!TextUtils.isEmpty(questionInfo.getAnswer())){
+                               if (questionInfo.getAnswer().equals("1")){
+                               /*    Glide.with(getContext())
+                                           .load(R.mipmap.check_current_two)
+                                           .into( judgeSelectToDoView_two.iv_current_quint_show);*/
+
+                                   judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_current_two);
+                                }else {
+                                   judgeSelectToDoView_two.iv_current_quint_show.setBackgroundResource(R.mipmap.check_err_ome);
+
+                          /*         Glide.with(getContext())
+                                           .load(R.mipmap.check_err_ome)
+                                           .into( judgeSelectToDoView_two.iv_current_quint_show);*/
+                               }
+                            }
                         }
-                        //显示正确答案
                     }
                 }
                 break;
@@ -1052,22 +1597,27 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
         //-------------------------答案保存，依据作业题目id
 
         // 显示提问的答案 for 填空
+        if ("0".equals(taskStatus)) {
+            practice_blank_answer_layout.setVisibility(GONE);
+        } else {
             practice_blank_answer_layout.setVisibility(VISIBLE);
-            String rightAnswer = questionInfo.getAnswer();
-            if (!TextUtils.isEmpty(rightAnswer)) {
-                if (rightAnswer.contains("|")) {
-                    //多道填空答案
-                    String[] rightAnswers = rightAnswer.split("\\|");
-                    for (int i = 0; i < rightAnswers.length; i++) {
-                        showPracticeFillBlankAnswer(i, rightAnswers[i]);
-                        //回显填空题的题目
-                        fillBlankToDoView.fill_blank_content.setText(localTextAnswersBean.getAnswers().get(i));
-                    }
-                } else {
-                    //只有一道填空答案
-                    showPracticeFillBlankAnswer(0, rightAnswer);
+        }
+
+        String rightAnswer = questionInfo.getAnswer();
+        if (!TextUtils.isEmpty(rightAnswer)) {
+            if (rightAnswer.contains("|")) {
+                //多道填空答案
+                String[] rightAnswers = rightAnswer.split("\\|");
+                for (int i = 0; i < rightAnswers.length; i++) {
+                    showPracticeFillBlankAnswer(i, rightAnswers[i]);
+                    //回显填空题的题目
+                    fillBlankToDoView.fill_blank_content.setText(localTextAnswersBean.getAnswers().get(i));
                 }
+            } else {
+                //只有一道填空答案
+                showPracticeFillBlankAnswer(0, rightAnswer);
             }
+        }
     }
 
     /**
@@ -1127,6 +1677,7 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
         }
 
         total_work_good_answer.setVisibility(INVISIBLE);
+        QZXTools.logE("====================33333", null);
 
         //设置题型和题序
         switch (questionType) {
@@ -1383,7 +1934,6 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     }
                     break;
             }
-
         }
 
         //展示答案解析
@@ -1529,7 +2079,20 @@ public class TotalQuestionView extends RelativeLayout implements View.OnClickLis
                     intent.putExtra("improvement", getBundle());
                     getContext().startActivity(intent);
                     break;
+                case R.id.img_total_learn_resource:
+                    Intent intent_learn_resource = new Intent(getContext(), LearnResourceActivity.class);
+                    intent_learn_resource.putExtra("questionId", questionInfo.getId());
+                    intent_learn_resource.putExtra("homeworkId", questionInfo.getHomeworkId());
+                    getContext().startActivity(intent_learn_resource);
+                    break;
+                case R.id.img_total_typical_answers:
+                    Intent intent_typical_answers = new Intent(getContext(), TypicalAnswersActivity.class);
+                    intent_typical_answers.putExtra("questionId", questionInfo.getId());
+                    intent_typical_answers.putExtra("homeworkId", questionInfo.getHomeworkId());
+                    getContext().startActivity(intent_typical_answers);
+                    break;
                 case R.id.total_work_good_answer:
+                case R.id.img_total_work_good_answer:
                     Intent intent_good = new Intent(getContext(), PerfectAnswerActivity.class);
                     intent_good.putExtra("questionId", questionInfo.getId());
                     intent_good.putExtra("homeworkId", questionInfo.getHomeworkId());

@@ -52,4 +52,8 @@
     <color name="red">#F22100</color>
     <color name="rippelColor">#0099CC</color>
 
+    <!--主题背景-->
+    <color name="primaryColor_f1_bg">#f1f1f1</color>
+    <color name="list_bottom_color">#666666</color>
+    <color name="primaryColor_fa_bg">#fafafa</color>
 </resources>

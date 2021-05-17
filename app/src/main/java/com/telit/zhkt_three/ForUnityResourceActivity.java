@@ -27,14 +27,14 @@ public class ForUnityResourceActivity extends BaseActivity {
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.e("zbv", "onServiceConnected");
+            //Log.e("zbv", "onServiceConnected");
             Toast.makeText(ForUnityResourceActivity.this, "服务连接成功", Toast.LENGTH_SHORT).show();
             myAidlInterface = IMyAidlInterface.Stub.asInterface(service);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.e("zbv", "onServiceDisconnected");
+            //Log.e("zbv", "onServiceDisconnected");
             Toast.makeText(ForUnityResourceActivity.this, "服务连接失败", Toast.LENGTH_SHORT).show();
             myAidlInterface = null;
         }

@@ -116,10 +116,10 @@ class QTagTxParser {
             line++;
             // If the line is incorrectly formatted, ignore the line.
           } catch (NumberFormatException e) {
-            Log.e(TAG, "Cannot parse byte count at line" + line + ".");
+           // Log.e(TAG, "Cannot parse byte count at line" + line + ".");
             continue;
           } catch (NoSuchElementException e) {
-            Log.e(TAG, "Invalid number of tokens on line " + line + ".");
+          //  Log.e(TAG, "Invalid number of tokens on line " + line + ".");
             continue;
           }
         }
@@ -135,8 +135,8 @@ class QTagTxParser {
       sPreviousBytes = tagTxBytes;
       return diff;
     } catch (IOException e) {
-      Log.e(TAG,
-          "Error reading from /proc/net/xt_qtaguid/stats. Please check if this file exists.");
+     // Log.e(TAG,
+         // "Error reading from /proc/net/xt_qtaguid/stats. Please check if this file exists.");
     } finally {
       StrictMode.setThreadPolicy(savedPolicy);
     }

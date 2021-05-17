@@ -11,7 +11,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.telit.zhkt_three.JavaBean.HomeWork.QuestionInfo;
+import com.telit.zhkt_three.JavaBean.HomeWorkAnswerSave.LocalTextAnswersBean;
+import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.Utils.QZXTools;
+import com.telit.zhkt_three.Utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,8 @@ public class ToLineView extends View {
     private List<Path> dotPathList;
     private List<Path> linePathList;
 
+    private List<String> isClearList;
+
     /**
      * 正确答案路径
      */
@@ -59,6 +65,10 @@ public class ToLineView extends View {
     private int normalColor;
     private int wrongColor;
     private int rightColor;
+    private String homeworkId;
+    private List<QuestionInfo> questionInfoList;
+    private QuestionInfo questionInfo;
+    private String saveTrack;
 
     public ToLineView(Context context) {
         this(context, null);
@@ -77,6 +87,7 @@ public class ToLineView extends View {
 
         dotPathList = new ArrayList<>();
         linePathList = new ArrayList<>();
+        isClearList=new ArrayList<>();
         answerDotPathlist = new ArrayList<>();
         answerLinePathList = new ArrayList<>();
 
@@ -111,12 +122,21 @@ public class ToLineView extends View {
     /**
      * 添加点路径
      */
-    public void addDotPath(Path path, boolean isAnswer) {
+    public void addDotPath(Path path, boolean isAnswer, String id) {
         if (isAnswer) {
             answerDotPathlist.add(path);
         } else {
             dotPathList.add(path);
         }
+        isClearList.add(id);
+    }
+
+
+    public void addDotPath(Path path) {
+        dotPathList.add(path);
+
+
+
     }
 
     /**
@@ -130,10 +150,36 @@ public class ToLineView extends View {
         }
     }
 
+    public void addLinePath(Path path) {
+        linePathList.add(path);
+    }
+
     /**
      * 重置视图
+     * @param id
      */
+    public void resetDrawLine(String id) {
+        if (isClearList.contains(id)){
+            return;
+        }
+
+        mStartDotPath.reset();
+        mStartDotPath.lineTo(0, 0);
+        mEndDotPath.reset();
+        mEndDotPath.lineTo(0, 0);
+        mLinePath.reset();
+        mLinePath.lineTo(0, 0);
+
+        dotPathList.clear();
+        linePathList.clear();
+
+        invalidate();
+    }
+
+
     public void resetDrawLine() {
+
+
         mStartDotPath.reset();
         mStartDotPath.lineTo(0, 0);
         mEndDotPath.reset();
@@ -301,6 +347,19 @@ public class ToLineView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 //        QZXTools.logE("toLine onDetachedFromWindow......", null);
+        //-------------------------答案保存，依据作业题目id
+        //主要是退出的时候要保留正确的答案
+        if (questionInfo!=null){
+            LocalTextAnswersBean localTextAnswersBean = new LocalTextAnswersBean();
+            localTextAnswersBean.setHomeworkId(homeworkId);
+            localTextAnswersBean.setQuestionId(questionInfo.getId());
+            localTextAnswersBean.setUserId(UserUtils.getUserId());
+            localTextAnswersBean.setQuestionType(questionInfo.getQuestionType());
+            localTextAnswersBean.setAnswerContent(saveTrack);
+//                                QZXTools.logE("Save localTextAnswersBean=" + localTextAnswersBean, null);
+            //插入或者更新数据库
+            MyApplication.getInstance().getDaoSession().getLocalTextAnswersBeanDao().insertOrReplace(localTextAnswersBean);
+        }
     }
 
     @Override
@@ -312,6 +371,12 @@ public class ToLineView extends View {
         }
     }
 
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        QZXTools.logE("ToLine onFinishInflate......", null);
+    }
+
     /**
      * 为了展示已画的划线，这时尺寸才非零
      */
@@ -319,6 +384,13 @@ public class ToLineView extends View {
 
     public void setOnSizeChangedCallback(OnSizeChangedCallback listner) {
         this.listner = listner;
+    }
+
+    public void setLocalSave(String homeworkId, QuestionInfo questionInfo, String saveTrack) {
+
+        this.homeworkId = homeworkId;
+        this.questionInfo = questionInfo;
+        this.saveTrack = saveTrack;
     }
 
     public interface OnSizeChangedCallback {

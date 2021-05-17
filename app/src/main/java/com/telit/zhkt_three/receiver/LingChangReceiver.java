@@ -13,6 +13,7 @@ import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.JavaBean.StudentInfo;
 import com.telit.zhkt_three.MyApplication;
+import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.Jpush.JpushApply;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
@@ -20,6 +21,7 @@ import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.manager.AppManager;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -46,7 +48,7 @@ public class LingChangReceiver extends BroadcastReceiver {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Server_Error:
-                    QZXTools.popToast(MyApplication.getInstance(), "服务端错误！", false);
+                    QZXTools.popToast(MyApplication.getInstance(), "当前网络不佳....", false);
                     if (circleProgressDialogFragment != null) {
                         circleProgressDialogFragment.dismissAllowingStateLoss();
                         circleProgressDialogFragment = null;
@@ -74,7 +76,7 @@ public class LingChangReceiver extends BroadcastReceiver {
 
                     //获取到student信息
                     StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                            .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).unique();
+                            .where(StudentInfoDao.Properties.UserId.eq(UserUtils.getUserId())).list().get(0);
 
 //                    QZXTools.logE("query studentInfo=" + studentInfo, null);
 
@@ -94,7 +96,7 @@ public class LingChangReceiver extends BroadcastReceiver {
 
                     //设置未登录标志
                     SharedPreferences sharedPreferences = MyApplication.getInstance().getSharedPreferences("student_info", MODE_PRIVATE);
-                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
+//                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
                     UserUtils.setOauthId(sharedPreferences, "oauth_id", "");
 
                     UserUtils.removeTgt();
@@ -106,6 +108,9 @@ public class LingChangReceiver extends BroadcastReceiver {
 
                     //解绑云管控
 //                    ManagerControllerClient.getInstance().destroy(MyApplication.getInstance());
+
+                    //撤销别名
+                    MiPushClient.unsetAlias(MyApplication.getInstance(), UserUtils.getUserId(), null);
 
                     AppManager.getAppManager().AppExit();
 

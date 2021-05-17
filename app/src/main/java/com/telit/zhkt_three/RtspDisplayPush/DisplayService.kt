@@ -18,9 +18,11 @@ import com.pedro.rtplibrary.rtmp.RtmpDisplay
 
 import com.pedro.rtplibrary.rtsp.RtspDisplay
 import com.telit.zhkt_three.Constant.Constant
+import com.telit.zhkt_three.MyApplication
 import com.telit.zhkt_three.R
 import com.telit.zhkt_three.customNetty.MsgUtils
 import com.telit.zhkt_three.customNetty.SimpleClientNetty
+import com.zbv.meeting.util.SharedPreferenceUtil
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -30,7 +32,7 @@ class DisplayService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.e(TAG, "RTP Display service create")
+        //Log.e(TAG, "RTP Display service create")
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH)
@@ -56,7 +58,7 @@ class DisplayService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e(TAG, "RTP Display service started")
+        //Log.e(TAG, "RTP Display service started")
         endpoint = intent?.extras?.getString("endpoint")
         if (endpoint != null) {
             prepareStreamRtp()
@@ -114,7 +116,7 @@ class DisplayService : Service() {
         private val connectCheckerRtp = object : ConnectCheckerRtp {
             override fun onConnectionSuccessRtp() {
                 showNotification("Stream started")
-                Log.e(TAG, "RTP service destroy")
+                //Log.e(TAG, "RTP service destroy")
                 ToastUtils.show("SuccessRtp");
                 //推流成功发送消息
                 SimpleClientNetty.getInstance().sendMsgToServer(MsgUtils.HEAD_ScreenCastAddress,
@@ -128,7 +130,7 @@ class DisplayService : Service() {
 
             override fun onConnectionFailedRtp(reason: String) {
                 showNotification("Stream connection failed")
-                Log.e(TAG, "RTP service destroy")
+                //Log.e(TAG, "RTP service destroy")
                 //这个是重连
                 //   displayBase?.reTry(2000);
 
@@ -138,6 +140,8 @@ class DisplayService : Service() {
             override fun onDisconnectRtp() {
                 showNotification("Stream stopped")
                 ToastUtils.show("Stream stopped");
+                SharedPreferenceUtil.getInstance(MyApplication.getInstance())
+                        .setBoolean("openHome", false)
             }
 
             override fun onAuthErrorRtp() {
@@ -162,7 +166,7 @@ class DisplayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e(TAG, "RTP Display service destroy")
+        //Log.e(TAG, "RTP Display service destroy")
         stopStream()
     }
 

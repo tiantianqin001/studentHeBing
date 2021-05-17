@@ -139,7 +139,7 @@ public class RecordController {
     try {
       mediaMuxer.writeSampleData(track, byteBuffer, info);
     } catch (IllegalStateException | IllegalArgumentException e) {
-      Log.i(TAG, "Write error", e);
+      LogUtil.i(TAG,  e.getMessage());
     }
   }
 

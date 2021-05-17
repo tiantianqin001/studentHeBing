@@ -1,6 +1,7 @@
 package com.telit.zhkt_three.Service;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
@@ -16,6 +17,7 @@ import com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity;
 import com.telit.zhkt_three.CustomView.RippleBackground;
 import com.telit.zhkt_three.JavaBean.InterActive.ServerIpInfo;
 import com.telit.zhkt_three.Utils.ApkListInfoUtils;
+import com.telit.zhkt_three.Utils.QZXTools;
 
 import org.json.JSONObject;
 
@@ -57,13 +59,7 @@ public class SockUserServer extends Service {
                 @Override
                 public synchronized void run() {
                     while (true) {
-                        try {
-                            Thread.sleep(1000);
-                            getDatashows();
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        getDatashows();
 
                     }
                 }
@@ -77,16 +73,30 @@ public class SockUserServer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new MyBinder();
     }
 
     private synchronized void getDatashows() {
         //这里是解决点击返回显示延迟的问题
 
         String message = recieveData(multicastSocket, Multicast_IP);//接收组播组传来的消息
-        Intent intent = new Intent("com.gdp2852.demo.service.broadcast");
+        QZXTools.logD("getDatashows......"+message);
+
+
+
+
+        if (dataCallback != null) {
+            dataCallback.dataChanged(message);
+        }
+
+      /*  Intent intent = new Intent();
+        intent.setAction("com.gdp2852.demo.service.broadcast");
         intent.putExtra("message", message);
-        sendBroadcast(intent);
+       // intent.setPackage("com.telit.zhkt_three");  //添加解决Android8.0发送广播接收不到的问题);
+        intent.setPackage(getPackageName());  //添加解决Android8.0发送广播接收不到的问题);
+
+       // intent.setComponent(new ComponentName(getPackageName(),"com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity.MyReceiver"));
+        sendBroadcast(intent);*/
     }
 
 
@@ -115,8 +125,9 @@ public class SockUserServer extends Service {
             socket.receive(packet); // 通过MulticastSocket实例端口从组播组接收数据
             // 将接受的数据转换成字符串形式
             message = new String(packet.getData(), 0, packet.getLength());
+
         } catch (Exception e1) {
-            Log.i(TAG, "recieveData: " + e1);
+          //  Log.i(TAG, "recieveData: " + e1);
 
         }
         return message;
@@ -138,5 +149,27 @@ public class SockUserServer extends Service {
         }
 
         super.onDestroy();
+    }
+
+
+    DataCallback dataCallback = null;
+
+    public DataCallback getDataCallback() {
+        return dataCallback;
+    }
+
+    public void setDataCallback(DataCallback dataCallback) {//注意这里以单个回调为例  如果是向多个activity传送数据 可以定义一个回调集合 在此处进行集合的添加
+        this.dataCallback = dataCallback;
+    }
+
+    // 通过回调机制，将Service内部的变化传递到外部
+    public interface DataCallback {
+        void dataChanged(String str);
+    }
+
+    public class MyBinder extends Binder{
+       public SockUserServer getService() {
+            return SockUserServer.this;
+        }
     }
 }

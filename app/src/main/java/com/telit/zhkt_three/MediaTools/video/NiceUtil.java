@@ -1,20 +1,18 @@
 package com.telit.zhkt_three.MediaTools.video;
 
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 
 import java.util.Formatter;
 import java.util.Locale;
-
-
-
 /**
  * Created by XiaoJianjun on 2017/5/8.
  * 工具类.

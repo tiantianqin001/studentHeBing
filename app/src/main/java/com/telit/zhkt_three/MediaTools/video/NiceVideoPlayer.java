@@ -20,7 +20,6 @@ import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-
 /**
  * Created by XiaoJianjun on 2017/4/28.
  * 播放器
@@ -88,6 +87,7 @@ public class NiceVideoPlayer extends FrameLayout
     public static final int TYPE_NATIVE = 222;
 
     private int mPlayerType = TYPE_IJK;
+   // private int mPlayerType = TYPE_IJK;
     private int mCurrentState = STATE_IDLE;
     private int mCurrentMode = MODE_NORMAL;
 
@@ -365,11 +365,11 @@ public class NiceVideoPlayer extends FrameLayout
                 case TYPE_IJK:
                 default:
                     mMediaPlayer = new IjkMediaPlayer();
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "analyzemaxduration", 100L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "probesize", 10240L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "flush_packets", 1L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "packet-buffering", 0L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "framedrop", 1L);
+                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "analyzemaxduration", 100L);
+                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "probesize", 10240L);
+                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "flush_packets", 1L);
+                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "packet-buffering", 0L);
+                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "framedrop", 1L);
                     break;
             }
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -717,4 +717,5 @@ public class NiceVideoPlayer extends FrameLayout
     public void setOnVideoCompletionListener(OnVideoCompletionListener onVideoCompletionListener) {
         this.onVideoCompletionListener = onVideoCompletionListener;
     }
+
 }

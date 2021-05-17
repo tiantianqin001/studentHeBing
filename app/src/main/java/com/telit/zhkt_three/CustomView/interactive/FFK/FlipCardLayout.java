@@ -54,10 +54,10 @@ public class FlipCardLayout extends ViewGroup implements View.OnTouchListener, V
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mode_width = View.MeasureSpec.getMode(widthMeasureSpec);
-        int size_width = View.MeasureSpec.getSize(widthMeasureSpec);//具体值或者Match_Parent
-        int mode_height = View.MeasureSpec.getMode(heightMeasureSpec);
-        int size_height = View.MeasureSpec.getSize(heightMeasureSpec);
+        int mode_width = MeasureSpec.getMode(widthMeasureSpec);
+        int size_width = MeasureSpec.getSize(widthMeasureSpec);//具体值或者Match_Parent
+        int mode_height = MeasureSpec.getMode(heightMeasureSpec);
+        int size_height = MeasureSpec.getSize(heightMeasureSpec);
 
         int width = 0;
         int height = 0;
@@ -105,8 +105,8 @@ public class FlipCardLayout extends ViewGroup implements View.OnTouchListener, V
             }
         }
 
-        setMeasuredDimension((mode_width == View.MeasureSpec.EXACTLY) ? size_width : width,
-                (mode_height == View.MeasureSpec.EXACTLY) ? size_height : height);
+        setMeasuredDimension((mode_width == MeasureSpec.EXACTLY) ? size_width : width,
+                (mode_height == MeasureSpec.EXACTLY) ? size_height : height);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class FlipCardLayout extends ViewGroup implements View.OnTouchListener, V
 
             View childView = getChildAt(i);
 
-            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) childView.getLayoutParams();
+            MarginLayoutParams layoutParams = (MarginLayoutParams) childView.getLayoutParams();
 
 //            QZXTools.logE("left=" + childView.getLeft() + ";top=" + childView.getTop()
 //                    + ";right=" + childView.getRight() + ";bottom=" + childView.getBottom()
@@ -135,13 +135,13 @@ public class FlipCardLayout extends ViewGroup implements View.OnTouchListener, V
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        return new ViewGroup.MarginLayoutParams(lp);
+    protected LayoutParams generateLayoutParams(LayoutParams lp) {
+        return new MarginLayoutParams(lp);
     }
 
     @Override
-    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new ViewGroup.MarginLayoutParams(getContext(), attrs);
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(), attrs);
     }
 
     private static final int MAX_HORIZONTAL_COUNT = 3;

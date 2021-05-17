@@ -24,7 +24,7 @@
             android:padding="@dimen/x5"
             android:src="@mipmap/icon_video" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -34,21 +34,26 @@
 
             <TextView
                 android:id="@+id/micro_class_item_tv_date"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2019/03/26  16:30"
                 android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/micro_class_item_tv_size"
+                android:ellipsize="end"
                 android:textSize="@dimen/x24" />
 
             <TextView
                 android:id="@+id/micro_class_item_tv_size"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="20M"
+                android:layout_centerVertical="true"
+                android:text="0kb"
+                android:layout_alignParentRight="true"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/x24" />
-        </LinearLayout>
+        </RelativeLayout>
     </FrameLayout>
 
     <LinearLayout

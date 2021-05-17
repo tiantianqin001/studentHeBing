@@ -2,6 +2,7 @@ package com.telit.zhkt_three.Activity.PersonalSpace;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -11,7 +12,7 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.CookieSyncManager;
+import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.ProgressBar;
@@ -20,24 +21,28 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
 import com.telit.zhkt_three.Activity.AfterHomeWork.NewJobReportActivity;
-import com.telit.zhkt_three.Activity.HomeScreen.PersonInfoActivity;
+import com.telit.zhkt_three.Activity.HomeScreen.MainActivity;
 import com.telit.zhkt_three.Activity.MistakesCollection.MistakesCollectionActivity;
+import com.telit.zhkt_three.Activity.OauthMy.ProviceActivity;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.CustomView.tbs.TBSHeadView;
 import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
+import com.telit.zhkt_three.Utils.Jpush.JpushApply;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
-
+import com.xiaomi.mipush.sdk.MiPushClient;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xwalk.core.XWalkActivity;
+import org.xwalk.core.XWalkCookieManager;
 import org.xwalk.core.XWalkHttpAuthHandler;
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkPreferences;
@@ -63,8 +68,6 @@ import okhttp3.Response;
  */
 public class PersonalSpaceActivity extends XWalkActivity {
 
-
-
     private TBSHeadView tbsHeadView;
     private XWalkView xWalkWebView;
     private XWalkSettings xWVSettings;
@@ -83,7 +86,9 @@ public class PersonalSpaceActivity extends XWalkActivity {
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(PersonalSpaceActivity.this, "服务端错误", false);
+
+                        QZXTools.popToast(PersonalSpaceActivity.this, "网络很慢", false);
+
 
                     }
 
@@ -92,7 +97,9 @@ public class PersonalSpaceActivity extends XWalkActivity {
                     if (isShow){
                         String visitUrl = (String) msg.obj;
                         //访问个人空间
-                        xWalkWebView.loadUrl(visitUrl);
+                      //  xWalkWebView.loadUrl(visitUrl);
+                        xWalkWebView.load(visitUrl,"");
+
                     }
 
                     break;
@@ -100,18 +107,47 @@ public class PersonalSpaceActivity extends XWalkActivity {
                     if (isShow){
 
                         QZXTools.popToast(PersonalSpaceActivity.this, (String) msg.obj, false);
+
+                      /*  startActivity(new Intent(PersonalSpaceActivity.this, ProviceActivity.class));
+                        finish();*/
+
+                      //  loginOut();
+                        //延长登录的tat  自动登录
+                        refreshTgtLogin();
+
                     }
+                    break;
+                case OffLine_Success:
+                    //设置未登录标志
+                    SharedPreferences sharedPreferences = getSharedPreferences("student_info", MODE_PRIVATE);
+                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
+                    UserUtils.setOauthId(sharedPreferences, "oauth_id", "");
+                    UserUtils.removeTgt();
+                    /**
+                     * 登出解除极光推送
+                     * */
+                    JpushApply.getIntance().unRegistJpush(MyApplication.getInstance());
+
+                    //撤销别名
+                    MiPushClient.unsetAlias(PersonalSpaceActivity.this, UserUtils.getUserId(), null);
+
+                    Intent intent=new Intent(PersonalSpaceActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+                case OffLine_Failed:
+                    QZXTools.popToast(PersonalSpaceActivity.this, "退出登录失败！", false);
                     break;
             }
         }
     };
+    private ProgressBar mBar;
 
 
     @Override
     protected void onXWalkReady() {
         XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
 //        XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
-
         XWalkPreferences.setValue(XWalkPreferences.JAVASCRIPT_CAN_OPEN_WINDOW, true);
         XWalkPreferences.setValue(XWalkPreferences.ALLOW_UNIVERSAL_ACCESS_FROM_FILE, true);
         XWalkPreferences.setValue(XWalkPreferences.SUPPORT_MULTIPLE_WINDOWS, true);
@@ -135,7 +171,8 @@ public class PersonalSpaceActivity extends XWalkActivity {
 
         xWVSettings.setAllowFileAccess(true);
         xWVSettings.setDomStorageEnabled(true);
-        xWVSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        xWVSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        xWVSettings.setBlockNetworkLoads (false);;
 
         xWVSettings.setAllowUniversalAccessFromFileURLs(true);
 //        xWVSettings.setMediaPlaybackRequiresUserGesture(true);
@@ -193,6 +230,8 @@ public class PersonalSpaceActivity extends XWalkActivity {
                 //super.onReceivedSslError(view, callback, error);
                 Log.e(TAG, "onReceivedSslError");
 
+                callback.onReceiveValue(true);
+
             }
 
             @Override
@@ -209,6 +248,13 @@ public class PersonalSpaceActivity extends XWalkActivity {
             @Override
             public void onProgressChanged(XWalkView view, int progressInPercent) {
                 super.onProgressChanged(view, progressInPercent);
+
+                if (progressInPercent == 100) {
+                    mBar.setVisibility(View.GONE);
+                } else {
+                    mBar.setVisibility(View.VISIBLE);
+                    mBar.setProgress(progressInPercent);
+                }
             }
 
 
@@ -234,6 +280,11 @@ public class PersonalSpaceActivity extends XWalkActivity {
         });
 
         //获取单点免登陆权限
+        xWalkWebView.setDrawingCacheEnabled(false);//不使用缓存
+        xWalkWebView.getNavigationHistory().clear();//清除历史记录
+        xWalkWebView.clearCache(true);//清楚包括磁盘缓存
+        XWalkCookieManager xWalkCookieManager=new XWalkCookieManager();
+        xWalkCookieManager.removeAllCookie();
         fetchNoLoginPermission();
     }
 
@@ -253,13 +304,10 @@ public class PersonalSpaceActivity extends XWalkActivity {
         EventBus.getDefault().register(this);
 
         tbsHeadView = findViewById(R.id.tbsHeadView);
+        xWalkWebView = findViewById(R.id.personal_space_webview);
 
-          xWalkWebView = findViewById(R.id.personal_space_webview);
+        mBar = findViewById(R.id.progress_Bar);
 
-        ProgressBar mPageLoadingProgressBar = findViewById(R.id.progressBar);
-        mPageLoadingProgressBar.setMax(100);
-        mPageLoadingProgressBar.setProgressDrawable(this.getResources()
-                .getDrawable(R.drawable.color_progressbar));
     }
 
 
@@ -274,6 +322,11 @@ public class PersonalSpaceActivity extends XWalkActivity {
         super.onDestroy();
         //退出个人中心埋点
         BuriedPointUtils.buriedPoint("2036","","","","");
+
+
+        // Don't use the cache, load from the network.
+        xWalkWebView.onDestroy();
+        xWalkWebView=null;
     }
 
     @Subscriber(tag = "reportJson", mode = ThreadMode.MAIN)
@@ -316,24 +369,30 @@ public class PersonalSpaceActivity extends XWalkActivity {
 
         String deviceId = md5(wlan_mac);
 
+
         String url = "http://open.ahjygl.gov.cn/sso-oauth/client/authorizeUrl";
+        String getTgt = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("getTgt");
+
         Map<String, String> paramMap = new LinkedHashMap<>();
         paramMap.put("appkey", Constant.EduAuthAppKey);
-        paramMap.put("tgt", UserUtils.getTgt());
+        paramMap.put("tgt", getTgt);
+
         paramMap.put("client", "pc");//一定要传递正确
         paramMap.put("mac", wlan_mac);
         paramMap.put("deviceId", deviceId);
         paramMap.put("url", PersonalSpaceUrl);
+
+
+        QZXTools.logE("fetchNoLoginPermission: "+paramMap,null);
 
         OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, paramMap, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mHandler.sendEmptyMessage(Server_Error);
             }
-
             @Override
             public void onResponse(Call call, Response response) {
-                Log.i(TAG, "onResponse: "+response.body().toString());
+                QZXTools.logE( "onResponse: "+response.body().toString(),null);
                 if (response.isSuccessful()) {
                     try {
                         String resultJson = response.body().string();//只能使用一次response.body().string()
@@ -403,5 +462,139 @@ public class PersonalSpaceActivity extends XWalkActivity {
             hexValue.append(Integer.toHexString(val));
         }
         return hexValue.toString();
+    }
+
+
+    /**
+     * OauthMy/TestActivity.java中的登出
+     */
+    private static final int OffLine_Success = 3;
+    private static final int OffLine_Failed = 4;
+    public void loginOut() {
+        String url = "http://open.ahjygl.gov.cn/sso-oauth/client/logout";
+
+        Map<String, String> paramMap = new LinkedHashMap<>();
+        paramMap.put("tgt", UserUtils.getTgt());
+
+
+        OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, paramMap, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                QZXTools.logE("失败", null);
+                mHandler.sendEmptyMessage(OffLine_Failed);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resultJson = response.body().string();//只能使用一次response.body().string()
+                    QZXTools.logE("response=" + resultJson, null);
+
+                    Gson gson = new Gson();
+                    Map<String, Object> results = gson.fromJson(resultJson, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+
+                    if (results.get("code").equals("1") || results.get("message").equals("success")) {
+                        mHandler.sendEmptyMessage(OffLine_Success);
+                    } else {
+                        mHandler.sendEmptyMessage(OffLine_Failed);
+                    }
+                }
+            }
+        });
+    }
+
+
+    //自动登录
+    private void refreshTgtLogin() {
+        String url = "http://open.ahjygl.gov.cn/sso-oauth/client/refreshTgt";
+        String getTgt = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("getTgt");
+        String deviceId = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("deviceId");
+        Map<String, String> paramMap = new LinkedHashMap<>();
+        paramMap.put("tgt", getTgt);
+        paramMap.put("client", "pc");//一定要传递正确
+        paramMap.put("deviceId", deviceId);
+
+        QZXTools.logE("paramMap:"+new Gson().toJson(paramMap),null);
+
+        OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, paramMap, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                QZXTools.logE("失败", null);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resultJson = response.body().string();//只能使用一次response.body().string()
+                    QZXTools.logE("response=" + resultJson, null);
+                    if (TextUtils.isEmpty(resultJson)){
+                        Gson gson = new Gson();
+                        Map<String, Object> map = gson.fromJson(resultJson, new TypeToken<Map<String, Object>>() {
+                        }.getType());
+                        if (map.get("code").equals("1")) {
+                            getCallback();
+                        } else {
+                            //失败进入登录页面
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(PersonalSpaceActivity.this, ProviceActivity.class));
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    public void getCallback() {
+        String getTgt = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("getTgt");
+        String deviceId = SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("deviceId");
+        String url = "http://open.ahjygl.gov.cn/sso-oauth/client/validateTgt";
+        Map<String, String> paramMap = new LinkedHashMap<>();
+        paramMap.put("appkey", Constant.EduAuthAppKey);
+        paramMap.put("tgt", getTgt);
+        paramMap.put("client", "pc");//一定要传递正确
+        paramMap.put("deviceId", deviceId);
+
+        OkHttp3_0Utils.getInstance().asyncGetOkHttp(url, paramMap, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                QZXTools.logE("失败", null);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    /**
+                     *
+                     * response={"code":"1","message":"success","data":"9c5e8fc2cc6e5a197b4ea823497f3da719ce42bcab3b04bf532573912beb97da4826d86417934d5f5d4a9af096137783f2e175af23ffe065","success":true}
+                     * */
+                    String resultJson = response.body().string();//只能使用一次response.body().string()
+                    QZXTools.logE("response=" + resultJson, null);
+                    Gson gson = new Gson();
+                    Map<String, Object> map = gson.fromJson(resultJson, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    QZXTools.logE("data=" + map.get("data"), null);
+                    if (map.get("code").equals("1")) {
+                        //成功才保存保存tgt
+                        fetchNoLoginPermission();
+                    } else if (map.get("code").equals("-1")) {
+                        //不成功删除tgt
+                        loginOut();
+                    }
+                   /* setResult(RESULT_OK, intent);
+                    finish();*/
+
+
+                }
+            }
+        });
+
     }
 }

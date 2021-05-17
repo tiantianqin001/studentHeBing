@@ -3,26 +3,19 @@ package com.telit.zhkt_three.MediaTools;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.telit.zhkt_three.Activity.BaseActivity;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.JavaBean.Gson.CommentCommitBean;
-import com.telit.zhkt_three.JavaBean.Gson.PreShareFilesBeans;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,8 +42,6 @@ public class CommentCommitActivity extends BaseActivity {
     TextView comment_score;
     @BindView(R.id.comment_rating_bar)
     RatingBar comment_rating_bar;
-    @BindView(R.id.comment_btn_commit)
-    TextView comment_btn_commit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +58,16 @@ public class CommentCommitActivity extends BaseActivity {
         String shareTitle = getIntent().getStringExtra("shareTitle");
         String resId = getIntent().getStringExtra("resId");
         String resName = getIntent().getStringExtra("resName");
+        String resStars = getIntent().getStringExtra("resStars");
         int commentId = getIntent().getIntExtra("commentId",0);
 
+        if (!TextUtils.isEmpty(resStars)){
+            float avgStar = Float.valueOf(resStars) / 2f;
+            comment_rating_bar.setRating(avgStar);
+            comment_score.setText(resStars + "分");
+            comment_words.setText(shareTitle);
+            return;
+        }
 
         comment_rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -124,7 +123,7 @@ public class CommentCommitActivity extends BaseActivity {
                                 CommentCommitBean.ResultBean resultBean = preShareFilesBeans.getResult().get(0);
                                 comment_words.setText(resultBean.getResComment());
                                 comment_score.setText((resultBean.getResStars() + "分"));
-                                comment_rating_bar.setRating(resultBean.getResStars()/2);
+                                comment_rating_bar.setRating(resultBean.getResStars()/2f);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

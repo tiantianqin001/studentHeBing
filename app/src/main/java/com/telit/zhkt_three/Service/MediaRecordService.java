@@ -41,9 +41,9 @@ public class MediaRecordService extends Thread {
             //在mediarecorder.prepare()方法后调用
             mVirtualDisplay = mMediaProjection.createVirtualDisplay(TAG + "-display", mWidth, mHeight, mDpi,
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC, mMediaRecorder.getSurface(), null, null);
-            Log.i(TAG, "created virtual display: " + mVirtualDisplay);
+
             mMediaRecorder.start();
-            Log.i(TAG, "mediarecorder start");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

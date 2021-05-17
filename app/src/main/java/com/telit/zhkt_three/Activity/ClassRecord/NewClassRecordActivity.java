@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,20 +22,15 @@ import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.CustomView.CustomHeadLayout;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.JavaBean.ClassRecord.ActualOrderClassRecord;
 import com.telit.zhkt_three.JavaBean.ClassRecord.ClassRecordTwo;
 import com.telit.zhkt_three.JavaBean.ClassRecord.OrderByDateClassRecord;
 import com.telit.zhkt_three.JavaBean.Gson.ClassRecordTwoBean;
-import com.telit.zhkt_three.JavaBean.StudentInfo;
-import com.telit.zhkt_three.MyApplication;
 import com.telit.zhkt_three.R;
 import com.telit.zhkt_three.Utils.BuriedPointUtils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
-import com.telit.zhkt_three.greendao.StudentInfoDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +94,7 @@ public class NewClassRecordActivity extends BaseActivity implements View.OnClick
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(NewClassRecordActivity.this, "服务端错误！", false);
+                        QZXTools.popToast(NewClassRecordActivity.this, getResources().getString(R.string.current_net_err), false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -167,22 +161,7 @@ private static final String TAG="tiantian008";
         unbinder = ButterKnife.bind(this);
 
         //设置头像信息等
-        StudentInfo studentInfo = MyApplication.getInstance().getDaoSession().getStudentInfoDao().queryBuilder()
-                .where(StudentInfoDao.Properties.StudentId.eq(UserUtils.getStudentId())).unique();
-        if (studentInfo != null) {
-            String clazz;
-            if (studentInfo.getClassName() != null) {
-                if (studentInfo.getGradeName() != null) {
-                    clazz = studentInfo.getGradeName().concat(studentInfo.getClassName());
-                } else {
-                    clazz = studentInfo.getClassName();
-                }
-            } else {
-                clazz = "";
-            }
-            class_record_head_layout.setHeadInfo(studentInfo.getPhoto(), studentInfo.getStudentName(), clazz);
-        }
-
+        class_record_head_layout.setHeadInfo(UserUtils.getAvatarUrl(), UserUtils.getStudentName(), UserUtils.getClassName());
         request_retry.setOnClickListener(this);
         link_network.setOnClickListener(this);
 
@@ -248,7 +227,7 @@ private static final String TAG="tiantian008";
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.i(TAG, "onScrolled: "+dy);
+                QZXTools.logE("onScrolled: "+dy,null);
             }
         });
         if (circleProgressDialogFragment == null) {

@@ -9,7 +9,7 @@ import android.view.SurfaceView;
  */
 
 public class PusherContract {
-    public interface View extends BaseView<PusherContract.Presenter> {
+    public interface View extends BaseView<Presenter> {
         void changeViewStatus(int status, String URL);
     }
 

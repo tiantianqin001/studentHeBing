@@ -9,17 +9,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.telit.zhkt_three.Activity.HomeScreen.LoginActivity;
 import com.telit.zhkt_three.Activity.HomeScreen.MainActivity;
-import com.telit.zhkt_three.Activity.InteractiveScreen.SelectClassActivity;
 import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
@@ -33,11 +35,16 @@ import com.telit.zhkt_three.Utils.MD5Utils;
 import com.telit.zhkt_three.Utils.OkHttp3_0Utils;
 import com.telit.zhkt_three.Utils.QZXTools;
 import com.telit.zhkt_three.Utils.UserUtils;
+import com.telit.zhkt_three.Utils.VersionUtils;
 import com.telit.zhkt_three.Utils.eventbus.EventBus;
 import com.telit.zhkt_three.Utils.eventbus.Subscriber;
 import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
+import com.telit.zhkt_three.dialoge.LoadDialog;
 import com.telit.zhkt_three.greendao.StudentInfoDao;
-
+import com.tencent.mars.comm.NetStatusUtil;
+import com.xiaomi.mipush.sdk.MiPushClient;
+import com.zbv.basemodel.LingChuangUtils;
+import com.zbv.meeting.util.SharedPreferenceUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +64,7 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
@@ -91,15 +99,25 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popCommonToast(ProviceActivity.this, "服务端错误！", false);
+                        QZXTools.popCommonToast(ProviceActivity.this, "当前网络不佳....请检查网络", false);
+
+                     /*   Intent intent=new Intent(ProviceActivity.this, LoginActivity.class);
+                        startActivity(intent);*/
+
+                        if (loadDialog!=null){
+                            loadDialog.cancel();
+                            loadDialog=null;
+                        }
 
                     }
-
-
                     break;
                 case Error404:
                     if (isShow){
-                        QZXTools.popCommonToast(ProviceActivity.this, "服务端请求失效，没有相关资源！", false);
+                        QZXTools.popCommonToast(ProviceActivity.this, "当前网络不佳....", false);
+                        if (loadDialog!=null){
+                            loadDialog.cancel();
+                            loadDialog=null;
+                        }
                     }
                     break;
                 case Operate_Success:
@@ -110,21 +128,43 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                          * */
                         JpushApply.getIntance().registJpush(MyApplication.getInstance());
 
-                        QZXTools.popCommonToast(ProviceActivity.this, (String) msg.obj, false);
+                        QZXTools.logE("Alias:"+UserUtils.getUserId(),null);
 
-                        startActivity(new Intent(ProviceActivity.this, MainActivity.class));
+                        //设置小米推送别名
+                        MiPushClient.setAlias(ProviceActivity.this, UserUtils.getUserId(), null);
+
+                       // QZXTools.popCommonToast(ProviceActivity.this, (String) msg.obj, false);
+
+                        //设置成功登录标志
+                        UserUtils.setBooleanTypeSpInfo(sp_student, "isLoginIn", true);
+
+                     //   startActivity(new Intent(ProviceActivity.this, MainActivity.class));
+
                         //结束登录页面
                         ProviceActivity.this.finish();
 
                         //登录成功埋点
                         BuriedPointUtils.buriedPoint("2001","","","","");
+
+                        if (timer!=null){
+                            timer.cancel();
+                            timer=null;
+                        }
+
+                        if (loadDialog!=null){
+                            loadDialog.cancel();
+                            loadDialog=null;
+                        }
                     }
-
-
                     break;
                 case Other_Error:
                     if (isShow){
-                        QZXTools.popCommonToast(ProviceActivity.this, (String) msg.obj, false);
+                      //  QZXTools.popCommonToast(ProviceActivity.this, (String) msg.obj, false);
+
+                        if (loadDialog!=null){
+                            loadDialog.cancel();
+                            loadDialog=null;
+                        }
                     }
                     break;
                 case Oauth_Result:
@@ -137,12 +177,25 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                         String Oauth_UserId = (String) map.get("data");
 
                         sp_student.edit().putString("oauth_id", Oauth_UserId).commit();
+
+                        if (loadDialog!=null){
+                            loadDialog.cancel();
+                            loadDialog=null;
+                        }
                     }
 
                     break;
             }
         }
     };
+    private Timer timer;
+
+    private TextView tv_refresh;
+    private TextView tv_versionCode;
+    private View view_no_net;
+    private ProgressBar mBar;
+    private LoadDialog loadDialog;
+
     private void loginIn() {
         if (!TextUtils.isEmpty(oauthCall.tgt)) {
             String url = "http://open.ahjygl.gov.cn/sso-oauth/client/refreshTgt";
@@ -292,6 +345,13 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                 @Override
                 public void onProgressChanged(XWalkView view, int progressInPercent) {
                     super.onProgressChanged(view, progressInPercent);
+
+                    if (progressInPercent == 100) {
+                        mBar.setVisibility(View.GONE);
+                    } else {
+                        mBar.setVisibility(View.VISIBLE);
+                        mBar.setProgress(progressInPercent);
+                    }
                 }
 
 
@@ -316,12 +376,12 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                 }
             });
         //开始登陆
-        if (!TextUtils.isEmpty(sp_student.getString("oauth_id", ""))) {
+      /*  if (!TextUtils.isEmpty(sp_student.getString("oauth_id", ""))) {
             requestOauthLogin(sp_student.getString("oauth_id", ""));
         }else {
-            loginIn();
-        }
 
+        }*/
+        loginIn();
         if (JPushInterface.isPushStopped(MyApplication.getInstance())) {
             QZXTools.logE("LoginActivity JPush resume", null);
             JPushInterface.resumePush(MyApplication.getInstance());
@@ -333,9 +393,11 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_1);
         AndroidBug5497Workaround.assistActivity(this);
+        mBar = findViewById(R.id.progress_Bar);
         xWalkWebView = findViewById(R.id.webView);
-      TextView tv_click_login = findViewById(R.id.tv_click_login);
-      ImageView iv_open_wifi = findViewById(R.id.iv_open_wifi);
+        TextView tv_click_login = findViewById(R.id.tv_click_login);
+        TextView tv_click_login_offline = findViewById(R.id.tv_click_login_offline);
+        ImageView iv_open_wifi = findViewById(R.id.iv_open_wifi);
         isShow=true;
 
         sp_student = getSharedPreferences("student_info", MODE_PRIVATE);
@@ -346,13 +408,64 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
         tv_click_login.setOnClickListener(this);
         iv_open_wifi.setOnClickListener(this);
 
+        tv_refresh = findViewById(R.id.tv_refresh);
+        tv_versionCode = findViewById(R.id.tv_versionCode);
+        tv_versionCode.setText("学生端：v" + VersionUtils.getVersionName(this));
+
+        tv_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetStatusUtil.isNetworkConnected(ProviceActivity.this)) {
+                    view_no_net.setVisibility(View.GONE);
+
+                    loginIn();
+                }else {
+                    view_no_net.setVisibility(View.VISIBLE);
+
+                    Toast.makeText(ProviceActivity.this,"网络没有连接",Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        //离线登录
+        tv_click_login_offline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ProviceActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view_no_net = findViewById(R.id.view_no_net);
+        if (NetStatusUtil.isNetworkConnected(this)) {
+            view_no_net.setVisibility(View.GONE);
+        }
+
+        loadDialog = new LoadDialog(this);
     }
-
-
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+
+        if (timer!=null){
+            timer.cancel();
+            timer=null;
+        }
+    }
+  public static final int NET_OUT_NET=0X008;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            Toast.makeText(ProviceActivity.this,"网络没有连接",Toast.LENGTH_LONG).show();
+        }
+    };
+    @Override
+    protected void onResume() {
+        super.onResume();
+      //  enterLoginPage();
     }
 
     //----------------------------登录页面
@@ -372,15 +485,19 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
         Map<String, String> map = new HashMap<String, String>();
         map.put("User-Agent", "");
         xWalkWebView.loadUrl("http://open.ahjygl.gov.cn/sso-oauth/client/login?deviceId=" + deviceId + "&themeType=" + themeType, map);
-
+        SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("deviceId",deviceId);
     }
 
     @Subscriber(tag = "getTgt", mode = ThreadMode.MAIN)
     public void getCallback(String flag) {
+        if (loadDialog!=null){
+            loadDialog.show();
+        }
         String url = "http://open.ahjygl.gov.cn/sso-oauth/client/validateTgt";
         Map<String, String> paramMap = new LinkedHashMap<>();
         paramMap.put("appkey", Constant.EduAuthAppKey);
-        paramMap.put("tgt", oauthCall.tgt);
+        paramMap.put("tgt", SharedPreferenceUtil.getInstance(MyApplication.getInstance()).getString("getTgt"));
+
         paramMap.put("client", "pc");//一定要传递正确
         paramMap.put("deviceId", deviceId);
 
@@ -388,6 +505,8 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
             @Override
             public void onFailure(Call call, IOException e) {
                 QZXTools.logE("失败", null);
+
+                QZXTools.logD("tiantianqinLogin.............."+e.getMessage());
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -398,6 +517,8 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                      * */
                     String resultJson = response.body().string();//只能使用一次response.body().string()
                     QZXTools.logE("response=" + resultJson, null);
+
+                    QZXTools.logD("tiantianqinLogin..........."+resultJson.toString());
                     Gson gson = new Gson();
                     Map<String, Object> map = gson.fromJson(resultJson, new TypeToken<Map<String, Object>>() {
                     }.getType());
@@ -415,7 +536,12 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
 
                     } else if (map.get("code").equals("-1")) {
                         //不成功删除tgt
-                        loginOut();
+                        //loginOut();
+
+                        Message message = mHandler.obtainMessage();
+                        message.what = Other_Error;
+                        message.obj = (String) map.get("data");
+                        mHandler.sendMessage(message);
                     }
                    /* setResult(RESULT_OK, intent);
                     finish();*/
@@ -436,8 +562,6 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
         //这里是省平台登录
         UserUtils.setBooleanTypeSpInfo(sp_student, "IsOauthMode", true);
 
-
-
         String url = UrlUtils.BaseUrl + UrlUtils.OauthLogin;
 
 //        String url = "http://172.16.4.40:8090/wisdomclass/toLoginByOauth";
@@ -448,6 +572,8 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
         paraMap.put("userId", userXfId);
         paraMap.put("type", "student");
         //传入极光的注册ID作为设备id
+        String registrationID = JPushInterface.getRegistrationID(this);
+        QZXTools.logD("tiantianqinLogin...........registrationID="+registrationID);
         paraMap.put("deviceId", JPushInterface.getRegistrationID(this));
 
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
@@ -456,6 +582,9 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                 QZXTools.logE("onFailure e=" + e, null);
                 //服务端错误,例如连接、读取、写入超时等
                 mHandler.sendEmptyMessage(Server_Error);
+
+
+                QZXTools.logD("tiantianqinLogin...........调自己的接口登录失败..."+e.getMessage());
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -464,6 +593,8 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
 //                            QZXTools.logE("resultJson=" + resultJson, null);
                     try {
                         String resultJson = response.body().string();
+
+                        QZXTools.logD("tiantianqinLogin...........调自己的接口登录失败..."+resultJson);
                         JSONObject jsonObject = new JSONObject(resultJson);
                         boolean success = jsonObject.getBoolean("success");
                         String errorCode = jsonObject.getString("errorCode");
@@ -485,6 +616,7 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                             UserUtils.setStringTypeSpInfo(sp_student, "classId", studentInfo.getClassId());
                             UserUtils.setStringTypeSpInfo(sp_student, "userId", studentInfo.getUserId());
                             UserUtils.setStringTypeSpInfo(sp_student, "shot_classId", studentInfo.getClassShortId());
+                            UserUtils.setStringTypeSpInfo(sp_student, "token", studentInfo.getToken());
 
 
                             //新增className studentName photo
@@ -495,9 +627,6 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                                 UserUtils.setStringTypeSpInfo(sp_student, "avatarUrl", studentInfo.getPhoto());
                             }
 
-                            //设置成功登录标志
-                            UserUtils.setBooleanTypeSpInfo(sp_student, "isLoginIn", true);
-
                             //保存到本地数据库
                             StudentInfoDao studentInfoDao = MyApplication.getInstance().getDaoSession().getStudentInfoDao();
                             studentInfoDao.insertOrReplace(studentInfo);
@@ -506,9 +635,8 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                             message.what = Operate_Success;
                             message.obj = "登录成功";
                             mHandler.sendMessage(message);
-
-
-
+                            String s = MD5Utils.MD5(studentInfo.getSchoolId());
+                            Log.i("schoolId", "onResponse: "+s);
                             //在登录成功后，我们要管控我们的app设置成开机自启 tudo
                             Intent intent = new Intent("com.linspirer.edu.loginapkfinish");
                             intent.putExtra("userid", studentInfo.getUserId());
@@ -517,6 +645,7 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                             intent.putExtra("classname", studentInfo.getGradeName()
                                     + " " + studentInfo.getClassName());
                             intent.putExtra("txurl", studentInfo.getPhoto());
+                           // intent.putExtra("useOfflineLogin", false);
                             intent.setPackage("com.android.launcher3");
                             sendBroadcast(intent);
                         } else {
@@ -538,7 +667,10 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
                 }
             }
         });
+
     }
+
+
 
     // MD5加密，32位小写
     public static String md5(String str) {
@@ -599,7 +731,13 @@ public class ProviceActivity extends XWalkActivity implements View.OnClickListen
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String resultJson = response.body().string();//只能使用一次response.body().string()
+                    //设置未登录标志
+                    SharedPreferences sharedPreferences = getSharedPreferences("student_info", MODE_PRIVATE);
+                    UserUtils.setBooleanTypeSpInfo(sharedPreferences, "isLoginIn", false);
+                    UserUtils.setOauthId(sharedPreferences, "oauth_id", "");
+                    UserUtils.removeTgt();
 
+                    SharedPreferenceUtil.getInstance(MyApplication.getInstance()).setString("getTgt","");
                     QZXTools.logE("response=" + resultJson, null);
                 }
             }

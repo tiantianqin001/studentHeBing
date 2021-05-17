@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:maxHeight="@dimen/x12"
             android:minHeight="@dimen/x12"
-            android:progress="60"
+            android:progress="0"
             android:progressDrawable="@drawable/seekbar_my_style"
             android:thumb="@drawable/shape_music_thumb" />
 

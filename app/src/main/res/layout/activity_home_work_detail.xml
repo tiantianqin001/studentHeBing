@@ -50,7 +50,7 @@
         android:id="@+id/homework_detail_vp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></com.telit.zhkt_three.CusomPater>
+        android:layout_weight="1"/>
 
     <View
         android:layout_width="match_parent"
@@ -79,11 +79,26 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/x36" />
 
+        <TextView
+            android:id="@+id/homework_btn_save"
+            android:layout_width="@dimen/y220"
+            android:layout_height="@dimen/x77"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/x18"
+            android:background="@drawable/shape_cjfl_result_head_save"
+            android:gravity="center"
+            android:text="保存"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/x36"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginTop="@dimen/x12"
+            />
+
 
         <!--批改作业-->
         <TextView
             android:id="@+id/tv_comment_teacher"
-            android:layout_width="match_parent"
+            android:layout_width="900dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/x18"
             android:textSize="@dimen/x32"

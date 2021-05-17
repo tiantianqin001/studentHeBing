@@ -117,7 +117,6 @@ public class NewJobReportActivity extends BaseActivity implements OnChartValueSe
 
     private ReportDataBean reportDataBean;
 
-    //测试Json
     private String reportJson = "{\n" +
             "\t\"chartData\": {\n" +
             "\t\t\"pieChartData\": [{\n" +

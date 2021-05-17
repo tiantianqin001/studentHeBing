@@ -4,16 +4,23 @@
     android:layout_height="wrap_content">
 
     <!--head view-->
-    <View
-        android:id="@+id/class_record_line"
-        android:layout_width="@dimen/x2"
+    <RelativeLayout
+        android:id="@+id/class_record_left_view"
+        android:layout_width="@dimen/y208"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/mid_class_record_linear"
-        android:layout_alignTop="@+id/mid_class_record_linear"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/x103"
-        android:layout_marginRight="@dimen/x103"
-        android:background="#637EDA" />
+        android:layout_alignTop="@+id/mid_class_record_linear">
+
+        <View
+            android:id="@+id/class_record_line"
+            android:layout_width="@dimen/x2"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/x103"
+            android:layout_marginRight="@dimen/x103"
+            android:background="#637EDA" />
+
+    </RelativeLayout>
 
     <!--four item view-->
     <LinearLayout
@@ -21,31 +28,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/x10"
-        android:layout_toRightOf="@+id/class_record_line"
+        android:layout_toRightOf="@+id/class_record_left_view"
         android:orientation="horizontal">
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/mid_class_record_one"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/mid_class_record_two"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/mid_class_record_three"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
 
         <com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView
             android:id="@+id/mid_class_record_four"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></com.telit.zhkt_three.CustomView.ClassRecord.ClassRecordItemView>
+            android:layout_weight="1"/>
     </LinearLayout>
 </RelativeLayout>

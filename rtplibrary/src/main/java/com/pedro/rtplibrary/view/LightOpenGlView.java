@@ -67,7 +67,7 @@ public class LightOpenGlView extends OpenGlViewBase {
 
   @Override
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-    Log.i(TAG, "size: " + width + "x" + height);
+
     this.previewWidth = width;
     this.previewHeight = height;
   }

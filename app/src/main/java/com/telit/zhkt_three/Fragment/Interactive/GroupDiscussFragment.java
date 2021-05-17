@@ -45,8 +45,6 @@ import com.telit.zhkt_three.Constant.Constant;
 import com.telit.zhkt_three.Constant.UrlUtils;
 import com.telit.zhkt_three.Fragment.CircleProgressDialogFragment;
 import com.telit.zhkt_three.Fragment.Dialog.DiscussConclusionFragment;
-import com.telit.zhkt_three.Fragment.Dialog.NoResultDialog;
-import com.telit.zhkt_three.Fragment.Dialog.NoSercerDialog;
 import com.telit.zhkt_three.Fragment.Dialog.TBSDownloadDialog;
 import com.telit.zhkt_three.JavaBean.Gson.GroupListBean;
 import com.telit.zhkt_three.JavaBean.InterActive.DiscussBean;
@@ -70,7 +68,6 @@ import com.telit.zhkt_three.Utils.eventbus.ThreadMode;
 import com.telit.zhkt_three.customNetty.MsgUtils;
 import com.telit.zhkt_three.customNetty.SimpleClientNetty;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,6 +81,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -170,7 +169,7 @@ public class GroupDiscussFragment extends Fragment implements View.OnClickListen
             switch (msg.what) {
                 case Server_Error:
                     if (isShow){
-                        QZXTools.popToast(getContext(), "服务端错误！", false);
+                        QZXTools.popToast(getContext(), "当前网络不佳....", false);
                         if (circleProgressDialogFragment != null) {
                             circleProgressDialogFragment.dismissAllowingStateLoss();
                             circleProgressDialogFragment = null;
@@ -560,12 +559,12 @@ public class GroupDiscussFragment extends Fragment implements View.OnClickListen
         @NonNull
         @Override
         public RVPullMenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            return new RVPullMenuAdapter.RVPullMenuViewHolder(LayoutInflater.from(getContext())
+            return new RVPullMenuViewHolder(LayoutInflater.from(getContext())
                     .inflate(R.layout.adapter_item_discuss_file, viewGroup, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RVPullMenuAdapter.RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
+        public void onBindViewHolder(@NonNull RVPullMenuViewHolder rvPullMenuViewHolder, int i) {
             rvPullMenuViewHolder.textView.setText("文件资源" + (i + 1));
             String url = fileList.get(i);
             String format = url.substring(url.lastIndexOf(".") + 1);
@@ -805,20 +804,40 @@ public class GroupDiscussFragment extends Fragment implements View.OnClickListen
      * @param data 文本模式传递的就是消息内容 图片模式传递的则是本地图片地址然后上传给web服务端
      * @param type 文本模式0 图片模式1
      */
+    StringBuffer stringBuffer=new StringBuffer();
+    StringBuffer webStrings=new StringBuffer();
     public void sendDiscussMsg(String data, int type) {
 
 //        //先自己显示
 //        discussBeanList.add(discussBean);
 //        discussCommunicationRVAdapter.notifyDataSetChanged();
+            //去掉所有的空格 目前的规则事根据空格判断的
+
+
 
         if (type == MsgUtils.TYPE_TEXT) {
-            String originalData = data;
+            String[] strings = data.split("");
+            for (String string : strings) {
+                if (TextUtils.isEmpty(string) || string.equals(" ")){
+                    if (string.equals(" ")){
+                        stringBuffer.append("\b");
+                        webStrings.append("&nbsp");
+                    }
+                    continue;
+                }
+                stringBuffer.append(string);
+                webStrings.append(string);
+            }
+            String originalData = stringBuffer.toString();
+            //String originalData = webStrings.toString();
             //DES加密
             String desData = CyptoUtils.encode(Constant.DESKey, originalData);
-            QZXTools.logE("originalData=" + originalData + ";desData=" + originalData, null);
+           // QZXTools.logE("originalData=" + originalData + ";desData=" + originalData, null);
             DiscussBean discussBean = MsgUtils.getDiscussBean(originalData, "", type, discussGroupId, groupIndex);
             discussBean.setDiscussId(discussId);
             SimpleClientNetty.getInstance().sendMsgToServer(MsgUtils.HEAD_DISCUSS, MsgUtils.createDiscuss(discussBean));
+            stringBuffer.setLength(0);
+            webStrings.setLength(0);
         } else if (type == MsgUtils.TYPE_PICTURE) {
             uploadDiscussPic(data);
         }
@@ -939,12 +958,9 @@ public class GroupDiscussFragment extends Fragment implements View.OnClickListen
         OkHttp3_0Utils.getInstance().asyncPostOkHttp(url, paraMap, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
                     //服务端错误
                     mHandler.sendEmptyMessage(Server_Error);
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
